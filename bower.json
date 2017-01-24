@@ -1,0 +1,22 @@
+{
+  "name": "sar-client",
+  "description": "",
+  "directory": "src/components/",
+  "main": "",
+  "authors": [
+    "niczem <nic@transparency-everywhere.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/sea-watch/SAR-Client",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "pouchdb": "^6.1.1",
+    "jquery": "^3.1.1"
+  }
+}
