@@ -9,6 +9,7 @@ import { TopNavComponent } from './components/top-nav/top-nav.component';
 import { LeftNavComponent } from './components/left-nav/left-nav.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { MapViewComponent } from './components/map-view/map-view.component';
+import { LogInComponent } from './components/log-in/log-in.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { MapViewComponent } from './components/map-view/map-view.component';
     TopNavComponent,
     LeftNavComponent,
     ChatComponent,
-    MapViewComponent
+    MapViewComponent,
+    LogInComponent
   ],
   imports: [
     BrowserModule,

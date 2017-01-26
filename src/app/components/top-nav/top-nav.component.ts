@@ -6,8 +6,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./top-nav.component.css']
 })
 export class TopNavComponent implements OnInit {
-
-  constructor() { }
+  title;
+  constructor() {
+  this.title ='asd'
+  }
 
   ngOnInit() {
   }
