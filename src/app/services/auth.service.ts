@@ -1,16 +1,10 @@
 import {Injectable,EventEmitter}     from '@angular/core';
-import {Subject} from 'rxjs/Subject';
-import {BehaviorSubject} from 'rxjs/subject/BehaviorSubject';
 declare var PouchDB: any;
 declare var localStorage: any;
 @Injectable()
 export class AuthService {
   logged_in;
   db;  
-  isLoggedIn: Subject<bool> = new BehaviorSubject(false);
-  changeLoginStatus (isLoggedIn: boolean) { 
-    this.isLoggedIn.next(isLoggedIn); // ??? not sure
-  } 
   constructor() {
 
     this.db = new PouchDB('http://localhost:5984/mydb', {skipSetup: true});
