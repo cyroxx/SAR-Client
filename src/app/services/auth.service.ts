@@ -1,24 +1,46 @@
-import {Injectable,EventEmitter}     from '@angular/core';
+import {Injectable,EventEmitter,Output}     from '@angular/core';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+
 declare var PouchDB: any;
 declare var localStorage: any;
 @Injectable()
 export class AuthService {
   logged_in;
   db;  
+
+  // Observable navItem source
+  private _loginStateSource = new BehaviorSubject<boolean>(false);
+  // Observable navItem stream
+  navItem$ = this._loginStateSource.asObservable();
+
+  changeLoginState = new EventEmitter<boolean>();
+
+
+  changeLoginStateTo(loginState) {
+    this.changeLoginState.emit(loginState)
+  }
+
   constructor() {
 
+    console.log('initializing login...');
+
     this.db = new PouchDB('http://localhost:5984/mydb', {skipSetup: true});
+
+
     var self = this;
-  	this.logged_in = false;
+  	self.changeLoginStateTo(false);
+
+
     this.db.getSession(function (err, response) {
       if (err) {
         // network error
       } else if (!response.userCtx.name) {
-        self.logged_in = false;
+        console.log('...no existing session');
+        self.changeLoginStateTo(false);
       } else {
-        console.log('session existing:');
+        console.log('...session existing:');
         console.log(response);
-        self.logged_in = true;
+        self.changeLoginStateTo(true);
       }
     });
   }
@@ -30,15 +52,15 @@ export class AuthService {
       if (err) {
         console.log(err)
         if (err.name === 'unauthorized') {
-          alert('password or username wrong');
+          console.log('...password or username wrong');
         } else {
           // cosmic rays, a meteor, etc.
         }
       }else{
         localStorage.username = userdata.username;
         localStorage.password = userdata.password;
-        self.logged_in = true;
-        alert('log in successful');
+        self.changeLoginStateTo(true);
+        console.log('...log in successful');
       }
     });
   }

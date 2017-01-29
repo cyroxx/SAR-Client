@@ -10,17 +10,25 @@ import {AuthService} from 'app/services/auth.service';
 export class LogInComponent implements OnInit {
   loginData = {};
   AuthService;
-  logged_in:false;
+  logged_in:boolean;
   constructor(AuthService:AuthService) { 
+    this.logged_in = false;
     this.AuthService = AuthService;
-    this.logged_in  = AuthService.logged_in;
+
+    AuthService.changeLoginState.subscribe(res => this.logged_in = res);
+    var self = this;
+
+    setInterval(function(){ 
+    console.log('logged_in:');
+    console.log(self.logged_in) 
+    }, 3000);
   }
 
   ngOnInit() {
   }
 
   doLogin(){
-  	console.log('login initialized...')
+  	console.log('login submitted...')
     this.AuthService.login(this.loginData);
 
 
