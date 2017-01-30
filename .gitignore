@@ -6,6 +6,7 @@
 
 # dependencies
 /node_modules
+/src/components
 
 # IDEs and editors
 /.idea
