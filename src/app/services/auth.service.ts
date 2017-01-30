@@ -64,8 +64,11 @@ export class AuthService {
       }
     });
   }
+  logout(){
+    return this.db.logout()
+  }
   is_logged_in() {
-  	return this.logged_in;
+  	return this.logged_in
   }
 
 }
