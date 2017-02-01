@@ -10,6 +10,7 @@ import { LeftNavComponent } from './components/left-nav/left-nav.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { MapViewComponent } from './components/map-view/map-view.component';
 import { LogInComponent } from './components/log-in/log-in.component';
+import { CreateCaseFormComponent } from './components/create-case-form/create-case-form.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { LogInComponent } from './components/log-in/log-in.component';
     LeftNavComponent,
     ChatComponent,
     MapViewComponent,
-    LogInComponent
+    LogInComponent,
+    CreateCaseFormComponent
   ],
   imports: [
     BrowserModule,

@@ -275,7 +275,9 @@ a.gray:hover, a.gray:focus, a.gray:active {
 
   /* Sidebar */
 
-
+  .sidebar{
+    margin-top:65px;
+  }
   .sidebar .label-danger {
       background-color: #727881
   }

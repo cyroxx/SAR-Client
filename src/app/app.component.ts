@@ -13,9 +13,11 @@ export class AppComponent {
   windowOptions = {'showstartoverlay':false};
   constructor(VehiclesService:VehiclesService){
 
-  	VehiclesService.loadVehicles();
+  	console.log(VehiclesService.getVehicles());
   	this.title = 'SAR Client'
 
   	this.windowOptions = {'showstartoverlay':true}
+
+    //VehiclesService.seedVehicles();
   }
 }
