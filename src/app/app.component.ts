@@ -10,6 +10,7 @@ import {VehiclesService} from 'app/services/vehicles.service';
 export class AppComponent {
   title;
   logged_in;
+  hideCreateCaseForm;
   windowOptions = {'showstartoverlay':false};
   constructor(VehiclesService:VehiclesService){
 
@@ -18,6 +19,10 @@ export class AppComponent {
 
   	this.windowOptions = {'showstartoverlay':true}
 
-    //VehiclesService.seedVehicles();
+    this.hideCreateCaseForm = true;
+
+    
+
+
   }
 }
