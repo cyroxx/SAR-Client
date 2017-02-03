@@ -970,7 +970,7 @@ a.gray:hover, a.gray:focus, a.gray:active {
     display: inline-block;
 }
     
-#loadingOverlay{
+#loadingOverlay,.overlay{
     position:fixed;
     top:0;
     right:0;
