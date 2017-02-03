@@ -5,10 +5,6 @@
 	* milestones
 	* feature set fuer MVP
 
-* offene fragen
-	* offline storage, wie?
-	* update konflikte, wie loesen?
-
 * Client milestones (MVP bis KW9)
     * KW 4
 	   * erfolgreicher login
@@ -27,20 +23,6 @@
     * KW 8-9 Puffer
 
 * API milestones (MVP bis KW9)
-    * KW 5 (bis hackathon)
-        * API endpoints implementieren (cases/vehicles)
-        * Ueberlegen wie die update-mechanik und konfliktloesung funktionieren soll
-    
-    
-    
-    
-	
-        
-	
-	
-
-
-
 
 * weiterfuehrende milestones
 	* bandbreitenoptimierung
