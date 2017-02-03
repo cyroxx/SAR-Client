@@ -1,0 +1,113 @@
+<div class="overlay" [hidden]="hideCreateCaseForm">
+  <div class="container" id="createCaseContainer">
+<form id="createCaseForm">
+    <div class="row">
+      <h2 class="col-md-3">
+        Create Case
+      </h2>
+    </div>
+    <div class="row " style="background:rgba(55,60,68,0.05);">
+            <div class="form-group col-md-3">
+              <label for="boat_status">Status</label>
+              <select class="form-control" name="boat_status" id="boat_status" ng-model="case.boat_status">
+                          <option value="need_help">Need Help</option>
+                          <option value="critical_target">Critical</option>
+                          <option value="rescued">Rescued</option>
+                          <option value="confirmed_target">Confirmed Target</option>
+                          <option value="possible_target">Possible Target</option>
+                          <option value="attended">Attended</option>
+                          <option value="closed">Closed</option>
+              </select>
+              <input type="hidden" name="source_type" value="create_case_form">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="boat_type">Boat Type</label>
+              <select class="form-control" name="boat_type" id="boat_type" ng-model="case.boat_type">
+                <option value="rubber">Rubber</option>
+                <option value="wood">Wood</option>
+                <option value="steel">Steel</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group col-md-3">
+              <label for="boat_condition">Condition</label>
+              <select class="form-control" name="boat_condition" id="boat_condition">
+                <option value="unknown">Unknown</option>
+                <option value="good">Good</option>
+                <option value="bad">Bad</option>
+                <option value="sinking">Sinking</option>
+                <option value="people_in_water">People in water</option>
+              </select>
+            </div>
+            <div class="form-group form-inline col-md-3">
+              <div class="checkbox" style="padding-top:32px;">
+                  <input type="checkbox" id="engine_working" name="engine_working" value="1">  <label for="engine_working">Working engine</label>
+
+              </div>
+            </div>
+    </div>
+    <div class="row">
+            <div class="col-md-3">
+	            <label> Position</label>
+	            <div class="btn-group ">
+	              <a class="btn btn-default btn-sm">GMS</a> <a class="btn btn-default btn-sm active">DG</a>
+	            </div>        
+          	</div>
+            <div class="form-group col-md-3">
+              <label for="lat">Lat</label>
+              <input class="form-control" type="text" placeholder="Lat" name="lat" id="lat" ng-model="case.lastLocation.lat">
+            </div>
+
+            <div class="form-group col-md-3">
+              <label for="lon">Lon</label>
+              <input class="form-control" type="text" placeholder="Lon" name="lon" id="lon" ng-model="case.lastLocation.lon">
+            </div>
+            <div class="col-md-3">
+            	<label>GPS</label>
+                <a class="btn btn-sm   btn-default use_location"><i class="zmdi zmdi-pin"></i>Current Location</a>
+            </div>
+
+    </div>
+    <div class="row" style="background:rgba(55,60,68,0.05);">
+            <div class="form-group col-md-3">
+              <label for="passenger_count">How many people?</label>
+              <input class="form-control" name="passenger_count" type="text" placeholder="How many people?" id="passenger_count" ng-model="case.passenger_count">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="passenger_count">… women?</label>
+              <input class="form-control" name="women_on_board" type="text" placeholder="How many woman?" id="women_on_board" ng-model="case.women_on_board">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="passenger_count">… children?</label>
+              <input class="form-control" name="children_on_board" type="text" placeholder="How many children?" id="children_on_board" ng-model="case.children_on_board">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="passenger_count">… disabled?</label>
+              <input class="form-control" name="disabled_on_board" type="text" placeholder="How many disabled?" id="disabled_on_board" ng-model="case.disabled_on_board">
+            </div>
+    </div>
+    <div class="row">
+            <div class="form-group col-md-6">
+                  <input type="checkbox" id="otherBoats" name="other_involved" value="1">
+                  <label for="otherBoats">Other boat/s involved?</label>
+                  <div class="other_boats">
+                          <input class="form-control" type="text" id="additional_informations">
+                  </div>
+            </div>
+            <div class="form-group col-md-6">
+                        <input type="checkbox" id="additionalInfos">
+                        <label for="additionalInfos">Additional information</label>
+                        <div class="additional_infos">
+                          <input class="form-control" type="text" placeholder="Additional informations" name="additional_informations" id="additional_informations" ng-model="case.additional_informations">
+                        </div>
+    	    </div>
+	</div>
+  <div class="row">
+    <div class="col-md-3">
+      <input type="submit" value="Submit" class="btn btn-primary">
+    </div>
+  </div>
+
+</form>
+</div>
+</div>
