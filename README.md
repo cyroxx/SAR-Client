@@ -9,3 +9,7 @@ Run `npm install` to install dependencies.
 Run `npm run electron` to build angular and electron application.
 
 Run `ng serve` inside the src/ directory to build and serve the angular application. 
+
+## Contributing
+
+Please see our [contributors guide](CONTRIBUTING.md) for details on how to contribute to the project. Thank you!
