@@ -1,6 +1,8 @@
 import {Injectable,EventEmitter,Output}     from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
+import {PouchService} from './pouch.service';
+
 declare var PouchDB: any;
 declare var localStorage: any;
 @Injectable()
@@ -15,16 +17,13 @@ export class AuthService {
 
   changeLoginState = new EventEmitter<boolean>();
 
-
-  changeLoginStateTo(loginState) {
-    this.changeLoginState.emit(loginState)
-  }
-
-  constructor() {
+  constructor(PouchService:PouchService) {
 
     console.log('initializing login...');
 
-    this.db = new PouchDB('http://localhost:5984/mydb', {skipSetup: true});
+    this.db = PouchService.initDB('mydb', {skipSetup:true});
+
+    //this.db = new PouchDB('http://localhost:5984/mydb', {skipSetup: true});
 
 
     var self = this;
@@ -43,6 +42,11 @@ export class AuthService {
         self.changeLoginStateTo(true);
       }
     });
+  }
+
+
+  changeLoginStateTo(loginState) {
+    this.changeLoginState.emit(loginState)
   }
 
   //@param userdata {username:string, password:string}
