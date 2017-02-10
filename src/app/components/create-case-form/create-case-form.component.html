@@ -1,5 +1,5 @@
-<div class="create-case overlay" [hidden]="hideCreateCaseForm">
-  <div class="container" id="createCaseContainer">
+<div class="modal-background-container">
+  <div class="modal-container" id="createCaseContainer">
     <form id="createCaseForm" #f="ngForm">
     <div class="row">
       <h2 class="col-md-3">
@@ -7,7 +7,6 @@
       </h2>
     </div>
     <div class="row " style="background:rgba(55,60,68,0.05);">
-
             <div class="form-group col-md-3">
               <label for="boat_status">Status</label>
               <select class="form-control" name="boat_status" id="boat_status" [(ngModel)]="case.status">
@@ -94,7 +93,10 @@
 	</div>
   <div class="row">
     <div class="col-md-3">
-      <input type="submit" value="Submit" class="btn btn-primary">
+      <input (click)="closeModal()" value="Cancel" class="btn btn-primary">
+    </div>
+    <div class="col-md-3">
+      <input (click)="save()" value="Submit" class="btn btn-primary">
     </div>
   </div>
 

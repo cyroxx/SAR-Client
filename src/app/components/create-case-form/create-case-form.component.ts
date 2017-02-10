@@ -1,11 +1,10 @@
 import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
-import { AppComponent } from '../../app.component';
-
-
+import { AppComponent } from '../../app.component'
 
 import { Case, Status, BoatType, BoatCondition, Location } from '../../interfaces/case';
+import { ModalContainer, Modal } from '../../interfaces/modalcontainer';
 
 @Component({
     selector: 'create-case-form',
@@ -14,7 +13,7 @@ import { Case, Status, BoatType, BoatCondition, Location } from '../../interface
     providers: [FormBuilder]
 })
 
-
+@Modal()
 export class CreateCaseFormComponent implements OnInit {
     private submitted;
     hideCreateCaseForm;
@@ -56,16 +55,16 @@ export class CreateCaseFormComponent implements OnInit {
         //this.case = new Case();
     }
 
-    save(model: Case, isValid: boolean) {
+    save() {
         this.submitted = true; // set form submit to true
 
         // check if model is valid
-        // if valid, call API to save customer
-        console.log(model, isValid);
+        // if valid, save in database
+        console.log(this.case);
     }
 
     getCurrentPosition() {
-      console.log(this.case);
+        console.log(this.case);
         navigator.geolocation.getCurrentPosition((position) => {
             //console.log(position);
             this.case.location = new Location(<number>position.coords.longitude, <number>position.coords.latitude, <number>position.coords.heading, <number>position.timestamp);
