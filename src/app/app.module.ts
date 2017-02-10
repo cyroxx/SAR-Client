@@ -12,8 +12,6 @@ import { MapViewComponent } from './components/map-view/map-view.component';
 import { LogInComponent } from './components/log-in/log-in.component';
 import { CreateCaseFormComponent } from './components/create-case-form/create-case-form.component';
 
-
-
 import {PouchService} from './services/pouch.service';
 
 @NgModule({

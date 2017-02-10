@@ -9,7 +9,7 @@ export class PouchService {
   constructor() {
   	this.remote = 'http://localhost:5984/'
   }
-  initDB(db_title: string,options){
+  initDB(db_title: string,options?:any){
 
 
   	this.databases = {}
