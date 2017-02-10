@@ -1,10 +1,17 @@
 export class Case {
     location: Location;
     state: Status;
-    name: string;
+    boatType: BoatType;
+		boatCondition: BoatCondition;
+		engineWorking: boolean;
+		peopleCount: number;
+		womenCount: number;
+		childrenCount: number;
+		disabledCount: number;
 
     constructor() {
     }
+
 }
 
 export class Location {

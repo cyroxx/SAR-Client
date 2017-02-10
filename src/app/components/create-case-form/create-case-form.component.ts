@@ -37,7 +37,7 @@ export class CreateCaseFormComponent implements OnInit {
     boatConditionKeys: string[];
 
     constructor(private _fb: FormBuilder) {
-        this.hideCreateCaseForm = false;
+        this.hideCreateCaseForm = true;
 
         this.stateList = Status;
         this.stateKeys = Object.keys(this.stateList).filter(Number);
@@ -65,13 +65,18 @@ export class CreateCaseFormComponent implements OnInit {
     }
 
     getCurrentPosition() {
+      console.log(this.case);
         navigator.geolocation.getCurrentPosition((position) => {
             //console.log(position);
             this.case.location = new Location(<number>position.coords.longitude, <number>position.coords.latitude, <number>position.coords.heading, <number>position.timestamp);
         });
     }
 
+    /*setStatus(statusId : string){
+      this.case.state = this.stateList[statusId];
+    }
+
     logItem(item) {
         console.log(item);
-    }
+    }*/
 }

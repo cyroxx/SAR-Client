@@ -3,5 +3,14 @@
     padding: 50px;
     margin-top: 50px;
     border: 1px solid #676666;
-    
+}
+
+.create-case.overlay{
+    position:fixed;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    background: rgba(120,120,120,0.5);
+    z-index: 9999;
 }
