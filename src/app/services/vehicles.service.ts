@@ -9,6 +9,7 @@ export class VehiclesService {
   constructor(PouchService:PouchService) {
 
   	this.db = PouchService.initDB('vehicles');
+  	
   }
   handleChange(change){
 
@@ -41,6 +42,10 @@ export class VehiclesService {
 	    }
 
 	  }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 40b31da50ebb133b4cc87e10f79ea44a689094d2
   }
 
   getVehicles(){
