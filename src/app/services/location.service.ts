@@ -6,7 +6,7 @@ export class LocationService {
   constructor() { }
 
   getCurrentPosition(callback: (object) => void) {
-    callback({latitude: 52.000, longitude: 13.000});
+    callback({coords: {latitude: 52.537, longitude: 13.253}, timestamp: 1486924248002});
   }
 
 }

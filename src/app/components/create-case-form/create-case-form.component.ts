@@ -73,9 +73,10 @@ export class CreateCaseFormComponent implements OnInit {
     getCurrentPosition() {
         this.locationService.getCurrentPosition((position) => {
             console.log(position);
+            this.case.location = new Location(<number>position.coords.longitude, <number>position.coords.latitude, <number>position.coords.heading, <number>position.timestamp);
         });
         console.log(this.case);
-
+/*
         this.case.location = new Location(<number>13.253, <number>52.537, <number>NaN, <number>1486924248002);
 
         if (navigator.geolocation) {
@@ -83,12 +84,12 @@ export class CreateCaseFormComponent implements OnInit {
 		   navigator.geolocation.getCurrentPosition((position) => {
 		   	console.log("Position is:");
             console.log(position);
-            this.case.location = new Location(<number>position.coords.longitude, <number>position.coords.latitude, <number>position.coords.heading, <number>position.timestamp);
+
         });
 		} else {
 		    console.log("Geolocation is not supported by this browser.");
 		}
-     
+     */
     }
 
     /*setStatus(statusId : string){
