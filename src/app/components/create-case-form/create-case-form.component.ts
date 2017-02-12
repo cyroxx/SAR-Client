@@ -71,7 +71,9 @@ export class CreateCaseFormComponent implements OnInit {
     }
 
     getCurrentPosition() {
-        console.log(this.locationService.get());
+        this.locationService.getCurrentPosition((position) => {
+            console.log(position);
+        });
         console.log(this.case);
 
         this.case.location = new Location(<number>13.253, <number>52.537, <number>NaN, <number>1486924248002);
