@@ -24,6 +24,7 @@
     "@angular/platform-browser-dynamic": "^2.3.1",
     "@angular/router": "^3.3.1",
     "angular2-openlayers": "^0.4.5",
+    "bancroft": "0.0.13",
     "core-js": "^2.4.1",
     "pouchdb": "^6.1.1",
     "rxjs": "^5.0.1",
