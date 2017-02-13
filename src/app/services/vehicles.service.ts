@@ -1,21 +1,15 @@
 import { Injectable } from '@angular/core';
-declare var PouchDB: any;
+import {PouchService} from '../services/pouch.service';
+
 @Injectable()
 export class VehiclesService {
   db
   data
   remote
-  constructor() {
-  	this.db = new PouchDB('vehicles');
-  	this.remote = 'http://localhost:5984/vehicles';
+  constructor(pouchService:PouchService) {
 
-    let options = {
-      live: true,
-      retry: true,
-      continuous: true
-    };
+  	this.db = pouchService.initDB('vehicles');
 
-    this.db.sync(this.remote, options);
   }
   handleChange(change){
 
