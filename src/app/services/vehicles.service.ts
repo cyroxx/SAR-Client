@@ -6,9 +6,9 @@ export class VehiclesService {
   db
   data
   remote
-  constructor(PouchService:PouchService) {
+  constructor(pouchService:PouchService) {
 
-  	this.db = PouchService.initDB('vehicles');
+  	this.db = pouchService.initDB('vehicles');
 
   }
   handleChange(change){
