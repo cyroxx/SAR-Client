@@ -6,43 +6,16 @@ export class VehiclesService {
   db
   data
   remote
-  constructor(pouchService:PouchService) {
+  pouchService
+  /*constructor(pouchService:PouchService) {
 
   	this.db = pouchService.initDB('vehicles');
 
-  }
-  handleChange(change){
+  }*/
 
-	  let changedDoc = null;
-	  let changedIndex = null;
-
-	  this.data.forEach((doc, index) => {
-
-	    if(doc._id === change.id){
-	      changedDoc = doc;
-	      changedIndex = index;
-	    }
-
-	  });
-
-	  //A document was deleted
-	  if(change.deleted){
-	    this.data.splice(changedIndex, 1);
-	  }
-	  else {
-
-	    //A document was updated
-	    if(changedDoc){
-	      this.data[changedIndex] = change.doc;
-	    }
-
-	    //A document was added
-	    else {
-	      this.data.push(change.doc);
-	    }
-
-	  }
-
+  constructor(pouchService:PouchService) {
+  	this.pouchService = pouchService
+  	this.db = this.pouchService.initDB('vehicles')
   }
 
   getVehicles(){
@@ -68,7 +41,7 @@ export class VehiclesService {
 	      resolve(this.data);
 
 	      this.db.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
-	        this.handleChange(change);
+	        this.pouchService.handleChange('vehicles',change);
 	      });
 
 	    }).catch((error) => {
