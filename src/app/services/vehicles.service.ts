@@ -7,11 +7,6 @@ export class VehiclesService {
   data
   remote
   pouchService
-  /*constructor(pouchService:PouchService) {
-
-  	this.db = pouchService.initDB('vehicles');
-
-  }*/
 
   constructor(pouchService:PouchService) {
   	this.pouchService = pouchService
