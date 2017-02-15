@@ -9,7 +9,12 @@
       "outDir": "dist",
       "assets": [
         "assets",
-        "favicon.ico"
+        "components",
+        "css",
+        "favicon.ico",
+        "fonts",
+        "index.js",
+        "js"
       ],
       "index": "index.html",
       "main": "main.ts",
