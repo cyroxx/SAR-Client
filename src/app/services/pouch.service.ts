@@ -11,7 +11,6 @@ export class PouchService {
   }
   initDB(db_title: string,options?:any){
 
-
   	this.databases = {}
   	//init object for db
   	this.databases[db_title] = {}
