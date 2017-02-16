@@ -1,5 +1,10 @@
 {
   "name": "sar-client",
+  "description": "SAR-Client App",
+  "author": {
+    "name": "Sea Watch",
+    "email": "nic@sea-watch.org"
+  },
   "version": "0.0.0",
   "license": "MIT",
   "main": "dist/index.js",
@@ -14,7 +19,14 @@
     "ng:build": "ng build",
     "ng:build:watch": "ng build --watch",
     "electron": "run-s ng:build electron:start",
-    "electron:start": "electron ."
+    "electron:start": "electron .",
+    "pack": "run-s ng:build pack:build:win pack:build:linux",
+    "pack:mac": "run-s ng:build pack:build:mac",
+    "pack:win": "run-s ng:build pack:build:win",
+    "pack:linux": "run-s ng:build pack:build:linux",
+    "pack:build:mac": "build -c electron-builder.yml --mac --x64",
+    "pack:build:win": "build -c electron-builder.yml --win --ia32 --x64",
+    "pack:build:linux": "build -c electron-builder.yml --linux --x64"
   },
   "private": true,
   "dependencies": {
@@ -40,6 +52,7 @@
     "angular-cli": "1.0.0-beta.25.5",
     "codelyzer": "~2.0.0-beta.1",
     "electron": "^1.4.15",
+    "electron-builder": "13.8.0",
     "jasmine-core": "2.5.2",
     "jasmine-spec-reporter": "2.5.0",
     "karma": "1.2.0",
