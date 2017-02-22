@@ -17,6 +17,7 @@ import {LocationsService} from './services/locations.service';
 import {CasesService} from './services/cases.service';
 import {ModalService} from './services/modal.service';
 import {ModalPlaceholderComponent } from './components/modalplaceholder/modalplaceholder.component';
+import { CaseListComponent } from './components/case-list/case-list.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import {ModalPlaceholderComponent } from './components/modalplaceholder/modalpla
     MapViewComponent,
     LogInComponent,
     CreateCaseFormComponent,
-    ModalPlaceholderComponent
+    ModalPlaceholderComponent,
+    CaseListComponent
   ],
   imports: [
     BrowserModule,

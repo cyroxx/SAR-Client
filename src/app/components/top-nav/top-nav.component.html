@@ -18,7 +18,7 @@
       <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-left">
               <li>
-                  <a href="#caseView" ng-class="{active: state=='caseview'}" ng-click="changeStatus('caseview');">
+                  <a href="#caseView" ng-class="{active: state=='caseview'}" (click)="showCaseList()">
                       <span>Mode</span><br>
                       <i class="zmdi zmdi-map"></i> Cases</a>
               </li>
