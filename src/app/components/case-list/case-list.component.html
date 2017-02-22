@@ -1,7 +1,14 @@
 <div class="modal-background-container">
   <div class="modal-container" id="createCaseContainer">
-    <p>
-      <li *ngFor="let case of cases;" class="case filter" data-id="1337"><a href="#">{{case._id}}</a></li>
-    </p>
+    <ul class="cases">
+      <li *ngFor="let case of cases;" class="case filter">
+        <div class="row">
+          <div class="status col-md-3 {{getStateClassName(case.state)}}">{{getStateName(case.state)}}</div>
+          <div class="col-md-3">{{getBoatTypeName(case.boatType)}}</div>
+          <div class="col-md-3">{{getBoatConditionName(case.boatCondition)}}</div>
+          <div class="col-md-3"><i class="zmdi zmdi-edit"></i></div>
+        </div>
+      </li>
+    </ul>
   </div>
 </div> 

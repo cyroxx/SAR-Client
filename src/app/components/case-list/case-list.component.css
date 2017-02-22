@@ -19,3 +19,35 @@
   overflow: hidden;
   font-family: roboto;
 }
+
+.cases {
+  list-style-type: none;
+}
+
+.case{
+  background: #ffffff;
+  margin: 15px 25px;
+  padding: 15px 15px;
+  font-size: 1.25rem;
+}
+
+.case > .status:before {
+  font-family: Material-Design-Iconic-Font;
+  content: '\f29b';
+}
+
+.critical:before, .needhelp:before {
+  color: #ff4344;
+}
+
+.confirmed:before, .possibletarget:before, .attended:before{
+  color: #ff8942;
+}
+
+.closed:before{
+  color: rgb(66, 183, 42);
+}
+
+.material-design-icons{
+  font-family: Material-Design-Iconic-Font;
+}
