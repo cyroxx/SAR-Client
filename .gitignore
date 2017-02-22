@@ -2,6 +2,7 @@
 
 # compiled output
 /dist
+/dist-builder
 /tmp
 
 # dependencies
@@ -39,3 +40,6 @@ testem.log
 #System Files
 .DS_Store
 Thumbs.db
+
+/.vagrant/
+*-cloudimg-console.log

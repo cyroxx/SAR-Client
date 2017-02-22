@@ -2,12 +2,12 @@ export class Case {
     location: Location;
     state: Status;
     boatType: BoatType;
-		boatCondition: BoatCondition;
-		engineWorking: boolean;
-		peopleCount: number;
-		womenCount: number;
-		childrenCount: number;
-		disabledCount: number;
+    boatCondition: BoatCondition;
+    engineWorking: boolean;
+    peopleCount: number;
+    womenCount: number;
+    childrenCount: number;
+    disabledCount: number;
 
     constructor() {
     }
@@ -20,12 +20,12 @@ export class Location {
     heading: any;
     timestamp: number;
 
-		constructor(longitude: number, latitude: number, heading: any, timestamp: number){
-			this.longitude = longitude;
-			this.latitude = latitude;
-			this.heading = heading;
-			this.timestamp = timestamp;
-		}
+    constructor(longitude: number, latitude: number, heading: any, timestamp: number) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.heading = heading;
+        this.timestamp = timestamp;
+    }
 }
 
 export enum Status {
