@@ -16,38 +16,8 @@ export class CasesService {
 
   getCases() {
 
-    if (this.data) {
-      return Promise.resolve(this.data);
-    }
-
-    return new Promise(resolve => {
-
-      this.db.allDocs({
-
-        include_docs: true
-
-      }).then((result) => {
-
-        this.data = [];
-
-        let docs = result.rows.map((row) => {
-          this.data.push(row.doc);
-        });
-
-        resolve(this.data);
-
-        this.db.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
-          this.pouchService.handleChange('cases', change);
-        });
-
-      }).catch((error) => {
-
-        console.log(error);
-
-      });
-
-    });
-
+    console.log('getting cases');
+    return this.pouchService.get('cases');
   }
 
   seedCases() {
