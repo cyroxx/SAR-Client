@@ -13,6 +13,8 @@ import { LogInComponent } from './components/log-in/log-in.component';
 import { CreateCaseFormComponent } from './components/create-case-form/create-case-form.component';
 
 import {PouchService} from './services/pouch.service';
+import {LocationsService} from './services/locations.service';
+import {CasesService} from './services/cases.service';
 import {ModalService} from './services/modal.service';
 import {ModalPlaceholderComponent } from './components/modalplaceholder/modalplaceholder.component';
 
@@ -39,7 +41,7 @@ import {ModalPlaceholderComponent } from './components/modalplaceholder/modalpla
       }
     ])
   ],
-  providers: [PouchService, ModalService],
+  providers: [PouchService, ModalService, LocationsService, CasesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

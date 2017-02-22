@@ -1,27 +1,48 @@
 import { Component, OnInit } from '@angular/core'
-import {MapService} from 'app/services/map.service'
+import { MapService } from 'app/services/map.service'
+import { CasesService } from 'app/services/cases.service'
+import { LocationsService } from 'app/services/locations.service'
+import { Case } from '../../interfaces/case';
 
 
 declare var L: any;
 @Component({
-  selector: 'app-map-view',
-  templateUrl: './map-view.component.html',
-  styleUrls: ['./map-view.component.css'],
-  providers:[MapService]
+	selector: 'app-map-view',
+	templateUrl: './map-view.component.html',
+	styleUrls: ['./map-view.component.css'],
+	providers: [MapService]
 })
 export class MapViewComponent implements OnInit {
 	public map: any;
 	mapService;
-  	constructor(MapService:MapService) {
-  		this.mapService = MapService;
-  	}
+	cases: Array<Case>;
+	caseService: CasesService;
+	locationService: LocationsService;
 
-  	ngOnInit() {
-  		this.initMap();	
-  	}
+	constructor(MapService: MapService, caseService: CasesService, locationService: LocationsService) {
+		this.mapService = MapService;
+		this.caseService = caseService;
+		this.locationService = locationService;
+	}
 
-  	initMap(){
+	ngOnInit() {
+		this.initMap();
 
-  		this.mapService.initMap()
+		this.caseService.getCases().then((data) => {
+			this.cases = data;
+
+			//if data is empty seed vehicles
+			//dev only
+			if (data.length === 0){
+				this.locationService.seedLocations();
+				this.caseService.seedCases();
+			}
+				
+		});
+	}
+
+	initMap() {
+
+		this.mapService.initMap()
 	}
 }
