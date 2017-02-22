@@ -1,0 +1,20 @@
+{
+  "locations": [
+    {
+      "_id": "2017-02-22T13:25:37.326Z-reportedBy-IUV",
+      "latitude": "32.944263",
+      "longitude": "12.296566",
+      "heading": "0",
+      "origin": "GPS",
+      "type": "case"
+    },
+    {
+       "_id": "2017-02-22T13:35:37.326Z-reportedBy-SW2",
+      "latitude": "32.937924",
+      "longitude": "12.326092",
+      "heading": "0",
+      "origin": "GPS",
+      "type": "case"
+    }
+  ]
+}
