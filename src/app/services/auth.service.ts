@@ -8,7 +8,8 @@ declare var localStorage: any;
 @Injectable()
 export class AuthService {
   logged_in;
-  db;  
+  db;
+  sessiondata; // used to store couch user object 
 
   // Observable navItem source
   private _loginStateSource = new BehaviorSubject<boolean>(false);
@@ -21,9 +22,9 @@ export class AuthService {
 
     console.log('initializing login...');
 
-    this.db = PouchService.initDB('mydb', {skipSetup:true});
+    //this.db = PouchService.initDB('mydb', {skipSetup:true});
 
-    //this.db = new PouchDB('http://localhost:5984/mydb', {skipSetup: true});
+    this.db = new PouchDB('http://localhost:5984/mydb', {skipSetup: true});
 
 
     var self = this;
@@ -31,18 +32,23 @@ export class AuthService {
 
 
     this.db.getSession(function (err, response) {
+
+      console.log('...getting session:')
       if (err) {
         // network error
       } else if (!response.userCtx.name) {
         console.log('...no existing session');
         self.changeLoginStateTo(false);
       } else {
-        console.log('...session existing:');
-        console.log(response);
+        //store returned sessiondata
+        if(response.ok)
+          self.sessiondata = response.userCtx
+
         self.changeLoginStateTo(true);
       }
     });
   }
+
 
 
   changeLoginStateTo(loginState) {
@@ -61,9 +67,13 @@ export class AuthService {
           // cosmic rays, a meteor, etc.
         }
       }else{
+        if(response.ok)
+          self.sessiondata = response;
+
         localStorage.username = userdata.username;
         localStorage.password = userdata.password;
         self.changeLoginStateTo(true);
+
         console.log('...log in successful');
       }
     });
@@ -73,6 +83,9 @@ export class AuthService {
   }
   is_logged_in() {
   	return this.logged_in
+  }
+  getUserData() {
+    return this.sessiondata;
   }
 
 }
