@@ -30,13 +30,6 @@ export class MapViewComponent implements OnInit {
 
 		this.caseService.getCases().then((data) => {
 			this.cases = data;
-
-			//if data is empty seed vehicles
-			//dev only
-			if (data.length === 0){
-				this.locationService.seedLocations();
-				this.caseService.seedCases();
-			}
 				
 		});
 	}

@@ -40,6 +40,10 @@ import { CaseListComponent } from './components/case-list/case-list.component';
       {
         path: '',
         component: MapViewComponent
+      },
+      {
+        path: 'cases',
+        component: CaseListComponent
       }
     ])
   ],

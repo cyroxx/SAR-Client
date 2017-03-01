@@ -1,18 +1,7 @@
 /****** MODAL ******/
 
-.modal-background-container {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 9999 !important;
-    background: rgba(120, 120, 120, 0.5);
-}
-
-.modal-container {
+.cases-container {
     padding: 30px;
-    max-width: 1200px;
     width: 100% !important;
     background-color: #F7F7F7;
     margin: 35px auto;

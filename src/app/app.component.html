@@ -6,12 +6,15 @@
 
 
     <div class="row">
-        <left-nav></left-nav>
-
-        <router-outlet></router-outlet>
-
-        <chat></chat>
-
+        <div class="col-sm-2">
+            <left-nav></left-nav>
+        </div>
+        <div class="col-sm-7">
+            <router-outlet></router-outlet>
+        </div>
+        <div class="cols-sm-3">
+            <chat></chat>
+        </div>
     </div>
 
 </div>
