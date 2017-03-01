@@ -1,41 +1,32 @@
 import { Component, OnInit } from '@angular/core'
-import { MapService } from 'app/services/map.service'
-import { CasesService } from 'app/services/cases.service'
-import { LocationsService } from 'app/services/locations.service'
-import { Case } from '../../interfaces/case';
+import {MapService} from 'app/services/map.service'
+import {VehiclesService} from 'app/services/vehicles.service'
 
 
 declare var L: any;
 @Component({
-	selector: 'app-map-view',
-	templateUrl: './map-view.component.html',
-	styleUrls: ['./map-view.component.css'],
-	providers: [MapService]
+    selector: 'app-map-view',
+    templateUrl: './map-view.component.html',
+    styleUrls: ['./map-view.component.css'],
+    providers:[MapService, VehiclesService]
 })
 export class MapViewComponent implements OnInit {
-	public map: any;
-	mapService;
-	cases: Array<Case>;
-	caseService: CasesService;
-	locationService: LocationsService;
+    public map: any;
 
-	constructor(MapService: MapService, caseService: CasesService, locationService: LocationsService) {
-		this.mapService = MapService;
-		this.caseService = caseService;
-		this.locationService = locationService;
-	}
+    mapService;
+    vehiclesService;
 
-	ngOnInit() {
-		this.initMap();
+    constructor(MapService:MapService, VehiclesService:VehiclesService) {
+        this.mapService = MapService;
+        this.vehiclesService = VehiclesService;
+    }
 
-		this.caseService.getCases().then((data) => {
-			this.cases = data;
-				
-		});
-	}
+    ngOnInit() {
+        this.initMap();
+        this.mapService.setMarker(32.46, 16.87, 'just a test');
+    }
 
-	initMap() {
-
-		this.mapService.initMap()
-	}
+    initMap() {
+        this.mapService.initMap();
+    }
 }
