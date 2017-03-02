@@ -2,6 +2,7 @@ import { Component, OnInit, ComponentRef } from '@angular/core';
 
 import {AppModule} from '../../app.module';
 import {CreateCaseFormComponent} from '../create-case-form/create-case-form.component';
+import {CaseListComponent} from '../case-list/case-list.component';
 import {ModalService} from '../../services/modal.service';
 
 @Component({
@@ -23,8 +24,13 @@ export class TopNavComponent implements OnInit {
     showCreateCaseModal() {
         this.modalService.create<CreateCaseFormComponent>(AppModule, CreateCaseFormComponent,
         {
-            foo: "bar",
-            onSave: () => alert('save me')
+        });
+
+    }
+
+    showCaseList() {
+        this.modalService.create<CaseListComponent>(AppModule, CaseListComponent,
+        {
         });
 
     }
