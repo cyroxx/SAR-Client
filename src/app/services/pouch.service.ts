@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 
+import { ConfigService } from './config.service';
+
 declare var PouchDB: any;
 @Injectable()
 export class PouchService {
 	databases: any
 	remote: string
+	ConfigService:ConfigService
+	constructor(ConfigService:ConfigService) {
 
-	constructor() {
-		this.remote = 'http://localhost:5984/'
+		this.remote = ConfigService.getConfiguration('db_remote_url');
 	}
 	initDB(db_title: string, options?: any) {
 
@@ -85,7 +88,6 @@ export class PouchService {
 		}
 	}
 	get(db_title: string) {
-
 		if (this.databases[db_title]['data'] && this.databases[db_title]['data'].length > 0) {
 			return Promise.resolve(this.databases[db_title]['data']);
 		}
