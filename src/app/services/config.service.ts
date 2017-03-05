@@ -12,7 +12,7 @@ constructor(private http:Http) {}
 
 private result: Object;
 
-getConfiguration(key) {
+getConfiguration(key) { 
     return app_config[key]
 }
 }
