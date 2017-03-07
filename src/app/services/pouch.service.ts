@@ -11,6 +11,10 @@ export class PouchService {
 	constructor(ConfigService:ConfigService) {
 
 		this.remote = ConfigService.getConfiguration('db_remote_url');
+
+		//add traling slash if necessary
+		this.remote = this.remote.replace(/\/?$/, '/');
+
 	}
 	initDB(db_title: string, options?: any) {
 
