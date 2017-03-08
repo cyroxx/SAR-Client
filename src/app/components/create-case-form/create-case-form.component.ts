@@ -3,7 +3,7 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 
 import { AppComponent } from '../../app.component'
 
-import { Case, Status, BoatType, BoatCondition, Location } from '../../interfaces/case';
+import { Case, Status, BoatType, BoatCondition, Location, LocationType } from '../../interfaces/case';
 import { ModalContainer, Modal } from '../../interfaces/modalcontainer';
 import { CasesService } from '../../services/cases.service';
 import { LocationsService } from '../../services/locations.service';
@@ -23,7 +23,7 @@ export class CreateCaseFormComponent implements OnInit {
     public events: any[] = []; // use later to display form changes
 
     case: Case;
-
+    
     @Input()
     caseId: string;
 
@@ -51,21 +51,22 @@ export class CreateCaseFormComponent implements OnInit {
         this.boatConditionList = BoatCondition;
         this.boatConditionKeys = Object.keys(this.boatConditionList).filter(Number);
 
-        this.case = new Case(new Location(0,0,0,0));
-        this.case._id = new Date().toISOString() + "-SW2";
+        this.case = new Case();
+        this.case._id = new Date().toISOString() + "-reportedBy-SW2";
     } // form builder simplify form initialization
 
     ngOnInit() {
         // we will initialize our form model here
-        //this.case = new Case();
+        //if caseId is present from input load it from the database
         if(this.caseId){
             let self = this;
-            this.caseService.getCase(this.caseId).then(function(c){
+
+            this.caseService.getCase(this.caseId).then(function(c){                
                 self.case = <Case> c;
-                self.locationService.getLocation( self.case.location._id ? self.case.location._id : self.case.location ).then(function(loc){
-                    console.log(loc);
+                
+                self.locationService.getLastLocationForForeignKey( self.caseId ).then(function(loc){
+                    self.case.location = <Location> loc.rows[0].doc;
                     
-                    self.case.location = <Location> loc;
                 });
             });
         }
@@ -75,17 +76,13 @@ export class CreateCaseFormComponent implements OnInit {
     save() {
         this.submitted = true; // set form submit to true
         this.caseService.store(this.case);
-
-        // check if model is valid
-        // if valid, save in database
-        console.log(this.case);
     }
 
     getCurrentPosition() {
-        console.log(this.case);
         navigator.geolocation.getCurrentPosition((position) => {
             //console.log(position);
-            this.case.location = new Location(<number>position.coords.longitude, <number>position.coords.latitude, <number>position.coords.heading, <number>position.timestamp);
+            //@TODO add reporter from currently logged in user
+            this.case.location = new Location(<number>position.coords.longitude, <number>position.coords.latitude, <number>position.coords.heading, <number>position.timestamp, this.case._id, LocationType.Case);
         });
     }
 

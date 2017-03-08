@@ -31,7 +31,7 @@ export class LocationsService {
    * @param foreignKey the key of the case or vehicle 
    */
   getLastLocationForForeignKey(foreignKey: string){
-    return Promise.resolve(this.pouchService.db('locations').allDocs({key: foreignKey, descending: true, limit: 1}));
+    return Promise.resolve(this.pouchService.db('locations').allDocs({include_docs: true, itemId: foreignKey, descending: true, limit: 1}));
   }
 
   store(location: Location) {

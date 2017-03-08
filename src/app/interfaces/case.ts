@@ -1,5 +1,6 @@
-export class Case {
-    _id: String;
+export class Case{
+    
+    _id: string;
     location: Location;
     state: Status;
     boatType: BoatType;
@@ -10,14 +11,12 @@ export class Case {
     childrenCount: number;
     disabledCount: number;
 
-    constructor(location: Location) {
-        this.location = location;
+    constructor() {
     }
 
-    toString(){
+    toString() {
         return this._id;
     }
-
 }
 
 export class Location {
@@ -26,13 +25,17 @@ export class Location {
     latitude: number;
     heading: any;
     timestamp: number;
+    itemId: string;
+    type: LocationType;
 
-    constructor(longitude: number, latitude: number, heading: any, timestamp: number) {
+    constructor(longitude: number, latitude: number, heading: any, timestamp: number, itemId: string, type: LocationType, reporter?: string, id?: string) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.heading = heading;
         this.timestamp = timestamp;
-        this._id = new Date().toISOString();
+        this.itemId = itemId;
+        this.type = type;
+        this._id = id ? id : new Date().toISOString() + "-reportedBy-" + reporter ? reporter : 'anonymous';
     }
 }
 
@@ -59,4 +62,9 @@ export enum BoatCondition {
     Bad,
     Sinking,
     'People in water'
+}
+
+export enum LocationType {
+    Case = 1,
+    Vehcile
 }

@@ -14,13 +14,13 @@ export class CasesService {
     this.db = this.pouchService.initDB('cases');
   }
 
-  store(c: Case) {
-    console.log('saving case ' + c);
-    this.locationService.store(c.location);
+  store(currentCase: Case) {
+    console.log(currentCase);
+    this.locationService.store(currentCase.location);
     this
     .pouchService
     .db('cases')
-    .post(c)
+    .post(this.getStorableForm(currentCase))
     .then(function(response){
       console.log(response)
     })
@@ -39,6 +39,17 @@ export class CasesService {
   getCase(id: string){
     return Promise.resolve(this.pouchService.db('cases').get(id));
   }
+
+    /**
+     * Converts this object into a storable without circular
+     * dependencies.
+     * Removes location
+     */
+   private getStorableForm(c: Case){
+        let selfCopy = Object.assign({}, c);
+        delete selfCopy.location;
+        return selfCopy;
+    }
 
 
 }
