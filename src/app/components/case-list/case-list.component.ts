@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
+import {AppModule} from '../../app.module';
 import {Case, Status, BoatType, BoatCondition} from '../../interfaces/case';
 import {CasesService} from '../../services/cases.service';
-import { ModalContainer, Modal } from '../../interfaces/modalcontainer';
+import {CreateCaseFormComponent} from '../create-case-form/create-case-form.component';
+import {ModalService} from '../../services/modal.service';
 
 @Component({
   selector: 'app-case-list',
@@ -10,7 +12,6 @@ import { ModalContainer, Modal } from '../../interfaces/modalcontainer';
   styleUrls: ['./case-list.component.css']
 })
 
-@Modal()
 export class CaseListComponent implements OnInit {
 
   cases: Array<Case>;
@@ -18,7 +19,7 @@ export class CaseListComponent implements OnInit {
   boatTypes = BoatType;
   boatConditions = BoatCondition;
 
-  constructor(private caseService: CasesService) {
+  constructor(private caseService: CasesService, private modalService: ModalService) {
    }
 
   ngOnInit() {
@@ -26,7 +27,7 @@ export class CaseListComponent implements OnInit {
     this.caseService.getCases().then(data => {
       this.cases = data;
     });
-
+    
   }
 
   getStateName(state: number) : string{
@@ -45,5 +46,11 @@ export class CaseListComponent implements OnInit {
     return this.boatConditions[condition];
   }
 
+  showEditCaseModal(id: string){
+    this.modalService.create<CreateCaseFormComponent>(AppModule, CreateCaseFormComponent,
+        {
+          caseId: id
+        });
+  }
 
 }

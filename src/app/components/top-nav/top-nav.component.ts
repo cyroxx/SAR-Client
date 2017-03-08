@@ -28,11 +28,4 @@ export class TopNavComponent implements OnInit {
 
     }
 
-    showCaseList() {
-        this.modalService.create<CaseListComponent>(AppModule, CaseListComponent,
-        {
-        });
-
-    }
-
 }

@@ -1,4 +1,5 @@
 export class Case {
+    _id: String;
     location: Location;
     state: Status;
     boatType: BoatType;
@@ -9,12 +10,18 @@ export class Case {
     childrenCount: number;
     disabledCount: number;
 
-    constructor() {
+    constructor(location: Location) {
+        this.location = location;
+    }
+
+    toString(){
+        return this._id;
     }
 
 }
 
 export class Location {
+    _id: string;
     longitude: number;
     latitude: number;
     heading: any;
@@ -25,6 +32,7 @@ export class Location {
         this.latitude = latitude;
         this.heading = heading;
         this.timestamp = timestamp;
+        this._id = new Date().toISOString();
     }
 }
 

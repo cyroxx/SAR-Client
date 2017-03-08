@@ -5,6 +5,8 @@ import { AppComponent } from '../../app.component'
 
 import { Case, Status, BoatType, BoatCondition, Location } from '../../interfaces/case';
 import { ModalContainer, Modal } from '../../interfaces/modalcontainer';
+import { CasesService } from '../../services/cases.service';
+import { LocationsService } from '../../services/locations.service';
 
 @Component({
     selector: 'create-case-form',
@@ -20,8 +22,10 @@ export class CreateCaseFormComponent implements OnInit {
     public createCaseForm: FormGroup;
     public events: any[] = []; // use later to display form changes
 
-    @Input()
     case: Case;
+
+    @Input()
+    caseId: string;
 
     state: Status;
     stateList: any;
@@ -35,7 +39,7 @@ export class CreateCaseFormComponent implements OnInit {
     boatConditionList: any;
     boatConditionKeys: string[];
 
-    constructor(private _fb: FormBuilder) {
+    constructor(private _fb: FormBuilder, private caseService: CasesService, private locationService: LocationsService) {
         this.hideCreateCaseForm = true;
 
         this.stateList = Status;
@@ -47,17 +51,30 @@ export class CreateCaseFormComponent implements OnInit {
         this.boatConditionList = BoatCondition;
         this.boatConditionKeys = Object.keys(this.boatConditionList).filter(Number);
 
-        this.case = new Case();
+        this.case = new Case(new Location(0,0,0,0));
+        this.case._id = new Date().toISOString() + "-SW2";
     } // form builder simplify form initialization
 
     ngOnInit() {
         // we will initialize our form model here
         //this.case = new Case();
-
+        if(this.caseId){
+            let self = this;
+            this.caseService.getCase(this.caseId).then(function(c){
+                self.case = <Case> c;
+                self.locationService.getLocation( self.case.location._id ? self.case.location._id : self.case.location ).then(function(loc){
+                    console.log(loc);
+                    
+                    self.case.location = <Location> loc;
+                });
+            });
+        }
+        
     }
 
     save() {
         this.submitted = true; // set form submit to true
+        this.caseService.store(this.case);
 
         // check if model is valid
         // if valid, save in database
