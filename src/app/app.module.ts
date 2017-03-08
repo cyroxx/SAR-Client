@@ -12,6 +12,7 @@ import { MapViewComponent } from './components/map-view/map-view.component';
 import { LogInComponent } from './components/log-in/log-in.component';
 import { CreateCaseFormComponent } from './components/create-case-form/create-case-form.component';
 
+import {ConfigService} from './services/config.service';
 import {PouchService} from './services/pouch.service';
 import {LocationsService} from './services/locations.service';
 import {CasesService} from './services/cases.service';
@@ -47,7 +48,7 @@ import { CaseListComponent } from './components/case-list/case-list.component';
       }
     ])
   ],
-  providers: [PouchService, ModalService, LocationsService, CasesService],
+  providers: [ConfigService,PouchService, ModalService, LocationsService, CasesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

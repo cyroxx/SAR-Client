@@ -1,6 +1,7 @@
 import {Injectable,EventEmitter,Output}     from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
+import {ConfigService} from './config.service';
 import {PouchService} from './pouch.service';
 
 declare var PouchDB: any;
@@ -18,13 +19,18 @@ export class AuthService {
 
   changeLoginState = new EventEmitter<boolean>();
 
-  constructor(PouchService:PouchService) {
+  ConfigService:ConfigService
+  remote:string
+
+  constructor(PouchService:PouchService, ConfigService:ConfigService) {
 
     console.log('initializing login...');
 
     //this.db = PouchService.initDB('mydb', {skipSetup:true});
 
-    this.db = new PouchDB('http://localhost:5984/mydb', {skipSetup: true});
+    this.remote = ConfigService.getConfiguration('db_remote_url');
+
+    this.db = new PouchDB(this.remote+'_users/', {skipSetup: true});
 
 
     var self = this;
