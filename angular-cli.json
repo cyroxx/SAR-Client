@@ -14,6 +14,7 @@
         "favicon.ico",
         "fonts",
         "img",
+        "config",
         "index.js",
         "js"
       ],
