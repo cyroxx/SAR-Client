@@ -66,7 +66,7 @@ export class PouchService {
 		let changedIndex = null;
 
 		this.databases[db_title]['data'].forEach((doc, index) => {
-
+			console.log(doc);
 			if (doc._id === change.id) {
 				changedDoc = doc;
 				changedIndex = index;

@@ -7,22 +7,22 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-            <a class="navbar-brand" href="#"> <span>{{title}}</span><br>Safe-Passage</a>
+            <a class="navbar-brand" routerLink="/"> <span>{{title}}</span><br>Safe-Passage</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-left">
                 <li>
-                    <a routerLink="/cases" ng-class="{active: state=='caseview'}">
+                    <a routerLink="/cases">
                         <span>Mode</span><br>
                         <i class="zmdi zmdi-map"></i> Cases</a>
                 </li>
                 <li>
-                    <a routerLink="/" ng-class="{active: state=='map'}" id="showMapView" ng-click="changeStatus('map');">
+                    <a routerLink="/" ng-class="{active: state=='map'}" id="showMapView">
                         <span> </span><br>
                         <i class="zmdi zmdi-view-module"></i> Map</a>
                 </li>
 
-                <li><a href="#" id="createCase" (click)="showCreateCaseModal()"><span>Create</span><br>New Case</a></li>
+                <li><a routerLink="/" id="createCase" (click)="showCreateCaseModal()"><span>Create</span><br>New Case</a></li>
 
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -36,7 +36,7 @@
                     </a>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span></span><br><b id="header_username"></b></a>
+                    <a routerLink="/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span></span><br><b id="header_username"></b></a>
                     <ul class="dropdown-menu" role="menu">
                         <li>
                             <a href="https://app.sea-watch.org/admin/public/admin/dashboard"><i class="fa fa-tachometer"></i> Admin Dashboard</a>

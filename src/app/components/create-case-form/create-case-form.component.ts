@@ -3,8 +3,10 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 
 import { AppComponent } from '../../app.component'
 
-import { Case, Status, BoatType, BoatCondition, Location } from '../../interfaces/case';
+import { Case, Status, BoatType, BoatCondition, Location, LocationType } from '../../interfaces/case';
 import { ModalContainer, Modal } from '../../interfaces/modalcontainer';
+import { CasesService } from '../../services/cases.service';
+import { LocationsService } from '../../services/locations.service';
 
 @Component({
     selector: 'create-case-form',
@@ -20,8 +22,10 @@ export class CreateCaseFormComponent implements OnInit {
     public createCaseForm: FormGroup;
     public events: any[] = []; // use later to display form changes
 
-    @Input()
     case: Case;
+    
+    @Input()
+    caseId: string;
 
     state: Status;
     stateList: any;
@@ -35,7 +39,7 @@ export class CreateCaseFormComponent implements OnInit {
     boatConditionList: any;
     boatConditionKeys: string[];
 
-    constructor(private _fb: FormBuilder) {
+    constructor(private _fb: FormBuilder, private caseService: CasesService, private locationService: LocationsService) {
         this.hideCreateCaseForm = true;
 
         this.stateList = Status;
@@ -48,27 +52,37 @@ export class CreateCaseFormComponent implements OnInit {
         this.boatConditionKeys = Object.keys(this.boatConditionList).filter(Number);
 
         this.case = new Case();
+        this.case._id = new Date().toISOString() + "-reportedBy-SW2";
     } // form builder simplify form initialization
 
     ngOnInit() {
         // we will initialize our form model here
-        //this.case = new Case();
+        //if caseId is present from input load it from the database
+        if(this.caseId){
+            let self = this;
 
+            this.caseService.getCase(this.caseId).then(function(c){                
+                self.case = <Case> c;
+                
+                self.locationService.getLastLocationForForeignKey( self.caseId ).then(function(loc){
+                    self.case.location = <Location> loc.rows[0].doc;
+                    
+                });
+            });
+        }
+        
     }
 
     save() {
         this.submitted = true; // set form submit to true
-
-        // check if model is valid
-        // if valid, save in database
-        console.log(this.case);
+        this.caseService.store(this.case);
     }
 
     getCurrentPosition() {
-        console.log(this.case);
         navigator.geolocation.getCurrentPosition((position) => {
             //console.log(position);
-            this.case.location = new Location(<number>position.coords.longitude, <number>position.coords.latitude, <number>position.coords.heading, <number>position.timestamp);
+            //@TODO add reporter from currently logged in user
+            this.case.location = new Location(<number>position.coords.longitude, <number>position.coords.latitude, <number>position.coords.heading, <number>position.timestamp, this.case._id, LocationType.Case);
         });
     }
 
