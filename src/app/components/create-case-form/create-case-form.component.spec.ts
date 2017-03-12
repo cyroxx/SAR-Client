@@ -11,9 +11,9 @@ describe('CreateCaseFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreateCaseFormComponent ]
+      declarations: [CreateCaseFormComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

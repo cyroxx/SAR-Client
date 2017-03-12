@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { RouterModule }   from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { TopNavComponent } from './components/top-nav/top-nav.component';
@@ -12,12 +12,12 @@ import { MapViewComponent } from './components/map-view/map-view.component';
 import { LogInComponent } from './components/log-in/log-in.component';
 import { CreateCaseFormComponent } from './components/create-case-form/create-case-form.component';
 
-import {ConfigService} from './services/config.service';
-import {PouchService} from './services/pouch.service';
-import {LocationsService} from './services/locations.service';
-import {CasesService} from './services/cases.service';
-import {ModalService} from './services/modal.service';
-import {ModalPlaceholderComponent } from './components/modalplaceholder/modalplaceholder.component';
+import { ConfigService } from './services/config.service';
+import { PouchService } from './services/pouch.service';
+import { LocationsService } from './services/locations.service';
+import { CasesService } from './services/cases.service';
+import { ModalService } from './services/modal.service';
+import { ModalPlaceholderComponent } from './components/modalplaceholder/modalplaceholder.component';
 import { CaseListComponent } from './components/case-list/case-list.component';
 
 
@@ -48,7 +48,7 @@ import { CaseListComponent } from './components/case-list/case-list.component';
       }
     ])
   ],
-  providers: [ConfigService,PouchService, ModalService, LocationsService, CasesService],
+  providers: [ConfigService, PouchService, ModalService, LocationsService, CasesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

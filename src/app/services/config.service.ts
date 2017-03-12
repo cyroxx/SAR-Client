@@ -1,14 +1,14 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 declare var app_config: any;
 
 @Injectable()
 export class ConfigService {
-	constructor() {}
+  constructor() { }
 
-	private result: Object;
+  private result: Object;
 
-	getConfiguration(key) { 
-	    return app_config[key]
-	}
+  getConfiguration(key) {
+    return app_config[key]
+  }
 }
