@@ -1,8 +1,8 @@
-import {Injectable,EventEmitter,Output}     from '@angular/core';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import { Injectable, EventEmitter, Output } from '@angular/core';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import {ConfigService} from './config.service';
-import {PouchService} from './pouch.service';
+import { ConfigService } from './config.service';
+import { PouchService } from './pouch.service';
 
 declare var PouchDB: any;
 declare var localStorage: any;
@@ -19,10 +19,10 @@ export class AuthService {
 
   changeLoginState = new EventEmitter<boolean>();
 
-  ConfigService:ConfigService
-  remote:string
+  ConfigService: ConfigService
+  remote: string
 
-  constructor(PouchService:PouchService, ConfigService:ConfigService) {
+  constructor(PouchService: PouchService, ConfigService: ConfigService) {
 
     console.log('initializing login...');
 
@@ -30,14 +30,14 @@ export class AuthService {
 
     this.remote = ConfigService.getConfiguration('db_remote_url');
 
-    this.db = new PouchDB(this.remote+'_users/', {skipSetup: true});
+    this.db = new PouchDB(this.remote + '_users/', { skipSetup: true });
 
 
     var self = this;
-  	self.changeLoginStateTo(false);
+    self.changeLoginStateTo(false);
 
 
-    this.db.getSession(function (err, response) {
+    this.db.getSession(function(err, response) {
 
       console.log('...getting session:')
       if (err) {
@@ -47,7 +47,7 @@ export class AuthService {
         self.changeLoginStateTo(false);
       } else {
         //store returned sessiondata
-        if(response.ok)
+        if (response.ok)
           self.sessiondata = response.userCtx
 
         self.changeLoginStateTo(true);
@@ -62,9 +62,9 @@ export class AuthService {
   }
 
   //@param userdata {username:string, password:string}
-  login(userdata){
+  login(userdata) {
     var self = this;
-    this.db.login(userdata.username, userdata.password, function (err, response) {
+    this.db.login(userdata.username, userdata.password, function(err, response) {
       if (err) {
         console.log(err)
         if (err.name === 'unauthorized') {
@@ -72,8 +72,8 @@ export class AuthService {
         } else {
           // cosmic rays, a meteor, etc.
         }
-      }else{
-        if(response.ok)
+      } else {
+        if (response.ok)
           self.sessiondata = response;
 
         localStorage.username = userdata.username;
@@ -84,11 +84,11 @@ export class AuthService {
       }
     });
   }
-  logout(){
+  logout() {
     return this.db.logout()
   }
   is_logged_in() {
-  	return this.logged_in
+    return this.logged_in
   }
   getUserData() {
     return this.sessiondata;

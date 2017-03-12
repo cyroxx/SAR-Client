@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthService} from 'app/services/auth.service';
+import { AuthService } from 'app/services/auth.service';
 
 @Component({
   selector: 'log-in-window',
   templateUrl: './log-in.component.html',
   styleUrls: ['./log-in.component.css'],
-  providers:[AuthService]
+  providers: [AuthService]
 })
 export class LogInComponent implements OnInit {
   loginData = {}
   AuthService
-  logged_in:boolean
-  proceedOffline:boolean //if true, login window disapears
-  constructor(AuthService:AuthService) { 
+  logged_in: boolean
+  proceedOffline: boolean //if true, login window disapears
+  constructor(AuthService: AuthService) {
     this.logged_in = false
     this.proceedOffline = false
     this.AuthService = AuthService
@@ -23,15 +23,15 @@ export class LogInComponent implements OnInit {
   ngOnInit() {
   }
 
-  hideLoginState(){
-    return this.proceedOffline||this.logged_in
+  hideLoginState() {
+    return this.proceedOffline || this.logged_in
   }
 
-  doLogin(){
-  	console.log('login submitted...')
+  doLogin() {
+    console.log('login submitted...')
     this.AuthService.login(this.loginData);
   }
-  proceed(){
+  proceed() {
     console.log('proceed offline...')
     console.log(this.hideLoginState())
     this.proceedOffline = true

@@ -7,33 +7,33 @@ export class StatusesService {
   statuses;
   constructor() {
 
-  	this.statuses = [
+    this.statuses = [
       {
-        index:'need_help',
-        title:'Need Help'
+        index: 'need_help',
+        title: 'Need Help'
       },
       {
-        index:'critical_target',
-        title:'Critical'
+        index: 'critical_target',
+        title: 'Critical'
       },
       {
-        index:'confirmed_target',
-        title:'Confirmed'
+        index: 'confirmed_target',
+        title: 'Confirmed'
       },
       {
-        index:'possible_target',
-        title:'Possible Target'
+        index: 'possible_target',
+        title: 'Possible Target'
       },
       {
-        index:'attended',
-        title:'Attended'
+        index: 'attended',
+        title: 'Attended'
       },
       {
-        index:'closed',
-        title:'Closed'
+        index: 'closed',
+        title: 'Closed'
       }
-  	];
-  	
+    ];
+
 
   }
 

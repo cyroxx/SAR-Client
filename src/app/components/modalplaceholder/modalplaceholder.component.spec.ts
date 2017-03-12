@@ -11,9 +11,9 @@ describe('ModalplaceholderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ModalplaceholderComponent ]
+      declarations: [ModalplaceholderComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

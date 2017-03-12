@@ -18,15 +18,15 @@ export class CasesService {
     console.log(currentCase);
     this.locationService.store(currentCase.location);
     this
-    .pouchService
-    .db('cases')
-    .post(this.getStorableForm(currentCase))
-    .then(function(response){
-      console.log(response)
-    })
-    .catch(function(err){
-      console.error(err);
-    });
+      .pouchService
+      .db('cases')
+      .post(this.getStorableForm(currentCase))
+      .then(function(response) {
+        console.log(response)
+      })
+      .catch(function(err) {
+        console.error(err);
+      });
   }
 
 
@@ -36,20 +36,20 @@ export class CasesService {
     return this.pouchService.get('cases');
   }
 
-  getCase(id: string){
+  getCase(id: string) {
     return Promise.resolve(this.pouchService.db('cases').get(id));
   }
 
-    /**
-     * Converts this object into a storable without circular
-     * dependencies.
-     * Removes location
-     */
-   private getStorableForm(c: Case){
-        let selfCopy = Object.assign({}, c);
-        delete selfCopy.location;
-        return selfCopy;
-    }
+  /**
+   * Converts this object into a storable without circular
+   * dependencies.
+   * Removes location
+   */
+  private getStorableForm(c: Case) {
+    let selfCopy = Object.assign({}, c);
+    delete selfCopy.location;
+    return selfCopy;
+  }
 
 
 }
