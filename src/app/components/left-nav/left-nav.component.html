@@ -1,15 +1,23 @@
 <div class="col-sm-2 col-md-2 sidebar">
-                <ul class="nav nav-sidebar">
-                  	<li><h3>Vehicles</h3></li>
+  <ul class="nav nav-sidebar">
+    <li>
+      <h3>Vehicles</h3>
+    </li>
+    <li *ngFor="let vehicle of vehicles;" class="vehicle filter" data-id="1337">
+      <a href="#">{{vehicle.title}}</a>
+    </li>
+    <li class="vehicle filter" data-id="all">
+      <a href="#">All</a>
+    </li>
 
-                  
-                    <li *ngFor="let vehicle of vehicles;" class="vehicle filter" data-id="1337"><a href="#">{{vehicle.title}}</a></li>
-                  	<li class="vehicle filter" data-id="all"><a href="#">All<!--<span class="label label-danger pull-right"></span>--></a></li>
-
-                  
-                    <li><h3>Status</h3></li>
-
-
-                    <li *ngFor="let status of statuses;" class="filter status " data-class="{{status.index}}" [ngClass]="status.index"><a href="#">{{status.title}}</a></li>
-                </ul>
-        </div>
+    <li>
+      <h3>Status</h3>
+    </li>
+    <li *ngFor="let status of statuses; let i = index;" class="filter status"
+        data-class="{{status.index}}" [ngClass]="status.index">
+      <a href="#" (click)="filter_by_status(i)">
+        {{status.title}}
+      </a>
+    </li>
+  </ul>
+</div>

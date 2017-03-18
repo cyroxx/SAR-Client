@@ -7,8 +7,10 @@ export class MapService {
   mapContainerId;
   maptype;
 
+  markers = {};
+
   constructor() {
-    this.maptype = 'OSM'
+    this.maptype = 'OSM';
   }
 
   getMapObject() {
@@ -18,11 +20,16 @@ export class MapService {
     return this.map;
   }
 
-  setMarker(x: number, y: number, description?: string) {
-    var marker = L.marker([x, y]).addTo(this.getMapObject());
+  setMarker(id: string, x: number, y: number, description?: string) {
+    // remove potential old marker
+    if (id in this.markers) {
+      L.removeLayer(this.markers[id]);
+    }
+    let marker = L.marker([x, y]).addTo(this.getMapObject());
     if (description) {
       marker.bindPopup(description);
     }
+    this.markers[id] = marker;
     return marker;
   }
 
@@ -30,13 +37,12 @@ export class MapService {
   initMap() {
     //init leaflet
     this.mapContainerId = 'client_map_container';
-    this.startLocation = [32.46, 16.87]
-    this.maptype = 'osm'
+    this.startLocation = [32.46, 16.87];
+    this.maptype = 'osm';
 
-    this.map = L.map(this.mapContainerId, '')
+    this.map = L.map(this.mapContainerId, '');
     this.map.options.maxZoom = 9;
-    this.map.setView(this.startLocation, 7);;
-    var self = this;
+    this.map.setView(this.startLocation, 7);
     switch (this.maptype) {
       case 'offline-map':
         /*Not working until maptiles are added to the repo*/
