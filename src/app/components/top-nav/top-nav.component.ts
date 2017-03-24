@@ -4,6 +4,7 @@ import { AppModule } from '../../app.module';
 import { CreateCaseFormComponent } from '../create-case-form/create-case-form.component';
 import { CaseListComponent } from '../case-list/case-list.component';
 import { ModalService } from '../../services/modal.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'top-nav',
@@ -13,19 +14,27 @@ import { ModalService } from '../../services/modal.service';
 
 export class TopNavComponent implements OnInit {
   title: string;
-
-  constructor(private modalService: ModalService) {
+  authService
+  constructor(private modalService: ModalService, AuthService: AuthService) {
     this.title = 'top nav'
+    this.authService = AuthService
   }
 
   ngOnInit() {
+
+  }
+
+  logout() {
+    console.log('logout called');
+    window.localStorage.clear()
+    this.authService.logout()
+    console.log('logout worked...');
   }
 
   showCreateCaseModal() {
     this.modalService.create<CreateCaseFormComponent>(AppModule, CreateCaseFormComponent,
       {
       });
-
   }
 
 }

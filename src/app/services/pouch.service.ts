@@ -16,6 +16,13 @@ export class PouchService {
     this.remote = this.remote.replace(/\/?$/, '/');
 
   }
+
+
+  reinitializeDBs() {
+    for (var key in this.databases) {
+      this.initDB(key);
+    }
+  }
   initDB(db_title: string, options?: any) {
 
     if (!this.databases) {
@@ -106,6 +113,9 @@ export class PouchService {
 
         this.databases[db_title]['data'] = [];
 
+        console.log('result.rows');
+        console.log(result.rows);
+
         let docs = result.rows.map((row) => {
           this.databases[db_title]['data'].push(row.doc);
         });
@@ -118,7 +128,7 @@ export class PouchService {
 
       }).catch((error) => {
 
-        console.log(error);
+        resolve([]);
 
       });
 

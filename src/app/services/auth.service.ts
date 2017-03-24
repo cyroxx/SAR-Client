@@ -1,17 +1,21 @@
 import { Injectable, EventEmitter, Output } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Router } from '@angular/router';
+
 
 import { ConfigService } from './config.service';
 import { PouchService } from './pouch.service';
 
 declare var PouchDB: any;
 declare var localStorage: any;
+declare var window: any;
 @Injectable()
 export class AuthService {
+  router
   logged_in;
   db;
   sessiondata; // used to store couch user object 
-
+  pouchService;
   // Observable navItem source
   private _loginStateSource = new BehaviorSubject<boolean>(false);
   // Observable navItem stream
@@ -22,12 +26,15 @@ export class AuthService {
   ConfigService: ConfigService
   remote: string
 
-  constructor(PouchService: PouchService, ConfigService: ConfigService) {
+  constructor(PouchService: PouchService, ConfigService: ConfigService, Router: Router) {
+
+    this.router = Router;
+
+    this.pouchService = PouchService;
 
     console.log('initializing login...');
 
     //this.db = PouchService.initDB('mydb', {skipSetup:true});
-
     this.remote = ConfigService.getConfiguration('db_remote_url');
 
     this.db = new PouchDB(this.remote + '_users/', { skipSetup: true });
@@ -35,7 +42,6 @@ export class AuthService {
 
     var self = this;
     self.changeLoginStateTo(false);
-
 
     this.db.getSession(function(err, response) {
 
@@ -58,7 +64,9 @@ export class AuthService {
 
 
   changeLoginStateTo(loginState) {
+
     this.changeLoginState.emit(loginState)
+
   }
 
   //@param userdata {username:string, password:string}
@@ -80,11 +88,17 @@ export class AuthService {
         localStorage.password = userdata.password;
         self.changeLoginStateTo(true);
 
+        //rerender
+        window.location = window.location.href + 'index.html';
+
+
         console.log('...log in successful');
       }
     });
   }
   logout() {
+
+    this.changeLoginStateTo(false);
     return this.db.logout()
   }
   is_logged_in() {
