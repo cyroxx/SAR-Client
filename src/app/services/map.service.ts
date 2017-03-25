@@ -38,7 +38,7 @@ export class MapService {
     //init leaflet
     this.mapContainerId = 'client_map_container';
     this.startLocation = [32.46, 16.87];
-    this.maptype = 'osm';
+    this.maptype = 'offline-map';
 
     this.map = L.map(this.mapContainerId, '');
     this.map.options.maxZoom = 9;
