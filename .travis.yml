@@ -27,6 +27,8 @@ deploy:
   file:
     - "dist-builder/*.AppImage"
     - "dist-builder/*.dmg"
+    - "dist-builder/latest.yml"
+    - "dist-builder/latest-mac.json"
   skip_cleanup: true
   on:
     tags: true
