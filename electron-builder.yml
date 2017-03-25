@@ -35,4 +35,4 @@ nsis:
   artifactName: ${name}-${version}.${ext}
 
 win:
-  target: nsis
+  target: portable

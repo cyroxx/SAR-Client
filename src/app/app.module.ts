@@ -14,6 +14,7 @@ import { CreateCaseFormComponent } from './components/create-case-form/create-ca
 
 import { ConfigService } from './services/config.service';
 import { PouchService } from './services/pouch.service';
+import { AuthService } from './services/auth.service';
 import { LocationsService } from './services/locations.service';
 import { CasesService } from './services/cases.service';
 import { ModalService } from './services/modal.service';
@@ -52,6 +53,7 @@ import { StatusesService } from './services/statuses.service';
     ])
   ],
   providers: [
+    AuthService,
     ConfigService,
     PouchService,
     ModalService,
