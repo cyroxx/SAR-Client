@@ -12,6 +12,16 @@ export class CasesService {
 
   constructor(private pouchService: PouchService, private locationService: LocationsService) {
     this.db = this.pouchService.initDB('cases');
+    this.db.createIndex({
+      index: {
+        fields: ['state']
+      }
+    }).then(function(result) {
+      console.log('Created an index on cases:state');
+    }).catch(function(err) {
+      console.log('Failed to create an index on cases:state');
+      console.log(err);
+    });
   }
 
   store(currentCase: Case) {
@@ -22,7 +32,7 @@ export class CasesService {
       .db('cases')
       .post(this.getStorableForm(currentCase))
       .then(function(response) {
-        console.log(response)
+        console.log(response);
       })
       .catch(function(err) {
         console.error(err);
@@ -38,6 +48,10 @@ export class CasesService {
 
   getCase(id: string) {
     return Promise.resolve(this.pouchService.db('cases').get(id));
+  }
+
+  getCasesMatching(where: any) {
+    return Promise.resolve(this.db.find({ selector: where }));
   }
 
   /**
