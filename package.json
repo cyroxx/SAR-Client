@@ -32,7 +32,9 @@
     "pack:build:mac": "build -c electron-builder.yml --mac --x64",
     "pack:build:win": "build -c electron-builder.yml --win --ia32",
     "pack:build:linux": "build -c electron-builder.yml --linux --x64",
-    "postinstall": "unzip ./src/unzip_me.zip && rm -rf ./src/unzip.me"
+    "postinstall": "run-s maptiles:clean maptiles:extract",
+    "maptiles:clean": "rimraf src/MapQuest",
+    "maptiles:extract": "extract-zip data/map-tiles.zip src/"
   },
   "private": true,
   "dependencies": {
@@ -60,6 +62,7 @@
     "codelyzer": "~2.0.0-beta.1",
     "electron": "^1.4.15",
     "electron-builder": "^16.3.0",
+    "extract-zip": "^1.6.0",
     "jasmine-core": "^2.5.2",
     "jasmine-spec-reporter": "^3.2.0",
     "karma": "^1.5.0",
@@ -70,6 +73,7 @@
     "karma-remap-istanbul": "^0.6.0",
     "npm-run-all": "^4.0.1",
     "protractor": "~5.1.1",
+    "rimraf": "^2.6.1",
     "ts-node": "^2.1.0",
     "tslint": "^4.3.0",
     "typescript": "~2.2.1",
