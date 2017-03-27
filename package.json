@@ -31,7 +31,7 @@
     "pack:linux": "run-s ng:build:noprogress pack:build:linux",
     "pack:build:mac": "build -c electron-builder.yml --mac --x64",
     "pack:build:win": "build -c electron-builder.yml --win --ia32",
-    "pack:build:linux": "build -c electron-builder.yml --linux --x64"
+    "pack:build:linux": "build -c electron-builder.yml --linux --x64",
     "postinstall": "unzip ./src/unzip_me.zip && rm -rf ./src/unzip.me"
   },
   "private": true,
