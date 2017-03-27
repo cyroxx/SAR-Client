@@ -1,43 +1,60 @@
 /****** MODAL ******/
 
 .cases-container {
-    padding: 30px;
     width: 100% !important;
-    background-color: #F7F7F7;
-    margin: 35px auto;
     border-radius: 2px;
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
     overflow: hidden;
+    min-height:100vh;
+    margin:80px -15px 0px -15px;
+
 }
 
 .cases {
     list-style-type: none;
+    margin:0px;
+    padding:0px;
 }
 
-.case {
+.case>.row {
     background: #ffffff;
-    margin: 15px 25px;
-    padding: 15px 15px;
-    font-size: 1.25rem;
+    margin: 15px 0px;
+    padding: 15px 7px;
+    font-size: 1.5rem;
+    border-top:2px solid #727881;
 }
+
+.case>.meta {
+    margin-bottom:-7px;
+    color:rgba(114,120,129,0.7);
+}
+
+.caseID {font-weight:500;}
+
+.case.closed .row {border-color:rgb(66, 183, 42);}
+.case.attended .row, .case.possibletarget .row, .case.confirmed .row {border-color:#ff8942;}
+.case.critical .row, .case.need_help .row {border-color:#ff4344;}
+
+.case .status {font-weight:500;}
 
 .case .status:before {
     font-family: Material-Design-Iconic-Font;
     content: '\f29b';
+    margin-right:7px;
+    font-weight:normal;
 }
 
-.critical:before,
-.needhelp:before {
+.status.critical,
+.status.needhelp {
     color: #ff4344;
 }
 
-.confirmed:before,
-.possibletarget:before,
-.attended:before {
+.status.confirmed,
+.status.possibletarget,
+.status.attended {
     color: #ff8942;
 }
 
-.closed:before {
+.status.closed {
     color: rgb(66, 183, 42);
 }
 

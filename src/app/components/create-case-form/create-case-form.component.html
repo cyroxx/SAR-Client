@@ -2,11 +2,21 @@
     <div class="modal-container" id="createCaseContainer">
         <form id="createCaseForm" #f="ngForm">
             <div class="row">
-                <h2 class="col-md-3">
-                    Create Case
-                </h2>
+                <div class="col-md-12 header">
+                    <h2>
+                        Create a new case
+                    </h2>
+                    <p>A case contains all the important informations and should be updated durring the mission.</p>
+                </div>
+
             </div>
-            <div class="row " style="background:rgba(55,60,68,0.05);">
+            <div class="row ">
+             <div class="form-group col-md-3">
+                    <label for="boat_type">Boat Type</label>
+                    <select class="form-control" name="boat_type" id="boat_type" [(ngModel)]="case.boatType">
+                <option *ngFor="let key of boatTypeKeys" [value]="key">{{boatTypeList[key]}}</option>
+              </select>
+                </div>
                 <div class="form-group col-md-3">
                     <label for="boat_status">Status</label>
                     <select class="form-control" name="boat_status" id="boat_status" [(ngModel)]="case.state">
@@ -15,12 +25,7 @@
                     <input type="hidden" name="source_type" value="create_case_form">
                 </div>
 
-                <div class="form-group col-md-3">
-                    <label for="boat_type">Boat Type</label>
-                    <select class="form-control" name="boat_type" id="boat_type" [(ngModel)]="case.boatType">
-                <option *ngFor="let key of boatTypeKeys" [value]="key">{{boatTypeList[key]}}</option>
-              </select>
-                </div>
+               
 
                 <div class="form-group col-md-3">
                     <label for="boat_condition">Condition</label>
@@ -57,7 +62,7 @@
                 </div>
 
             </div>
-            <div class="row" style="background:rgba(55,60,68,0.05);">
+            <div class="row">
                 <div class="form-group col-md-3">
                     <label for="passenger_count">How many people?</label>
                     <input class="form-control" name="passenger_count" type="number" placeholder="How many people?" id="passenger_count" [(ngModel)]="case.peopleCount">
