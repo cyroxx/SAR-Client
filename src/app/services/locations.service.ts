@@ -39,7 +39,7 @@ export class LocationsService {
   store(location: Location) {
 
     console.log(location);
-    
+
     this
       .pouchService
       .db('locations')

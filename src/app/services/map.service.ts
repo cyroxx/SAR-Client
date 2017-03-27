@@ -50,7 +50,7 @@ export class MapService {
 
 
   initMap() {
-    //init leaflet
+    // init leaflet
     this.mapContainerId = 'client_map_container';
     this.startLocation = [32.46, 16.87];
     this.maptype = 'osm';

@@ -55,7 +55,7 @@ export class CreateCaseFormComponent implements OnInit {
     this.case = new Case();
     this.case._id = new Date().toISOString() + "-reportedBy-" + authService.getUserData().name;
     console.log(this.case._id);
-    
+
   } // form builder simplify form initialization
 
   ngOnInit() {
@@ -64,7 +64,7 @@ export class CreateCaseFormComponent implements OnInit {
     let self = this;
 
     if (this.caseId) {
-      
+
       this.caseService.getCase(this.caseId).then(function(c) {
         self.case = <Case>c;
 
@@ -73,8 +73,8 @@ export class CreateCaseFormComponent implements OnInit {
 
         });
       });
-    }else{
-      self.case.location = new Location(0,0,0,0, self.case._id, LocationType.Case);
+    } else {
+      self.case.location = new Location(0, 0, 0, 0, self.case._id, LocationType.Case);
     }
 
   }
