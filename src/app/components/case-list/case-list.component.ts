@@ -35,7 +35,7 @@ export class CaseListComponent implements OnInit {
   }
 
   getStateClassName(state: number): string {
-    return this.getStateName(state).replace(/ /g, '').toLowerCase();
+    return state ? this.getStateName(state).replace(/ /g, '').toLowerCase() : '';
   }
 
   getBoatTypeName(type: number): string {

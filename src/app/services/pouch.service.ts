@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-
+import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ConfigService } from './config.service';
 
 declare var PouchDB: any;
@@ -7,16 +8,23 @@ declare var PouchDB: any;
 export class PouchService {
   databases: any
   remote: string
-  ConfigService: ConfigService
+  //onlineState: any
+  ConfigService: ConfigService  // Observable string source
+  onlineStateSource = new Subject<string>();
+
+  public onlineState = new BehaviorSubject('offline');
+  // Observable string stream
   constructor(ConfigService: ConfigService) {
 
     this.remote = ConfigService.getConfiguration('db_remote_url');
 
     //add traling slash if necessary
     this.remote = this.remote.replace(/\/?$/, '/');
-
   }
-
+  // Service message commands
+  setOnlineState(state: string) {
+    this.onlineState.next(state)
+  }
 
   reinitializeDBs() {
     for (var key in this.databases) {
@@ -31,6 +39,8 @@ export class PouchService {
     //init object for db
     this.databases[db_title] = {}
 
+    var self = this;
+
     console.log('initializing database ' + db_title);
     if (options) {
       console.log('...with following options:');
@@ -39,26 +49,47 @@ export class PouchService {
       let options = {
         live: true,
         retry: true,
-        continuous: true
+        continuous: true,
+        include_docs: true
       };
     }
 
     //init pouchDB instance
-    this.databases[db_title]['pouchDB'] = new PouchDB(this.remote + db_title, options);
-
-    /*if(!options.skipSetup){
-        this.databases[db_title]['pouchDB'] = new PouchDB(db_title);
-
+    //this.databases[db_title]['pouchDB'] = new PouchDB(this.remote + db_title, options);
+    if (!options || !options.skipSetup) {
+      this.databases[db_title]['pouchDB'] = new PouchDB(db_title);
 
       //add title to remote, apply options
-      console.log('initting sync:'+this.remote+db_title);
-    this.databases[db_title]['pouchDB'].sync(this.remote+db_title, options);
-}else{
-    console.log('...skipping setup');
-    //skipsetup is used if user needs
-    //to authenticate before
-    //the database can be initialized
-}*/
+      console.log('initting sync:' + this.remote + db_title);
+      this.databases[db_title]['pouchDB'].sync(this.remote + db_title, options).on('change', function(change) {
+        // yo, something changed!
+        console.log('on: true');
+
+        self.setOnlineState('online')
+      }).on('paused', function(error) {
+        //sync is paused even if everything is ok
+        //so the state will only be changed if it
+        //is paused because of an error
+
+        if (error) {
+          self.setOnlineState('offline')
+          console.log('on: false');
+        }
+      }).on('active', function(info) {
+        console.log('on: true');
+        self.setOnlineState('online')
+        // replication was resumed
+      }).on('error', function(err) {
+        console.log('on: false');
+        self.setOnlineState('offline')
+        // totally unhandled error (shouldn't happen)
+      });
+    } else {
+      console.log('...skipping setup');
+      //skipsetup is used if user needs
+      //to authenticate before
+      //the database can be initialized
+    }
     this.databases[db_title]['data'] = []
     return this.databases[db_title]['pouchDB']
 
@@ -97,6 +128,9 @@ export class PouchService {
         this.databases[db_title]['data'].push(change.doc);
       }
     }
+  }
+  getConnectionState() {
+    return this.onlineState;
   }
   get(db_title: string) {
     if (this.databases[db_title]['data'] && this.databases[db_title]['data'].length > 0) {
