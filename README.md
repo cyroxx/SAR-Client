@@ -29,6 +29,7 @@ Version examples:
 Use the following commands to create a new release:
 
 1. Set new `version` in `package.json` (e.g. `"version": "0.2.0-rc.1"`)
+1. Commit `package.json` file after changing the version
 1. Create git tag via `git tag v<version>` (e.g. `git tag v0.1.0-alpha.2`)
 1. Push git tags via `git push --tags`
 
