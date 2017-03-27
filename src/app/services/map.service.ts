@@ -29,12 +29,12 @@ export class MapService {
   }
 
   setMarker(id: string, group: string, x: number, y: number, description?: string) {
-    let layer_group = this.getLayerGroup(group);
+    const layer_group = this.getLayerGroup(group);
     // remove potential old marker
     if (id in this.markers) {
-      L.removeLayer(this.markers[id]);
+      layer_group.removeLayer(this.markers[id]);
     }
-    let marker = L.marker([x, y]).addTo(layer_group);
+    const marker = L.marker([x, y]).addTo(layer_group);
     if (description) {
       marker.bindPopup(description);
     }
