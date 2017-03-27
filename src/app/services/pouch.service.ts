@@ -122,7 +122,7 @@ export class PouchService {
 
         resolve(this.databases[db_title]['data']);
 
-        this.databases[db_title]['pouchDB'].changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
+        this.databases[db_title]['pouchDB'].changes({ live: true, retry: true, since: 'now', include_docs: true }).on('change', (change) => {
           this.handleChange(db_title, change);
         });
 
