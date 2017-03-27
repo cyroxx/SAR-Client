@@ -10,13 +10,11 @@ export class VehiclesService {
 
   constructor(pouchService: PouchService) {
     this.pouchService = pouchService
-    this.db = new Promise(resolve => {
-      resolve(this.pouchService.initDB('vehicles'))
-    });
+    this.db = this.pouchService.initDB('vehicles');
   }
 
   getVehicles() {
-    
+
     if (this.data) {
       return Promise.resolve(this.data);
     }
