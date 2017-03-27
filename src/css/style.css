@@ -3,7 +3,8 @@
 body {
     background:rgb(231,233,236);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
-
+    -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -53,12 +54,6 @@ a.gray:hover, a.gray:focus, a.gray:active {
     background-color:rgba(0,152,207,1);
  }
 
-  /* Navbar */
-
-    .navbar {
-        height:64px; 
-      }
-
     .navbar-inverse .navbar-toggle {
       margin-top:14px;
     }
@@ -80,7 +75,7 @@ a.gray:hover, a.gray:focus, a.gray:active {
 
 
     .nav-sidebar {
-        padding-top: 12px;
+        padding-top: 0px;
         position:fixed;
         padding-bottom:30px;
     }
@@ -91,16 +86,30 @@ a.gray:hover, a.gray:focus, a.gray:active {
 
     .navbar-brand, .navbar-inverse .navbar-brand:hover, .navbar-inverse .navbar-brand:focus{
       height:auto;
-      background-color: rgb(23,175,250);
+      background:#17affa;
+      font-weight:700;
+      padding:15px;
+      margin-right:15px;
+          line-height: 1em;
+          font-size:19px;
+
     }
 
-    .navbar-inverse .navbar-nav > li > a,  a.navbar-brand {
+
+    .navbar-inverse .navbar-nav > li > a{
       font-size:19px;
-      font-weight:900;
+      font-weight:400;
       line-height:1em;
-      padding-top:9px;
-      padding-bottom:14px; /* Font-Fix */
+      padding:15px;
+      margin-bottom:-1px;
     }
+    .navbar-nav .zmdi {
+      font-size: 15px;
+      margin-top: 2px;
+     display: block;
+       float: left;
+      margin-right: 7px;
+}
 
     .navbar-inverse .navbar-nav > li.dropdown > a:after {
       padding-left:5px;
@@ -166,7 +175,7 @@ a.gray:hover, a.gray:focus, a.gray:active {
     .navbar-inverse #online_status .status_icon {
       display:block;
       position:relative;
-      margin-top:26px;
+      margin-top:6px;
     }
 
          .pulse {
@@ -403,7 +412,6 @@ a.gray:hover, a.gray:focus, a.gray:active {
 
     @media (min-width:1170px) {
             .navbar-brand {
-            width: 16.66666667vw;
         }
     }
 
@@ -782,7 +790,7 @@ a.gray:hover, a.gray:focus, a.gray:active {
     box-shadow: 0 0 10px 0 rgba(170, 183, 193, .25);
     background: #fff;
     overflow:auto;
-    margin-top:30px;
+    margin-top:0px;
   }
 
   .lost_password a {
@@ -982,14 +990,14 @@ a.gray:hover, a.gray:focus, a.gray:active {
     z-index: 9999;
 }
 @keyframes pulse_animation {
-	0% { transform: scale(1); }
-	30% { transform: scale(1); }
-	40% { transform: scale(1.08); }
-	50% { transform: scale(1); }
-	60% { transform: scale(1); }
-	70% { transform: scale(1.05); }
-	80% { transform: scale(1); }
-	100% { transform: scale(1); }
+  0% { transform: scale(1); }
+  30% { transform: scale(1); }
+  40% { transform: scale(1.08); }
+  50% { transform: scale(1); }
+  60% { transform: scale(1); }
+  70% { transform: scale(1.05); }
+  80% { transform: scale(1); }
+  100% { transform: scale(1); }
 }
 
 #loadingOverlay img{
