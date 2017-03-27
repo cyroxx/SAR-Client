@@ -36,3 +36,4 @@ Use the following commands to create a new release:
 
 Travis-CI and Appveyor will build the release artifacts and upload them to
 the GitHub releases page.
+
