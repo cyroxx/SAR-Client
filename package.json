@@ -18,7 +18,7 @@
     "pretest": "run-s fmt",
     "pree2e": "webdriver-manager update --standalone false --gecko false",
     "e2e": "protractor",
-    "preng:build": "run-s fmt",
+    "preng:build": "run-s fmt maptiles:clean maptiles:extract",
     "ng:build": "ng build",
     "ng:build:watch": "ng build --watch",
     "ng:build:noprogress": "ng build --progress=false",
@@ -32,9 +32,8 @@
     "pack:build:mac": "build -c electron-builder.yml --mac --x64",
     "pack:build:win": "build -c electron-builder.yml --win --ia32",
     "pack:build:linux": "build -c electron-builder.yml --linux --x64",
-    "postinstall": "run-s maptiles:clean maptiles:extract",
     "maptiles:clean": "rimraf src/MapQuest",
-    "maptiles:extract": "extract-zip data/map-tiles.zip src/"
+    "maptiles:extract": "extract-zip data/map-tiles.zip dist/"
   },
   "private": true,
   "dependencies": {
