@@ -7,6 +7,7 @@ import { Case, Status, BoatType, BoatCondition, Location, LocationType } from '.
 import { ModalContainer, Modal } from '../../interfaces/modalcontainer';
 import { CasesService } from '../../services/cases.service';
 import { LocationsService } from '../../services/locations.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'create-case-form',
@@ -39,7 +40,7 @@ export class CreateCaseFormComponent implements OnInit {
   boatConditionList: any;
   boatConditionKeys: string[];
 
-  constructor(private _fb: FormBuilder, private caseService: CasesService, private locationService: LocationsService) {
+  constructor(private _fb: FormBuilder, private caseService: CasesService, private locationService: LocationsService, private authService: AuthService) {
     this.hideCreateCaseForm = true;
 
     this.stateList = Status;
@@ -52,15 +53,18 @@ export class CreateCaseFormComponent implements OnInit {
     this.boatConditionKeys = Object.keys(this.boatConditionList).filter(Number);
 
     this.case = new Case();
-    this.case._id = new Date().toISOString() + "-reportedBy-SW2";
+    this.case._id = new Date().toISOString() + "-reportedBy-" + authService.getUserData().name;
+    console.log(this.case._id);
+    
   } // form builder simplify form initialization
 
   ngOnInit() {
     // we will initialize our form model here
     //if caseId is present from input load it from the database
-    if (this.caseId) {
-      let self = this;
+    let self = this;
 
+    if (this.caseId) {
+      
       this.caseService.getCase(this.caseId).then(function(c) {
         self.case = <Case>c;
 
@@ -69,6 +73,8 @@ export class CreateCaseFormComponent implements OnInit {
 
         });
       });
+    }else{
+      self.case.location = new Location(0,0,0,0, self.case._id, LocationType.Case);
     }
 
   }

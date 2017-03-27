@@ -16,10 +16,38 @@ export class VehiclesService {
   }
 
   getVehicles() {
+    
+    if (this.data) {
+      return Promise.resolve(this.data);
+    }
 
-    console.log('getting vehicles');
-    console.log(this.pouchService.get('vehicles'));
-    return Promise.resolve(this.pouchService.get('vehicles'));
+    return new Promise(resolve => {
+
+      this.db.allDocs({
+
+        include_docs: true
+
+      }).then((result) => {
+
+        this.data = [];
+
+        let docs = result.rows.map((row) => {
+          this.data.push(row.doc);
+        });
+
+        resolve(this.data);
+
+        this.db.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
+          this.pouchService.handleChange('vehicles', change);
+        });
+
+      }).catch((error) => {
+
+        console.log(error);
+
+      });
+
+    });
 
   }
   seedVehicles() {

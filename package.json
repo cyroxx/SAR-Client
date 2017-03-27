@@ -30,7 +30,7 @@
     "pack:win": "run-s ng:build:noprogress pack:build:win",
     "pack:linux": "run-s ng:build:noprogress pack:build:linux",
     "pack:build:mac": "build -c electron-builder.yml --mac --x64",
-    "pack:build:win": "build -c electron-builder.yml --win --ia32 --x64",
+    "pack:build:win": "build -c electron-builder.yml --win --ia32",
     "pack:build:linux": "build -c electron-builder.yml --linux --x64"
   },
   "private": true,
@@ -58,7 +58,7 @@
     "@types/node": "^6.0.42",
     "codelyzer": "~2.0.0-beta.1",
     "electron": "^1.4.15",
-    "electron-builder": "^15.3.0",
+    "electron-builder": "^16.3.0",
     "jasmine-core": "^2.5.2",
     "jasmine-spec-reporter": "^3.2.0",
     "karma": "^1.5.0",

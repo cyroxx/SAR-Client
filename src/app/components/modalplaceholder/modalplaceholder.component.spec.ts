@@ -5,7 +5,7 @@ import { DebugElement } from '@angular/core';
 
 import { ModalPlaceholderComponent } from './modalplaceholder.component';
 
-describe('ModalplaceholderComponent', () => {
+describe('ModalPlaceholderComponent', () => {
   let component: ModalPlaceholderComponent;
   let fixture: ComponentFixture<ModalPlaceholderComponent>;
 
