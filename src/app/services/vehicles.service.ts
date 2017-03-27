@@ -14,7 +14,6 @@ export class VehiclesService {
   }
 
   getVehicles() {
-
     if (this.data) {
       return Promise.resolve(this.data);
     }

@@ -18,8 +18,11 @@ import { AuthService } from './services/auth.service';
 import { LocationsService } from './services/locations.service';
 import { CasesService } from './services/cases.service';
 import { ModalService } from './services/modal.service';
+import { MapService } from 'app/services/map.service';
+
 import { ModalPlaceholderComponent } from './components/modalplaceholder/modalplaceholder.component';
 import { CaseListComponent } from './components/case-list/case-list.component';
+import { StatusesService } from './services/statuses.service';
 
 
 @NgModule({
@@ -49,7 +52,16 @@ import { CaseListComponent } from './components/case-list/case-list.component';
       }
     ])
   ],
-  providers: [ConfigService, PouchService, ModalService, LocationsService, CasesService, AuthService],
+  providers: [
+    AuthService,
+    ConfigService,
+    PouchService,
+    ModalService,
+    LocationsService,
+    CasesService,
+    MapService,
+    StatusesService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

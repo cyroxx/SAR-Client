@@ -19,6 +19,7 @@
     "pouchdb": "^6.1.1",
     "jquery": "^3.1.1",
     "pouchdb-authentication": "^0.5.5",
+    "pouchdb-find": "^0.10.5",
     "leaflet": "^1.0.3"
   }
 }
