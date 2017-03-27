@@ -12,7 +12,7 @@ export class PouchService {
   ConfigService: ConfigService  // Observable string source
   onlineStateSource = new Subject<string>();
 
-  public onlineState = new BehaviorSubject(null);
+  public onlineState = new BehaviorSubject('offline');
   // Observable string stream
   constructor(ConfigService: ConfigService) {
 
@@ -23,7 +23,7 @@ export class PouchService {
   }
   // Service message commands
   setOnlineState(state: string) {
-    this.onlineStateSource.next(state)
+    this.onlineState.next(state)
   }
 
   reinitializeDBs() {

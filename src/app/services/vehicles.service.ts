@@ -10,42 +10,16 @@ export class VehiclesService {
 
   constructor(pouchService: PouchService) {
     this.pouchService = pouchService
-    this.db = this.pouchService.initDB('vehicles')
+    this.db = new Promise(resolve => {
+      resolve(this.pouchService.initDB('vehicles'))
+    });
   }
 
   getVehicles() {
 
-    if (this.data) {
-      return Promise.resolve(this.data);
-    }
-
-    return new Promise(resolve => {
-
-      this.db.allDocs({
-
-        include_docs: true
-
-      }).then((result) => {
-
-        this.data = [];
-
-        let docs = result.rows.map((row) => {
-          this.data.push(row.doc);
-        });
-
-        resolve(this.data);
-
-        this.db.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
-          this.pouchService.handleChange('vehicles', change);
-        });
-
-      }).catch((error) => {
-
-        console.log(error);
-
-      });
-
-    });
+    console.log('getting vehicles');
+    console.log(this.pouchService.get('vehicles'));
+    return Promise.resolve(this.pouchService.get('vehicles'));
 
   }
   seedVehicles() {
