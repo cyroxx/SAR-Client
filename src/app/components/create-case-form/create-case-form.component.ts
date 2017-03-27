@@ -58,9 +58,10 @@ export class CreateCaseFormComponent implements OnInit {
   ngOnInit() {
     // we will initialize our form model here
     //if caseId is present from input load it from the database
-    if (this.caseId) {
-      let self = this;
+    let self = this;
 
+    if (this.caseId) {
+      
       this.caseService.getCase(this.caseId).then(function(c) {
         self.case = <Case>c;
 
@@ -69,6 +70,8 @@ export class CreateCaseFormComponent implements OnInit {
 
         });
       });
+    }else{
+      self.case.location = new Location(0,0,0,0, self.case._id, LocationType.Case);
     }
 
   }
