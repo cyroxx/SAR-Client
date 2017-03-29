@@ -66,10 +66,10 @@ export class CreateCaseFormComponent implements OnInit {
 
     if (this.caseId) {
 
-      this.caseService.getCase(this.caseId).then(function (c) {
+      this.caseService.getCase(this.caseId).then(function(c) {
         self.case = <Case>c;
 
-        self.locationService.getLastLocationForForeignKey(self.caseId).then(function (loc) {
+        self.locationService.getLastLocationForForeignKey(self.caseId).then(function(loc) {
           self.case.location = <Location>loc.rows[0].doc;
 
         });

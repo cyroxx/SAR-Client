@@ -61,12 +61,12 @@ export class PouchService {
 
       //add title to remote, apply options
       console.log('initing sync:' + this.remote + db_title + " with options " + options);
-      this.databases[db_title]['pouchDB'].sync(this.remote + db_title, options).on('change', function (change) {
+      this.databases[db_title]['pouchDB'].sync(this.remote + db_title, options).on('change', function(change) {
         // yo, something changed!
         console.log('on: true');
         console.log('remote change detected: ' + change);
         self.setOnlineState('online')
-      }).on('paused', function (error) {
+      }).on('paused', function(error) {
         //sync is paused even if everything is ok
         //so the state will only be changed if it
         //is paused because of an error
@@ -75,11 +75,11 @@ export class PouchService {
           self.setOnlineState('offline')
           console.log('on: false');
         }
-      }).on('active', function (info) {
+      }).on('active', function(info) {
         console.log('on: true');
         self.setOnlineState('online')
         // replication was resumed
-      }).on('error', function (err) {
+      }).on('error', function(err) {
         console.log('on: false');
         self.setOnlineState('offline')
         // totally unhandled error (shouldn't happen)
@@ -169,14 +169,14 @@ export class PouchService {
 
   }
 
-  find(db_title: string, where: any){
+  find(db_title: string, where: any) {
     if (this.databases[db_title]['pouchDB']) {
       return Promise.resolve(this.databases[db_title]['pouchDB'].find({ selector: where }));
     }
     return Promise.reject('No database with name [' + db_title + ']');
   }
 
-  findById(db_title: string, id: string){
+  findById(db_title: string, id: string) {
     if (this.databases[db_title]['pouchDB']) {
       return Promise.resolve(this.databases[db_title]['pouchDB'].get(id));
     }
