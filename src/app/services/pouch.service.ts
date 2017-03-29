@@ -46,7 +46,7 @@ export class PouchService {
       console.log('...with following options:');
       console.log(options)
     } else {
-      let options = {
+      options = {
         live: true,
         retry: true,
         continuous: true,
@@ -60,11 +60,11 @@ export class PouchService {
       this.databases[db_title]['pouchDB'] = new PouchDB(db_title);
 
       //add title to remote, apply options
-      console.log('initting sync:' + this.remote + db_title);
+      console.log('initing sync:' + this.remote + db_title + " with options " + options);
       this.databases[db_title]['pouchDB'].sync(this.remote + db_title, options).on('change', function (change) {
         // yo, something changed!
         console.log('on: true');
-
+        console.log('remote change detected: ' + change);
         self.setOnlineState('online')
       }).on('paused', function (error) {
         //sync is paused even if everything is ok
