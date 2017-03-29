@@ -35,9 +35,11 @@ export class MapViewComponent implements OnInit {
     this.casesService.getCases().then((data) => {
       this.cases = data;
       for (let incident of this.cases) {
-        let location_promise = this.locationsService.getLastLocationForForeignKey(incident._id);
+        let location_promise = this.locationsService.getLastLocationMatching({
+          'itemId': incident._id,
+        });
         location_promise.then((location) => {
-          let location_doc = location.rows[0].doc;
+          let location_doc = location.docs[0];
           if (!location_doc) {
             console.log('No location found for case: ' + incident._id);
             return;
@@ -58,9 +60,11 @@ export class MapViewComponent implements OnInit {
     this.vehiclesService.getVehicles().then((data) => {
       this.vehicles = data;
       for (let vehicle of this.vehicles) {
-        let location_promise = this.locationsService.getLastLocationForForeignKey(vehicle._id);
+        let location_promise = this.locationsService.getLastLocationMatching({
+          'itemId': vehicle._id,
+        });
         location_promise.then((location) => {
-          let location_doc = location.rows[0].doc;
+          let location_doc = location.docs[0];
           if (!location_doc) {
             console.log('No location found for vehicle: ' + vehicle.name);
             return;
