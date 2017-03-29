@@ -16,9 +16,9 @@ export class CasesService {
       index: {
         fields: ['state']
       }
-    }).then(function(result) {
+    }).then(function (result) {
       console.log('Created an index on cases:state');
-    }).catch(function(err) {
+    }).catch(function (err) {
       console.log('Failed to create an index on cases:state');
       console.log(err);
     });
@@ -31,10 +31,10 @@ export class CasesService {
       .pouchService
       .db('cases')
       .put(this.getStorableForm(currentCase))
-      .then(function(response) {
+      .then(function (response) {
         console.log(response);
       })
-      .catch(function(err) {
+      .catch(function (err) {
         console.error(err);
       });
   }
@@ -45,12 +45,31 @@ export class CasesService {
     return this.pouchService.get('cases');
   }
 
-  getCase(id: string){
+  getCase(id: string) {
     return this.pouchService.findById('cases', id);
   }
 
   getCasesMatching(where: any) {
     return this.pouchService.find('cases', where);
+  }
+
+  listenForChanges(caseId: string, onChange: Function) {
+    this.db.changes({
+      since: 'now',
+      live: true,
+      include_docs: true
+    }).on('change', function (change) {
+      console.log("CHANGE");
+      console.log(change);      
+      if (caseId === change.doc._id) {
+        onChange(change)
+      }
+    }).on('complete', function (info) {
+      console.log("COMPLETE");
+      console.log(info);
+    }).on('error', function (err) {
+      console.log(err);
+    });
   }
 
   /**

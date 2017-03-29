@@ -57,3 +57,7 @@
     padding-bottom: 7px;
     border-bottom: 2px solid rgba(114, 120, 129, 0.5);
 }
+
+.refresh-link {
+    cursor: pointer;
+}

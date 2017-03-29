@@ -22,8 +22,10 @@ export class CreateCaseFormComponent implements OnInit {
   hideCreateCaseForm;
   public createCaseForm: FormGroup;
   public events: any[] = []; // use later to display form changes
+  public edited: boolean = false;
 
   case: Case;
+  change: Case;
 
   @Input()
   caseId: string;
@@ -54,7 +56,6 @@ export class CreateCaseFormComponent implements OnInit {
 
     this.case = new Case();
     this.case._id = new Date().toISOString() + "-reportedBy-" + authService.getUserData().name;
-    console.log(this.case._id);
 
   } // form builder simplify form initialization
 
@@ -65,23 +66,35 @@ export class CreateCaseFormComponent implements OnInit {
 
     if (this.caseId) {
 
-      this.caseService.getCase(this.caseId).then(function(c) {
+      this.caseService.getCase(this.caseId).then(function (c) {
         self.case = <Case>c;
 
-        self.locationService.getLastLocationForForeignKey(self.caseId).then(function(loc) {
+        self.locationService.getLastLocationForForeignKey(self.caseId).then(function (loc) {
           self.case.location = <Location>loc.rows[0].doc;
 
         });
+
+        self.caseService.listenForChanges(self.case._id,
+          (change) => {
+            self.change = change.doc;
+            self.edited = true;
+          });
       });
     } else {
       self.case.location = new Location(0, 0, 0, 0, self.case._id, LocationType.Case);
     }
+
 
   }
 
   save() {
     this.submitted = true; // set form submit to true
     this.caseService.store(this.case);
+  }
+
+  refresh() {
+    this.case = this.change;
+    this.edited = false;
   }
 
   getCurrentPosition() {
