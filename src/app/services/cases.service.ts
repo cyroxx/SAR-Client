@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { PouchService } from '../services/pouch.service';
 import { LocationsService } from '../services/locations.service';
-import { Case, Location } from '../interfaces/case';
+import { Case } from '../interfaces/case';
+import { Location } from '../interfaces/location';
 
 @Injectable()
 export class CasesService {

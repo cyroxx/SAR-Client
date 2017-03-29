@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AppModule } from '../../app.module';
-import { Case, Status, BoatType, BoatCondition } from '../../interfaces/case';
+
+import { Case } from '../../interfaces/case';
+import { BoatType } from '../../interfaces/boat-type';
+import { BoatCondition } from '../../interfaces/boat-condition';
+import { Status } from '../../interfaces/status';
+
 import { CasesService } from '../../services/cases.service';
 import { CreateCaseFormComponent } from '../create-case-form/create-case-form.component';
 import { ModalService } from '../../services/modal.service';
