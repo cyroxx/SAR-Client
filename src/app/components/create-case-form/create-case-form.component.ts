@@ -60,8 +60,6 @@ export class CreateCaseFormComponent implements OnInit {
     this.boatConditionList = BoatCondition;
     this.boatConditionKeys = Object.keys(this.boatConditionList).filter(Number);
 
-    console.log(this.caseId);
-
     //typecast needed because we only have the id at this moment and we don't want
     //to explicitly initialize all the other fields
     this.case = <Case>{
