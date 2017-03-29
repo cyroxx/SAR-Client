@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ConfigService } from './config.service';
+import { Listener } from '../interfaces/listener';
 
 declare var PouchDB: any;
 @Injectable()
 export class PouchService {
   databases: any
   remote: string
+  remoteChangeListeners: Array<Listener>;
   //onlineState: any
   ConfigService: ConfigService  // Observable string source
   onlineStateSource = new Subject<string>();
@@ -20,7 +22,17 @@ export class PouchService {
 
     //add traling slash if necessary
     this.remote = this.remote.replace(/\/?$/, '/');
+
+    this.remoteChangeListeners = [];
   }
+
+  registerRemoteChangeListener(listener: Listener): void {
+    console.log("Registering Listener");
+
+    this.remoteChangeListeners.push(listener);
+
+  }
+
   // Service message commands
   setOnlineState(state: string) {
     this.onlineState.next(state)
@@ -31,6 +43,7 @@ export class PouchService {
       this.initDB(key);
     }
   }
+
   initDB(db_title: string, options?: any) {
 
     if (!this.databases) {
@@ -64,7 +77,14 @@ export class PouchService {
       this.databases[db_title]['pouchDB'].sync(this.remote + db_title, options).on('change', function(change) {
         // yo, something changed!
         console.log('on: true');
-        console.log('remote change detected: ' + change);
+        console.log('change detected: ');
+        console.log(change);
+
+        //notify all listeners for remote changes        
+        if (change.direction === 'pull') {
+          self.remoteChangeListeners.forEach((listener) => { listener.notify(change.change); });
+        }
+
         self.setOnlineState('online')
       }).on('paused', function(error) {
         //sync is paused even if everything is ok

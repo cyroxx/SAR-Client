@@ -41,8 +41,6 @@ export class LocationsService {
    * @param foreignKey the key of the case or vehicle 
    */
   getLastLocationMatching(where: any) {
-    console.log(where);
-
     return this.pouchService.find('locations', where);
   }
 

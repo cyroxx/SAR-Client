@@ -9,11 +9,14 @@ import { BoatType } from '../../interfaces/boat-type';
 import { BoatCondition } from '../../interfaces/boat-condition';
 import { Location } from '../../interfaces/location';
 import { LocationType } from '../../interfaces/location-type';
+import { Listener } from '../../interfaces/listener';
 
 import { ModalContainer, Modal } from '../../interfaces/modalcontainer';
 import { CasesService } from '../../services/cases.service';
 import { LocationsService } from '../../services/locations.service';
 import { AuthService } from '../../services/auth.service';
+import { PouchService } from '../../services/pouch.service';
+
 
 @Component({
   selector: 'create-case-form',
@@ -23,7 +26,7 @@ import { AuthService } from '../../services/auth.service';
 })
 
 @Modal()
-export class CreateCaseFormComponent implements OnInit {
+export class CreateCaseFormComponent implements OnInit, Listener {
   private submitted;
   hideCreateCaseForm;
   public createCaseForm: FormGroup;
@@ -48,7 +51,7 @@ export class CreateCaseFormComponent implements OnInit {
   boatConditionList: any;
   boatConditionKeys: string[];
 
-  constructor(private _fb: FormBuilder, private caseService: CasesService, private locationService: LocationsService, private authService: AuthService) {
+  constructor(private _fb: FormBuilder, private caseService: CasesService, private locationService: LocationsService, private authService: AuthService, private pouchService: PouchService) {
     this.hideCreateCaseForm = true;
 
     this.stateList = Status;
@@ -69,6 +72,8 @@ export class CreateCaseFormComponent implements OnInit {
   } // form builder simplify form initialization
 
   ngOnInit() {
+    this.pouchService.registerRemoteChangeListener(this);
+
     // we will initialize our form model here
     //if caseId is present from input load it from the database
     const self = this;
@@ -87,11 +92,6 @@ export class CreateCaseFormComponent implements OnInit {
 
         });
 
-        self.caseService.listenForChanges(self.case._id,
-          (change) => {
-            self.change = change.doc;
-            self.edited = true;
-          });
       });
     } else {
       this.case.location = {
@@ -108,13 +108,35 @@ export class CreateCaseFormComponent implements OnInit {
 
   }
 
+  notify(change): void {
+    console.log("CHANGE");
+    console.log(change);
+    change.docs.forEach((c) => {
+      console.log(c);
+
+      if (c._id === this.case._id) {
+        this.change = c;
+        this.edited = true;
+      }
+    });
+  }
+
   save() {
     this.submitted = true; // set form submit to true
     this.caseService.store(this.case);
   }
 
   refresh() {
+    const self = this;
+
     this.case = this.change;
+    this.locationService.getLastLocationMatching({
+      'itemId': this.caseId,
+    }).then(function(loc) {
+      console.log(loc);
+      self.case.location = <Location>loc.docs[0];
+
+    });
     this.edited = false;
   }
 

@@ -54,25 +54,6 @@ export class CasesService {
     return this.pouchService.find('cases', where);
   }
 
-  listenForChanges(caseId: string, onChange: Function) {
-    this.db.changes({
-      since: 'now',
-      live: true,
-      include_docs: true
-    }).on('change', function(change) {
-      console.log("CHANGE");
-      console.log(change);
-      if (caseId === change.doc._id) {
-        onChange(change)
-      }
-    }).on('complete', function(info) {
-      console.log("COMPLETE");
-      console.log(info);
-    }).on('error', function(err) {
-      console.log(err);
-    });
-  }
-
   /**
    * Converts this object into a storable without circular
    * dependencies.
