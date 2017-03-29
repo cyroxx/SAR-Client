@@ -41,17 +41,16 @@ export class CasesService {
 
 
   getCases() {
-
     console.log('getting cases');
     return this.pouchService.get('cases');
   }
 
-  getCase(id: string) {
-    return Promise.resolve(this.pouchService.db('cases').get(id));
+  getCase(id: string){
+    return this.pouchService.findById('cases', id);
   }
 
   getCasesMatching(where: any) {
-    return Promise.resolve(this.db.find({ selector: where }));
+    return this.pouchService.find('cases', where);
   }
 
   /**
