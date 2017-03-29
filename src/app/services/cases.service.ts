@@ -30,7 +30,7 @@ export class CasesService {
     this
       .pouchService
       .db('cases')
-      .post(this.getStorableForm(currentCase))
+      .put(this.getStorableForm(currentCase))
       .then(function(response) {
         console.log(response);
       })
