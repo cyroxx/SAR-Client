@@ -60,7 +60,7 @@ export class CreateCaseFormComponent implements OnInit {
 
     //typecast needed because we only have the id at this moment and we don't want
     //to explicitly initialize all the other fields
-    this.case = <Case> {
+    this.case = <Case>{
       _id: new Date().toISOString() + "-reportedBy-" + authService.getUserData().name
     };
 
@@ -75,10 +75,10 @@ export class CreateCaseFormComponent implements OnInit {
 
     if (this.caseId) {
 
-      this.caseService.getCase(this.caseId).then(function (c) {
+      this.caseService.getCase(this.caseId).then(function(c) {
         self.case = <Case>c;
 
-        self.locationService.getLastLocationForForeignKey(self.caseId).then(function (loc) {
+        self.locationService.getLastLocationForForeignKey(self.caseId).then(function(loc) {
           self.case.location = <Location>loc.rows[0].doc;
 
         });
