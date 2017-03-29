@@ -3,7 +3,13 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 
 import { AppComponent } from '../../app.component'
 
-import { Case, Status, BoatType, BoatCondition, Location, LocationType } from '../../interfaces/case';
+import { Case } from '../../interfaces/case';
+import { Status } from '../../interfaces/status';
+import { BoatType } from '../../interfaces/boat-type';
+import { BoatCondition } from '../../interfaces/boat-condition';
+import { Location } from '../../interfaces/location';
+import { LocationType } from '../../interfaces/location-type';
+
 import { ModalContainer, Modal } from '../../interfaces/modalcontainer';
 import { CasesService } from '../../services/cases.service';
 import { LocationsService } from '../../services/locations.service';
@@ -52,8 +58,12 @@ export class CreateCaseFormComponent implements OnInit {
     this.boatConditionList = BoatCondition;
     this.boatConditionKeys = Object.keys(this.boatConditionList).filter(Number);
 
-    this.case = new Case();
-    this.case._id = new Date().toISOString() + "-reportedBy-" + authService.getUserData().name;
+    //typecast needed because we only have the id at this moment and we don't want
+    //to explicitly initialize all the other fields
+    this.case = <Case>{
+      _id: new Date().toISOString() + "-reportedBy-" + authService.getUserData().name
+    };
+
     console.log(this.case._id);
 
   } // form builder simplify form initialization
@@ -61,7 +71,7 @@ export class CreateCaseFormComponent implements OnInit {
   ngOnInit() {
     // we will initialize our form model here
     //if caseId is present from input load it from the database
-    let self = this;
+    const self = this;
 
     if (this.caseId) {
 
@@ -74,7 +84,15 @@ export class CreateCaseFormComponent implements OnInit {
         });
       });
     } else {
-      self.case.location = new Location(0, 0, 0, 0, self.case._id, LocationType.Case);
+      this.case.location = {
+        _id: new Date().toISOString() + "-reportedBy-" + self.authService.getUserData().name,
+        longitude: 0,
+        latitude: 0,
+        heading: 0,
+        timestamp: 0,
+        itemId: self.case._id,
+        type: LocationType.Case
+      };
     }
 
   }
@@ -85,10 +103,19 @@ export class CreateCaseFormComponent implements OnInit {
   }
 
   getCurrentPosition() {
+    const self = this;
     navigator.geolocation.getCurrentPosition((position) => {
       //console.log(position);
       //@TODO add reporter from currently logged in user
-      this.case.location = new Location(<number>position.coords.longitude, <number>position.coords.latitude, <number>position.coords.heading, <number>position.timestamp, this.case._id, LocationType.Case);
+      self.case.location = {
+        _id: new Date().toISOString() + "-reportedBy-" + self.authService.getUserData().name,
+        longitude: position.coords.longitude,
+        latitude: position.coords.latitude,
+        heading: position.coords.heading,
+        timestamp: position.timestamp,
+        itemId: self.case._id,
+        type: LocationType.Case
+      };
     });
   }
 
