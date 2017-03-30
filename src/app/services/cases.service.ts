@@ -31,7 +31,7 @@ export class CasesService {
     this
       .pouchService
       .db('cases')
-      .post(this.getStorableForm(currentCase))
+      .put(this.getStorableForm(currentCase))
       .then(function(response) {
         console.log(response);
       })
@@ -42,17 +42,16 @@ export class CasesService {
 
 
   getCases() {
-
     console.log('getting cases');
     return this.pouchService.get('cases');
   }
 
   getCase(id: string) {
-    return Promise.resolve(this.pouchService.db('cases').get(id));
+    return this.pouchService.findById('cases', id);
   }
 
   getCasesMatching(where: any) {
-    return Promise.resolve(this.db.find({ selector: where }));
+    return this.pouchService.find('cases', where);
   }
 
   /**

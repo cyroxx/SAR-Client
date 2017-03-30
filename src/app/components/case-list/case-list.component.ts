@@ -30,7 +30,10 @@ export class CaseListComponent implements OnInit {
   ngOnInit() {
 
     this.caseService.getCases().then(data => {
-      this.cases = data;
+      this.cases = data.sort(
+        (a, b) => {
+          return a._id < b._id ? 1 : (a._id > b._id ? -1 : 0);
+        });
     });
 
   }

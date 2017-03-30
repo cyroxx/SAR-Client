@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ConfigService } from './config.service';
+import { Listener } from '../interfaces/listener';
 
 declare var PouchDB: any;
 @Injectable()
 export class PouchService {
   databases: any
   remote: string
+  remoteChangeListeners: Array<Listener>;
   //onlineState: any
   ConfigService: ConfigService  // Observable string source
   onlineStateSource = new Subject<string>();
@@ -20,7 +22,17 @@ export class PouchService {
 
     //add traling slash if necessary
     this.remote = this.remote.replace(/\/?$/, '/');
+
+    this.remoteChangeListeners = [];
   }
+
+  registerRemoteChangeListener(listener: Listener): void {
+    console.log("Registering Listener");
+
+    this.remoteChangeListeners.push(listener);
+
+  }
+
   // Service message commands
   setOnlineState(state: string) {
     this.onlineState.next(state)
@@ -31,6 +43,7 @@ export class PouchService {
       this.initDB(key);
     }
   }
+
   initDB(db_title: string, options?: any) {
 
     if (!this.databases) {
@@ -46,7 +59,7 @@ export class PouchService {
       console.log('...with following options:');
       console.log(options)
     } else {
-      let options = {
+      options = {
         live: true,
         retry: true,
         continuous: true,
@@ -60,10 +73,17 @@ export class PouchService {
       this.databases[db_title]['pouchDB'] = new PouchDB(db_title);
 
       //add title to remote, apply options
-      console.log('initting sync:' + this.remote + db_title);
+      console.log('initing sync:' + this.remote + db_title + " with options " + options);
       this.databases[db_title]['pouchDB'].sync(this.remote + db_title, options).on('change', function(change) {
         // yo, something changed!
         console.log('on: true');
+        console.log('change detected: ');
+        console.log(change);
+
+        //notify all listeners for remote changes        
+        if (change.direction === 'pull') {
+          self.remoteChangeListeners.forEach((listener) => { listener.notify(change.change); });
+        }
 
         self.setOnlineState('online')
       }).on('paused', function(error) {
@@ -104,7 +124,6 @@ export class PouchService {
     let changedIndex = null;
 
     this.databases[db_title]['data'].forEach((doc, index) => {
-      console.log(doc);
       if (doc._id === change.id) {
         changedDoc = doc;
         changedIndex = index;
@@ -168,5 +187,19 @@ export class PouchService {
 
     });
 
+  }
+
+  find(db_title: string, where: any) {
+    if (this.databases[db_title]['pouchDB']) {
+      return Promise.resolve(this.databases[db_title]['pouchDB'].find({ selector: where }));
+    }
+    return Promise.reject('No database with name [' + db_title + ']');
+  }
+
+  findById(db_title: string, id: string) {
+    if (this.databases[db_title]['pouchDB']) {
+      return Promise.resolve(this.databases[db_title]['pouchDB'].get(id));
+    }
+    return Promise.reject('No database with name [' + db_title + ']');
   }
 }
