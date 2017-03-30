@@ -6,6 +6,7 @@
                     <h2>
                         {{caseId ? 'Edit case: ' + case._id : 'Create a new case'}}
                     </h2>
+                    <p *ngIf="caseId">Last updated at {{case.lastUpdate}} by {{case.reportedBy}}</p>
                     <p>A case contains all the important informations and should be updated durring the mission.</p>
                 </div>
             </div>

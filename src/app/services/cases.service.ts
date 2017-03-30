@@ -29,6 +29,7 @@ export class CasesService {
   store(currentCase: Case) {
     console.log(currentCase);
     currentCase.reportedBy = this.authService.getUserData().name;
+    currentCase.lastUpdate = new Date().toISOString();
     //just to be safe check for undefined location
     if (currentCase.location) {
       currentCase.location.reportedBy = this.authService.getUserData().name;
