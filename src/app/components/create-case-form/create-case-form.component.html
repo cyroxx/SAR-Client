@@ -11,7 +11,7 @@
             </div>
             <div class="row">
                 <div *ngIf="edited" class="alert alert-danger" role="alert">
-                    <span class="sr-only">Warning:</span> Case has been changed by another person! <a class="refresh-link" (click)="refresh()">Please relaod!</a>
+                    <span class="sr-only">Warning:</span> Case has been changed by {{case.reportedBy ? case.reportedBy : 'someone else'}}! <a class="refresh-link" (click)="refresh()">Please relaod!</a>
                 </div>
             </div>
             <div class="row ">

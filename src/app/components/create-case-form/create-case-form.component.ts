@@ -152,7 +152,8 @@ export class CreateCaseFormComponent implements OnInit, Listener {
         heading: position.coords.heading,
         timestamp: position.timestamp,
         itemId: self.case._id,
-        type: LocationType.Case
+        type: LocationType.Case,
+        reportedBy: self.authService.getUserData().name
       };
     });
   }

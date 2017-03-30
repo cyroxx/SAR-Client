@@ -8,6 +8,7 @@ export interface Location {
   timestamp: number;
   itemId: string;
   type: LocationType;
+  reportedBy?: string;
 
   /*constructor(longitude: number, latitude: number, heading: any, timestamp: number, itemId: string, type: LocationType, reporter?: string, id?: string) {
     this.longitude = longitude;

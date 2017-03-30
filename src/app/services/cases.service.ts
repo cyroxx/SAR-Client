@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PouchService } from '../services/pouch.service';
+import { AuthService } from '../services/auth.service';
 import { LocationsService } from '../services/locations.service';
 import { Case } from '../interfaces/case';
 import { Location } from '../interfaces/location';
@@ -11,7 +12,7 @@ export class CasesService {
   data: Array<any>;
   remote;
 
-  constructor(private pouchService: PouchService, private locationService: LocationsService) {
+  constructor(private pouchService: PouchService, private locationService: LocationsService, private authService: AuthService) {
     this.db = this.pouchService.initDB('cases');
     this.db.createIndex({
       index: {
@@ -27,7 +28,12 @@ export class CasesService {
 
   store(currentCase: Case) {
     console.log(currentCase);
-    this.locationService.store(currentCase.location);
+    currentCase.reportedBy = this.authService.getUserData().name;
+    //just to be safe check for undefined location
+    if (currentCase.location) {
+      currentCase.location.reportedBy = this.authService.getUserData().name;
+      this.locationService.store(currentCase.location);
+    }
     this
       .pouchService
       .db('cases')
