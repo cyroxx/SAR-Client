@@ -15,4 +15,6 @@ export interface Case {
   womenCount: number;
   childrenCount: number;
   disabledCount: number;
+  lastUpdate: string;
+  reportedBy?: string;
 }

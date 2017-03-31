@@ -4,14 +4,15 @@
             <div class="row">
                 <div class="col-md-12 header">
                     <h2>
-                        Create a new case
+                        {{caseId ? 'Edit case: ' + case._id : 'Create a new case'}}
                     </h2>
+                    <p *ngIf="caseId">Last updated at {{case.lastUpdate}} by {{case.reportedBy}}</p>
                     <p>A case contains all the important informations and should be updated durring the mission.</p>
                 </div>
             </div>
             <div class="row">
                 <div *ngIf="edited" class="alert alert-danger" role="alert">
-                    <span class="sr-only">Warning:</span> Case has been changed by another person! <a class="refresh-link" (click)="refresh()">Please relaod!</a>
+                    <span class="sr-only">Warning:</span> Case has been changed by {{case.reportedBy ? case.reportedBy : 'someone else'}}! <a class="refresh-link" (click)="refresh()">Please relaod!</a>
                 </div>
             </div>
             <div class="row ">
