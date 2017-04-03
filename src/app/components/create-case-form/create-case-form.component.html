@@ -39,28 +39,32 @@
                 <div class="col-md-3" ng>
                     <label> Position</label>
                     <div class="btn-group ">
-                        <a class="btn btn-default btn-sm" [ngClass]="{ 'active': casemeta.location_type == GMS }" (click)="updateLocationType('GMS')">GMS</a> 
+                        <a class="btn btn-default btn-sm" [ngClass]="{ 'active': casemeta.location_type == DMS }" (click)="updateLocationType('DMS')">DMS</a> 
                         <a class="btn btn-default btn-sm" [ngClass]="{ 'active': casemeta.location_type == DG }" (click)="updateLocationType('DG');">DG</a>
                         {{casemeta.location_type}}
                     </div>
                 </div>
                 <div class="form-group col-md-3">
                     <label for="lat">Lat</label>
-                    <input class="form-control" type="text" placeholder="Lat" name="lat" id="lat" [(ngModel)]="case.location && case.location.latitude">
+                    <input class="form-control" type="text" placeholder="Lat" name="lat" id="lat" [(ngModel)]="casemeta.dd_location && casemeta.dd_location.latitude">
                     <!--DMS input area-->
                     <div class="dms_input">
                         <div class="row">
                             <div class="col-xs-2">
                                 <label for="dms_lat_degree">Latitude</label>
-                                <input class="form-control" type="text" placeholder="D" name="dms_lat_degree" id="dms_lat_degree" [(ngModel)]="case.dms_location && case.dms_location.latitude_degree">
+                                <input class="form-control" type="number" placeholder="D" name="dms_lat_degree" id="dms_lat_degree" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.latitude.degree">
                             </div>
                             <div class="col-xs-2">
                                 <label>&nbsp;</label>
-                                <input class="form-control" type="text" placeholder="M" name="dms_lat_minute" id="dms_lat_minute" [(ngModel)]="case.dms_location && case.dms_location.latitude_minute">
+                                <input class="form-control" type="number" placeholder="M" name="dms_lat_minute" id="dms_lat_minute" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.latitude.minute">
                             </div>
                             <div class="col-xs-2">
                                 <label>&nbsp;</label>
-                                <input class="form-control" type="text" placeholder="D" name="latitude_second" id="latitude_second" [(ngModel)]="case.dms_location && case.dms_location.latitude_second">
+                                <input class="form-control" type="number" placeholder="D" name="latitude_second" id="latitude_second" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.latitude.second">
+                            </div>
+                            <div class="col-xs-2">
+                                <label>&nbsp;</label>
+                                <input class="form-control" type="text" placeholder="D" name="latitude_direction" id="latitude_directioon" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.latitude.direction">
                             </div>
                         </div>
                     </div>
@@ -69,22 +73,26 @@
 
                 <div class="form-group col-md-3">
                     <label for="lon">Lon</label>
-                    <input class="form-control" type="text" placeholder="Lon" name="lon" id="lon" [(ngModel)]="case.location && case.location.longitude">
+                    <input class="form-control" type="text" placeholder="Lon" name="lon" id="lon" [(ngModel)]="casemeta.dd_location && casemeta.dd_location.longitude">
 
                     <!--DMS input area-->
                     <div class="dms_input">
                         <div class="row">
                             <div class="col-xs-2">
-                                <label for="dms_lon_degree">Longitude</label>
-                                <input class="form-control" type="text" placeholder="D" name="dms_lon_degree" id="dms_lon_degree" [(ngModel)]="case.dms_location && case.dms_location.longitude_degree">
+                                <label for="dms_lat_degree">Latitude</label>
+                                <input class="form-control" type="number" placeholder="D" name="dms_lat_degree" id="dms_lat_degree" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.longitude.degree">
                             </div>
                             <div class="col-xs-2">
                                 <label>&nbsp;</label>
-                                <input class="form-control" type="text" placeholder="M" name="dms_lon_minute" id="dms_lon_minute" [(ngModel)]="case.dms_location && case.dms_location.longitude_minute">
+                                <input class="form-control" type="number" placeholder="M" name="dms_lat_minute" id="dms_lat_minute" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.longitude.minute">
                             </div>
                             <div class="col-xs-2">
                                 <label>&nbsp;</label>
-                                <input class="form-control" type="text" placeholder="D" name="longitude_second" id="longitude_second" [(ngModel)]="case.dms_location && case.dms_location.longitude_second">
+                                <input class="form-control" type="number" placeholder="D" name="longitude_second" id="longitude_second" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.longitude.second">
+                            </div>
+                            <div class="col-xs-2">
+                                <label>&nbsp;</label>
+                                <input class="form-control" type="text" placeholder="D" name="longitude_direction" id="longitude_directioon" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.longitude.direction">
                             </div>
                         </div>
                     </div>
