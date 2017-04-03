@@ -12,12 +12,12 @@ export class AppComponent {
   logged_in;
   hideCreateCaseForm;
   windowOptions = { 'showstartoverlay': false };
-  constructor(VehiclesService: VehiclesService) {
+  constructor(private vehiclesService: VehiclesService) {
 
-    console.log(VehiclesService.getVehicles());
-    this.title = 'SAR Client'
+    console.log(vehiclesService.getVehicles());
+    this.title = 'SAR Client';
 
-    this.windowOptions = { 'showstartoverlay': true }
+    this.windowOptions = { 'showstartoverlay': true };
 
     this.hideCreateCaseForm = true;
 

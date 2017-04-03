@@ -6,26 +6,35 @@ export class MapService {
   startLocation;
   mapContainerId;
   maptype;
-
   markers = {};
+  layer_groups = {};
 
   constructor() {
     this.maptype = 'OSM';
   }
 
   getMapObject() {
-    if (this.map == null) {
-      this.initMap();
+    if (!this.map) {
+      return this.initMap();
     }
     return this.map;
   }
 
-  setMarker(id: string, x: number, y: number, description?: string) {
+  getLayerGroup(group_name: string) {
+    if (!(group_name in this.layer_groups)) {
+      this.layer_groups[group_name] = L.layerGroup();
+      this.layer_groups[group_name].addTo(this.map);
+    }
+    return this.layer_groups[group_name];
+  }
+
+  setMarker(id: string, group: string, x: number, y: number, description?: string) {
+    const layer_group = this.getLayerGroup(group);
     // remove potential old marker
     if (id in this.markers) {
-      L.removeLayer(this.markers[id]);
+      layer_group.removeLayer(this.markers[id]);
     }
-    let marker = L.marker([x, y]).addTo(this.getMapObject());
+    const marker = L.marker([x, y]).addTo(layer_group);
     if (description) {
       marker.bindPopup(description);
     }
@@ -33,9 +42,15 @@ export class MapService {
     return marker;
   }
 
+  filter_on_cases(cases) {
+    const group = this.getLayerGroup('cases');
+    const case_markers = group.getLayers();
+    console.log(case_markers);
+  }
+
 
   initMap() {
-    //init leaflet
+    // init leaflet
     this.mapContainerId = 'client_map_container';
     this.startLocation = [32.46, 16.87];
     this.maptype = 'offline-map';

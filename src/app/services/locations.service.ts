@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PouchService } from '../services/pouch.service';
-import { Location } from '../interfaces/case';
+import { Location } from '../interfaces/location';
 
 @Injectable()
 export class LocationsService {
@@ -13,6 +13,16 @@ export class LocationsService {
   constructor(pouchService: PouchService) {
     this.pouchService = pouchService;
     this.db = this.pouchService.initDB('locations');
+    this.db.createIndex({
+      index: {
+        fields: ['itemId']
+      }
+    }).then(function(result) {
+      console.log('Created an index on location:itemId');
+    }).catch(function(err) {
+      console.log('Failed to create an index on location:itemId');
+      console.log(err);
+    });
   }
 
   getLocations() {
@@ -30,13 +40,13 @@ export class LocationsService {
    * 
    * @param foreignKey the key of the case or vehicle 
    */
-  getLastLocationForForeignKey(foreignKey: string) {
-    return Promise.resolve(this.pouchService.db('locations').allDocs(
-      { include_docs: true, itemId: foreignKey, descending: true, limit: 1 }
-    ));
+  getLastLocationMatching(where: any) {
+    return this.pouchService.find('locations', where);
   }
 
   store(location: Location) {
+
+    console.log(location);
 
     this
       .pouchService

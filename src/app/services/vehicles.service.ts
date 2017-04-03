@@ -10,7 +10,7 @@ export class VehiclesService {
 
   constructor(pouchService: PouchService) {
     this.pouchService = pouchService
-    this.db = this.pouchService.initDB('vehicles')
+    this.db = this.pouchService.initDB('vehicles');
   }
 
   getVehicles() {

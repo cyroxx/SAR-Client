@@ -32,6 +32,7 @@ var location_service  = new function(){
               "heading": "0",
               "origin": "EPAK",
               "type": "vehicle_location",
+              "itemId": res[i].doc._id
             }).then(function (response) {
               // handle response
               console.log(response);

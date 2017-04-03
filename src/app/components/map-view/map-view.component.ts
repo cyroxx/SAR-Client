@@ -5,33 +5,24 @@ import { CasesService } from 'app/services/cases.service'
 import { LocationsService } from '../../services/locations.service';
 
 declare var L: any;
+declare var map: any;
 @Component({
   selector: 'app-map-view',
   templateUrl: './map-view.component.html',
   styleUrls: ['./map-view.component.css'],
-  providers: [MapService, VehiclesService, CasesService, LocationsService]
 })
 export class MapViewComponent implements OnInit {
   public map: any;
-
-  mapService;
-  casesService;
-  vehiclesService;
-  locationsService;
 
   vehicles;
   cases;
 
   constructor(
-    mapService: MapService,
-    vehiclesService: VehiclesService,
-    casesService: CasesService,
-    locationsService: LocationsService,
+    private vehiclesService: VehiclesService,
+    private casesService: CasesService,
+    private locationsService: LocationsService,
+    private mapService: MapService,
   ) {
-    this.mapService = mapService;
-    this.vehiclesService = vehiclesService;
-    this.casesService = casesService;
-    this.locationsService = locationsService;
   }
 
   ngOnInit() {
@@ -44,15 +35,18 @@ export class MapViewComponent implements OnInit {
     this.casesService.getCases().then((data) => {
       this.cases = data;
       for (let incident of this.cases) {
-        let location_promise = this.locationsService.getLastLocationForForeignKey(incident._id);
+        let location_promise = this.locationsService.getLastLocationMatching({
+          'itemId': incident._id,
+        });
         location_promise.then((location) => {
-          let location_doc = location.rows[0].doc;
+          let location_doc = location.docs[0];
           if (!location_doc) {
             console.log('No location found for case: ' + incident._id);
             return;
           }
           this.mapService.setMarker(
-            'case-' + incident._id,
+            incident._id,
+            'cases',
             location_doc.latitude,
             location_doc.longitude,
             incident._id,
@@ -66,15 +60,18 @@ export class MapViewComponent implements OnInit {
     this.vehiclesService.getVehicles().then((data) => {
       this.vehicles = data;
       for (let vehicle of this.vehicles) {
-        let location_promise = this.locationsService.getLastLocationForForeignKey(vehicle._id);
+        let location_promise = this.locationsService.getLastLocationMatching({
+          'itemId': vehicle._id,
+        });
         location_promise.then((location) => {
-          let location_doc = location.rows[0].doc;
+          let location_doc = location.docs[0];
           if (!location_doc) {
             console.log('No location found for vehicle: ' + vehicle.name);
             return;
           }
           this.mapService.setMarker(
-            'vehicle-' + vehicle._id,
+            vehicle._id,
+            'vehicles',
             location_doc.latitude,
             location_doc.longitude,
             vehicle.name,

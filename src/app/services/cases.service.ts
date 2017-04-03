@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { PouchService } from '../services/pouch.service';
+import { AuthService } from '../services/auth.service';
 import { LocationsService } from '../services/locations.service';
-import { Case, Location } from '../interfaces/case';
+import { Case } from '../interfaces/case';
+import { Location } from '../interfaces/location';
 
 @Injectable()
 export class CasesService {
@@ -10,19 +12,35 @@ export class CasesService {
   data: Array<any>;
   remote;
 
-  constructor(private pouchService: PouchService, private locationService: LocationsService) {
+  constructor(private pouchService: PouchService, private locationService: LocationsService, private authService: AuthService) {
     this.db = this.pouchService.initDB('cases');
+    this.db.createIndex({
+      index: {
+        fields: ['state']
+      }
+    }).then(function(result) {
+      console.log('Created an index on cases:state');
+    }).catch(function(err) {
+      console.log('Failed to create an index on cases:state');
+      console.log(err);
+    });
   }
 
   store(currentCase: Case) {
     console.log(currentCase);
-    this.locationService.store(currentCase.location);
+    currentCase.reportedBy = this.authService.getUserData().name;
+    currentCase.lastUpdate = new Date().toISOString();
+    //just to be safe check for undefined location
+    if (currentCase.location) {
+      currentCase.location.reportedBy = this.authService.getUserData().name;
+      this.locationService.store(currentCase.location);
+    }
     this
       .pouchService
       .db('cases')
-      .post(this.getStorableForm(currentCase))
+      .put(this.getStorableForm(currentCase))
       .then(function(response) {
-        console.log(response)
+        console.log(response);
       })
       .catch(function(err) {
         console.error(err);
@@ -31,13 +49,16 @@ export class CasesService {
 
 
   getCases() {
-
     console.log('getting cases');
     return this.pouchService.get('cases');
   }
 
   getCase(id: string) {
-    return Promise.resolve(this.pouchService.db('cases').get(id));
+    return this.pouchService.findById('cases', id);
+  }
+
+  getCasesMatching(where: any) {
+    return this.pouchService.find('cases', where);
   }
 
   /**

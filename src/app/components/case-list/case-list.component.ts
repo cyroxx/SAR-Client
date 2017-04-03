@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AppModule } from '../../app.module';
-import { Case, Status, BoatType, BoatCondition } from '../../interfaces/case';
+
+import { Case } from '../../interfaces/case';
+import { BoatType } from '../../interfaces/boat-type';
+import { BoatCondition } from '../../interfaces/boat-condition';
+import { Status } from '../../interfaces/status';
+
 import { CasesService } from '../../services/cases.service';
 import { CreateCaseFormComponent } from '../create-case-form/create-case-form.component';
 import { ModalService } from '../../services/modal.service';
@@ -25,7 +30,10 @@ export class CaseListComponent implements OnInit {
   ngOnInit() {
 
     this.caseService.getCases().then(data => {
-      this.cases = data;
+      this.cases = data.sort(
+        (a, b) => {
+          return a._id < b._id ? 1 : (a._id > b._id ? -1 : 0);
+        });
     });
 
   }
@@ -35,7 +43,7 @@ export class CaseListComponent implements OnInit {
   }
 
   getStateClassName(state: number): string {
-    return this.getStateName(state).replace(/ /g, '').toLowerCase();
+    return state ? this.getStateName(state).replace(/ /g, '').toLowerCase() : '';
   }
 
   getBoatTypeName(type: number): string {

@@ -15,13 +15,15 @@ import { AuthService } from '../../services/auth.service';
 export class TopNavComponent implements OnInit {
   title: string;
   authService
+  is_online
   constructor(private modalService: ModalService, AuthService: AuthService) {
     this.title = 'top nav'
     this.authService = AuthService
   }
 
   ngOnInit() {
-
+    //this.is_online = this.authService.pouchService.getConnectionState();
+    this.authService.pouchService.onlineState.subscribe((value: any) => this.is_online = value)
   }
 
   logout() {
