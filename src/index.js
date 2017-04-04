@@ -23,6 +23,15 @@ function createWindow () {
     // when you should delete the corresponding element.
     win = null
   })
+
+  let timer;
+  win.webContents.on('did-finish-load', () => {
+    // Needs to be replaced with the position logic
+    timer = setInterval(() => {
+      console.log('sending positions');
+      win.webContents.send('positions', {lat: 51.5033640, lon: -0.1276250});
+    }, 2000);
+  });
 }
 
 // This method will be called when Electron has finished
