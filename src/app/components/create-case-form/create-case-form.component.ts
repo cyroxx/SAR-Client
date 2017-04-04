@@ -50,20 +50,23 @@ export class CreateCaseFormComponent implements OnInit, Listener {
   boatCondition: BoatCondition;
   boatConditionList: any;
   boatConditionKeys: string[];
-  casemeta:any;
+  casemeta: any;
 
   constructor(private _fb: FormBuilder, private caseService: CasesService, private locationService: LocationsService, private authService: AuthService, private pouchService: PouchService) {
 
     this.hideCreateCaseForm = true;
 
     this.casemeta = {
-      location_type: 'DMS',
+      location_type: 'DD',
       dms_location: {
         latitude: { degree: 0, minute: 0, second: 0, direction: 'N' },
         longitude: { degree: 0, minute: 0, second: 0, direction: 'E' }
+      },
+      dd_location: {
+        latitude: 0,
+        longitude: 0
       }
     }
-
 
     this.stateList = Status;
     this.stateKeys = Object.keys(this.stateList).filter(Number);
@@ -138,11 +141,11 @@ export class CreateCaseFormComponent implements OnInit, Listener {
     this.submitted = true; // set form submit to true
     this.caseService.store(this.case);
   }
-
+  updatePosition() {
+    this.updateLocationType(this.casemeta.location_type);
+  }
   updateLocationType(type) {
     this.casemeta.location_type = type;
-
-    
     switch (type) {
       case 'DMS':
         //convert lat
@@ -155,17 +158,19 @@ export class CreateCaseFormComponent implements OnInit, Listener {
         console.log(this.casemeta.dms_location);
         console.log(this.casemeta.dd_location);
         break;
-      case 'DG':
+      case 'DD':
 
-        this.casemeta.dg_location = {};
+        this.casemeta.dms_location = {};
         //convert lon
-        this.casemeta.dg_location.latitude = this.convertDDToDMS(this.casemeta.dd_location.latitude);
-        
-        this.casemeta.dg_location.longitude = this.convertDDToDMS(this.casemeta.dd_location.longitude);
+        this.casemeta.dms_location.latitude = this.convertDDToDMS(this.casemeta.dd_location.latitude);
+
+        this.casemeta.dms_location.longitude = this.convertDDToDMS(this.casemeta.dd_location.longitude);
 
         break;
 
     }
+    this.case.location.latitude = this.casemeta.dd_location.latitude
+    this.case.location.longitude = this.casemeta.dd_location.longitude
   }
 
   convertDDToDMS(deg) {
