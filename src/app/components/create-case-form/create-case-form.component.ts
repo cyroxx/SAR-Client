@@ -103,6 +103,8 @@ export class CreateCaseFormComponent implements OnInit, Listener {
           console.log(loc);
 
           self.case.location = <Location>loc.docs[0];
+          self.casemeta.dd_location.longitude = self.case.location.longitude;
+          self.casemeta.dd_location.latitude = self.case.location.latitude;
 
         });
 
