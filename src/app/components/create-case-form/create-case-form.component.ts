@@ -148,11 +148,14 @@ export class CreateCaseFormComponent implements OnInit, Listener {
   }
   updateLocationType(type) {
     this.casemeta.location_type = type;
+    console.log(type);
     switch (type) {
-      case 'DMS':
+
+      case 'DD':
         //convert lat
-        if (!this.casemeta.dd_location)
+        if (!this.casemeta.dd_location) {
           this.casemeta.dd_location = {};
+        }
         this.casemeta.dd_location.latitude = this.convertDMSToDD(this.casemeta.dms_location.latitude.degree, this.casemeta.dms_location.latitude.minute, this.casemeta.dms_location.latitude.second, this.casemeta.dms_location.latitude.direction);
 
         //convert lon
@@ -160,13 +163,20 @@ export class CreateCaseFormComponent implements OnInit, Listener {
         console.log(this.casemeta.dms_location);
         console.log(this.casemeta.dd_location);
         break;
-      case 'DD':
+      case 'DMS':
 
-        this.casemeta.dms_location = {};
+        if (!this.casemeta.dd_location) {
+          this.casemeta.dd_location = {};
+        }
+        if (!this.casemeta.dms_location) {
+          this.casemeta.dms_location = {};
+        }
         //convert lon
         this.casemeta.dms_location.latitude = this.convertDDToDMS(this.casemeta.dd_location.latitude);
 
         this.casemeta.dms_location.longitude = this.convertDDToDMS(this.casemeta.dd_location.longitude);
+        console.log(this.casemeta.dms_location.latitude);
+        console.log(this.casemeta.dms_location.longitude);
 
         break;
 
