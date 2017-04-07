@@ -40,7 +40,7 @@ export class MapViewComponent implements OnInit {
         });
         location_promise.then((location) => {
           let location_doc = location.docs[0];
-          if (!location_doc) {
+          if (!location_doc || !location_doc.latitude) {
             console.log('No location found for case: ' + incident._id);
             return;
           }
@@ -65,7 +65,7 @@ export class MapViewComponent implements OnInit {
         });
         location_promise.then((location) => {
           let location_doc = location.docs[0];
-          if (!location_doc) {
+          if (!location_doc || !location_doc.latitude) {
             console.log('No location found for vehicle: ' + vehicle.name);
             return;
           }
