@@ -1,12 +1,9 @@
 var MailListener = require("mail-listener2");
+var PouchDB = require('pouchdb');
+var config = require('./config.js');
 
-
-
+//mail address of inreach service
 var filtered_mail_addr = 'some@mail.com';
-
-
-
-
 
 var mail_service = new function(){
 
@@ -26,7 +23,7 @@ var mail_service = new function(){
       this.casesDB = new PouchDB(config.db_remote_url+'/cases', dbConfig);
       this.positionsDB = new PouchDB(config.db_remote_url+'/locations', dbConfig);
   }
-  this.initMailListener = function(){
+  this.initInreachMailListener = function(){
     var self = this;
     var mailListener = new MailListener({
       
@@ -69,8 +66,6 @@ var mail_service = new function(){
     mailListener.on("mail", function(mail, seqno, attributes){
       // do something with mail object including attachments
 
-
-
       if(mail.headers.from.indexOf(filtered_mail_addr)>-1){
 
         /*
@@ -102,38 +97,36 @@ var mail_service = new function(){
 
         var case_id = new Date().toISOString()+"-reportedBy-"+boat_id;
 
-        var boat_types = ['','Unknown','Good','Bad','Sinking','People in water'];
+        var boat_status_array = ['','UNKNOWN','GOOD','BAD','SINKING','PEOPLE IN WATER'];
 
-        /*
-        self.casesDB.put({
-          "_id": case_id,
-          "state": "3",
-          "boatType": "2",
-          "boatCondition": "3",
-          "peopleCount": 1,
-          "womenCount": 1,
-          "childrenCount": 1,
-          "disabledCount": 1
-        }).then(function (response) {
-          // handle response
-                      self.positionsDB.put({
-                        "_id": new Date().toISOString()+"-locationOf-"+boat_id,
-                        "latitude": lat,
-                        "longitude": lon,
-                        "heading": "0",
-                        "origin": "INREACH",
-                        "type": "case_location",
-                        "itemId": case_id
-                      }).then(function (response) {
-                        // handle response
-                        console.log(response);
-                      }).catch(function (err) {
-                        console.log(err);
-                      });
-        }).catch(function (err) {
-          console.log(err);
-        });
-        */
+        if(!lat||!lon||boat_status_array.indexOf(boat_status)==-1){
+          console.log('something went wrong')
+        }else{
+        
+          self.casesDB.put({
+            "_id": case_id,
+            "state": boat_status_array.indexOf(boat_status)
+          }).then(function (response) {
+            // handle response
+                        self.positionsDB.put({
+                          "_id": new Date().toISOString()+"-locationOf-"+boat_id,
+                          "latitude": lat,
+                          "longitude": lon,
+                          "heading": "0",
+                          "origin": "INREACH",
+                          "type": "case_location",
+                          "itemId": case_id
+                        }).then(function (response) {
+                          // handle response
+                          console.log(response);
+                        }).catch(function (err) {
+                          console.log(err);
+                        });
+          }).catch(function (err) {
+            console.log(err);
+          });
+        
+        }
 
         
 
