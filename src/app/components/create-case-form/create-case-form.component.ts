@@ -106,6 +106,9 @@ export class CreateCaseFormComponent implements OnInit, Listener {
           self.casemeta.dd_location.longitude = self.case.location.longitude;
           self.casemeta.dd_location.latitude = self.case.location.latitude;
 
+          self.updateLocationType('DMS');
+          self.updateLocationType('DD');
+
         });
 
       });
