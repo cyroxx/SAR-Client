@@ -7,11 +7,12 @@ var config = require('./config.js');
 var mail_service = new function(){
 
   this.init = function(){
+
     this.initDBs();
 
     var self = this;
 
-    this.initMailListener({
+    /*this.initMailListener({
       imap_username:config.inreach_mail_username,
       imap_password:config.inreach_mail_password,
       imap_host:config.inreach_mail_host,
@@ -21,7 +22,7 @@ var mail_service = new function(){
         self.inreachMailCallback(mail, seqno, attributes);
 
       }
-    });
+    });*/
 
     this.initMailListener({
       imap_username:config.iridium_mail_username,
@@ -176,6 +177,17 @@ var mail_service = new function(){
         'Status': "not moving",
         'Conditions': "people in water",
         'Additional Comments': "case 27"}
+
+
+        {id: 1004,
+        lat: 35.88603922,
+        lon: 14.521798,
+        timestamp: "2017-04-11 22:29:30",
+        ship_type: "woodboat big",
+        engine_running: "not moving",
+        status: "people in water",
+        additional_comments: ""}
+
         -- 
         Diese Nachricht wurde von meinem Android-Mobiltelefon.
         */
@@ -191,17 +203,21 @@ var mail_service = new function(){
           dJSON.parse(json_string).then(function (case_obj) {
 
               //console.log(case_obj);
-
+              console.log(case_obj);
               //case_obj.Conditions.replace(/\b\w/g, function(l){ return l.toUpperCase() });
-              var boat_status = case_obj.Conditions.toUpperCase()
+              var boat_status = case_obj.status.toUpperCase()
               var boat_status_array = ['','UNKNOWN','GOOD','BAD','SINKING','PEOPLE IN WATER'];
               var boat_type_array =   ['','RUBBER','WOOD','STEEL','OTHER'];
 
-              var lat = case_obj.LAT;
-              var lon = case_obj.LON;
-              var engine_working = case_obj.Status == 'moving' ? true:false;
+              var lat = case_obj.lat;
+              var lon = case_obj.lon;
+              var engine_working = case_obj.engine_running == 'moving' ? true:false;
+              
 
-              switch(case_obj['Ship Type']){
+              var warship = false;
+
+
+              switch(case_obj['ship_type']){
                 case'woodboat small':
                   var boat_type = boat_type_array.indexOf('WOOD');
                   var peopleCount = 100
@@ -214,15 +230,29 @@ var mail_service = new function(){
                   var boat_type = boat_type_array.indexOf('RUBBER');
                   var peopleCount = 100
                 break;
+                case'big WarShip':
+                  warship = true;
+                break;
+                case'middle WarShip':
+                  warship = true;
+                break;
+                case'middle WarShip':
+                  warship = true;
+                break;
               }
 
               var boat_id = 'PLANE';
               var case_id = new Date().toISOString()+"-reportedBy-"+boat_id;
               
+              if(boat_status_array.indexOf(boat_status)==-1)
+                boat_status = 'UNKNOWN';
+
               if(!lat||!lon||boat_status_array.indexOf(boat_status)==-1){
                 console.log('something went wrong')
               }else{
               
+                self.generateMails(case_obj);
+
                 self.casesDB.put({
                   "_id": case_id,
                   "state": boat_status_array.indexOf(boat_status),
@@ -259,7 +289,72 @@ var mail_service = new function(){
         }
 
   }
+  this.sendMail = function (address, title, text_plain,text_html, callback){
+
+
+      var nodemailer = require('nodemailer');
+      var smtpTransport = require("nodemailer-smtp-transport");
+
+      // create reusable transporter object using SMTP transport
+      var transporter = nodemailer.createTransport(smtpTransport({
+          service: 'gmail',
+          auth: {
+              user: config.sender_mail_username,
+              pass: config.sender_mail_password
+          }}
+      ));
+
+      // NB! No need to recreate the transporter object. You can use
+      // the same transporter object for all e-mails
+
+      // setup e-mail data with unicode symbols
+      var mailOptions = {
+          from: 'Sea-Watch Air <seawatch.air@gmail.com', // sender address
+          to: address, // list of receivers
+          subject: title, // Subject line
+          text: text_plain, // plaintext body
+          html: text_html // html body
+      };
+
+      // send mail with defined transport object
+      transporter.sendMail(mailOptions, function(error, info){
+          if(error){
+              return console.log(error);
+          }
+          console.log('Message sent: ' + info.response);
+
+      });
+
+
+
+  },
+  this.generateMails = function(case_obj){
+    var text = 'Dear officer in charge,<br>\n the Sea-Watch aircraft just found a boat in distress. Here are the informations:<br><br>\n\n';
+    for(var i in case_obj){
+       text += i+' : '+case_obj[i]+"<br>\n";
+    }
+    text += '<br><br>\n\nThanks for your cooperation,<br>\nThe Sea-Watch Team.<br>\nPlease Note:<br>\nThis email is generated automatically by the Sea-Watch-App operational System.';
+
+    this.sendMail('test@mail.com', 'New Distress Case', text.replace('<br>',''),text);
+
+
+  }
 
 }
+
+/*
+Dear officer in charge,
+
+the Sea-Watch aircraft just found a boat in distress. Here are the informations:
+
+For any questions regarding this case or the aircraft mission please contact the aircraft via 881631010516@msg.iridium.com
+or our backoffice airborneoperations@sea-watch.org. 
+
+Thanks for your cooperation,
+The Sea-Watch Team.
+
+Please Note:
+This email is generated automatically by the Sea-Watch-App operational System.
+*/
 
 mail_service.init();
