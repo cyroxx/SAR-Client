@@ -49,17 +49,78 @@
                 <div class="col-md-3" ng>
                     <label> Position</label>
                     <div class="btn-group ">
-                        <a class="btn btn-default btn-sm">GMS</a> <a class="btn btn-default btn-sm active">DG</a>
+                        <a class="btn btn-default btn-sm" [ngClass]="{ 'active': casemeta.location_type == 'DMS' }" (click)="updateLocationType('DMS')">DMS</a>
+                        <a class="btn btn-default btn-sm" [ngClass]="{ 'active': casemeta.location_type == 'DD' }" (click)="updateLocationType('DD');">DD</a> {{casemeta.location_type}}
                     </div>
                 </div>
                 <div class="form-group col-md-3">
-                    <label for="lat">Lat</label>
-                    <input class="form-control" type="text" placeholder="Lat" name="lat" id="lat" [(ngModel)]="case.location && case.location.latitude">
+                    <div class="dd_input" [hidden]="casemeta.location_type == 'DMS'">
+                        <label for="lat">Lat</label>
+                        <input class="form-control" type="number" step="0.000001" placeholder="Lat" name="lat" id="lat" [(ngModel)]="casemeta.dd_location && casemeta.dd_location.latitude" (ngModelChange)="updatePosition()">
+                    </div>
+                    <!--DMS input area-->
+                    <div class="dms_input" [hidden]="casemeta.location_type == 'DD'">
+                        <div class="row">
+                            <div class="col-xs-2">
+                                <label for="dms_lat_degree">Latitude</label>
+                                <input class="form-control" type="number" placeholder="D" name="dms_lat_degree" id="dms_lat_degree" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.latitude.degree" (ngModelChange)="updatePosition()">
+                            </div>
+                            <div class="col-xs-2">
+                                <label>&nbsp;</label>
+                                <input class="form-control" type="number" placeholder="M" name="dms_lat_minute" id="dms_lat_minute" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.latitude.minute" (ngModelChange)="updatePosition()">
+                            </div>
+                            <div class="col-xs-2">
+                                <label>&nbsp;</label>
+                                <input class="form-control" type="number" placeholder="D" name="latitude_second" id="latitude_second" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.latitude.second" (ngModelChange)="updatePosition()">
+                            </div>
+                            <div class="col-xs-2">
+                                <label>&nbsp;</label>
+                                <select name="latitude_direction" id="latitude_direction" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.latitude.direction" (ngModelChange)="updatePosition()">
+                                  <option value="N">N</option>
+                                  <option value="E">E</option>
+                                  <option value="S">S</option>
+                                  <option value="W">W</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!--DMS input area end-->
                 </div>
 
                 <div class="form-group col-md-3">
-                    <label for="lon">Lon</label>
-                    <input class="form-control" type="text" placeholder="Lon" name="lon" id="lon" [(ngModel)]="case.location && case.location.longitude">
+                    <div class="dd_input" [hidden]="casemeta.location_type == 'DMS'">
+                        <label for="lon">Longitude</label>
+                        <input class="form-control" type="number" step="0.000001" placeholder="Lon" name="lon" id="lon" [(ngModel)]="casemeta.dd_location && casemeta.dd_location.longitude" (ngModelChange)="updatePosition()">
+                    </div>
+
+                    <!--DMS input area-->
+                    <div class="dms_input" [hidden]="casemeta.location_type == 'DD'">
+                        <div class="row">
+                            <div class="col-xs-2">
+                                <label for="dms_lon_degree">Longitude</label>
+                                <input class="form-control" type="number" placeholder="D" name="dms_lon_degree" id="dms_lon_degree" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.longitude.degree" (ngModelChange)="updatePosition()">
+                            </div>
+                            <div class="col-xs-2">
+                                <label>&nbsp;</label>
+                                <input class="form-control" type="number" placeholder="M" name="dms_lon_minute" id="dms_lon_minute" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.longitude.minute" (ngModelChange)="updatePosition()">
+                            </div>
+                            <div class="col-xs-2">
+                                <label>&nbsp;</label>
+                                <input class="form-control" type="number" placeholder="D" name="longitude_second" id="longitude_second" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.longitude.second" (ngModelChange)="updatePosition()">
+                            </div>
+                            <div class="col-xs-2">
+                                <label>&nbsp;</label>
+                                <select name="longitude_direction" id="longitude_direction" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.longitude.direction" (ngModelChange)="updatePosition()">
+                                  <option value="N">N</option>
+                                  <option value="E">E</option>
+                                  <option value="S">S</option>
+                                  <option value="W">W</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!--DMS input area end-->
+
                 </div>
                 <div class="col-md-3">
                     <label>GPS</label>

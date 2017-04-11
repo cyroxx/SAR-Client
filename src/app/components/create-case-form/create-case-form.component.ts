@@ -50,9 +50,23 @@ export class CreateCaseFormComponent implements OnInit, Listener {
   boatCondition: BoatCondition;
   boatConditionList: any;
   boatConditionKeys: string[];
+  casemeta: any;
 
   constructor(private _fb: FormBuilder, private caseService: CasesService, private locationService: LocationsService, private authService: AuthService, private pouchService: PouchService) {
+
     this.hideCreateCaseForm = true;
+
+    this.casemeta = {
+      location_type: 'DD',
+      dms_location: {
+        latitude: { degree: 0, minute: 0, second: 0, direction: 'N' },
+        longitude: { degree: 0, minute: 0, second: 0, direction: 'E' }
+      },
+      dd_location: {
+        latitude: 0,
+        longitude: 0
+      }
+    }
 
     this.stateList = Status;
     this.stateKeys = Object.keys(this.stateList).filter(Number);
@@ -63,12 +77,12 @@ export class CreateCaseFormComponent implements OnInit, Listener {
     this.boatConditionList = BoatCondition;
     this.boatConditionKeys = Object.keys(this.boatConditionList).filter(Number);
 
+
     //typecast needed because we only have the id at this moment and we don't want
     //to explicitly initialize all the other fields
     this.case = <Case>{
       _id: new Date().toISOString() + "-reportedBy-" + authService.getUserData().name
     };
-
   } // form builder simplify form initialization
 
   ngOnInit() {
@@ -89,6 +103,11 @@ export class CreateCaseFormComponent implements OnInit, Listener {
           console.log(loc);
 
           self.case.location = <Location>loc.docs[0];
+          self.casemeta.dd_location.longitude = self.case.location.longitude;
+          self.casemeta.dd_location.latitude = self.case.location.latitude;
+
+          self.updateLocationType('DMS');
+          self.updateLocationType('DD');
 
         });
 
@@ -121,11 +140,85 @@ export class CreateCaseFormComponent implements OnInit, Listener {
     });
   }
 
+
+
   save() {
     this.submitted = true; // set form submit to true
     this.caseService.store(this.case);
   }
+  updatePosition() {
+    this.updateLocationType(this.casemeta.location_type);
+  }
+  updateLocationType(type) {
+    this.casemeta.location_type = type;
+    console.log(type);
+    switch (type) {
 
+      case 'DD':
+        //convert lat
+        if (!this.casemeta.dd_location) {
+          this.casemeta.dd_location = {};
+        }
+        this.casemeta.dd_location.latitude = this.convertDMSToDD(this.casemeta.dms_location.latitude.degree, this.casemeta.dms_location.latitude.minute, this.casemeta.dms_location.latitude.second, this.casemeta.dms_location.latitude.direction);
+
+        //convert lon
+        this.casemeta.dd_location.longitude = this.convertDMSToDD(this.casemeta.dms_location.longitude.degree, this.casemeta.dms_location.longitude.minute, this.casemeta.dms_location.longitude.second, this.casemeta.dms_location.longitude.direction);
+        console.log(this.casemeta.dms_location);
+        console.log(this.casemeta.dd_location);
+        break;
+      case 'DMS':
+
+        if (!this.casemeta.dd_location) {
+          this.casemeta.dd_location = {};
+        }
+        if (!this.casemeta.dms_location) {
+          this.casemeta.dms_location = {};
+        }
+        //convert lon
+        this.casemeta.dms_location.latitude = this.convertDDToDMS(this.casemeta.dd_location.latitude);
+
+        this.casemeta.dms_location.longitude = this.convertDDToDMS(this.casemeta.dd_location.longitude);
+        console.log(this.casemeta.dms_location.latitude);
+        console.log(this.casemeta.dms_location.longitude);
+
+        break;
+
+    }
+    this.case.location.latitude = this.casemeta.dd_location.latitude
+    this.case.location.longitude = this.casemeta.dd_location.longitude
+  }
+
+  convertDDToDMS(deg) {
+    var d = Math.floor(deg);
+    var minfloat = (deg - d) * 60;
+    var m = Math.floor(minfloat);
+    var secfloat = (minfloat - m) * 60;
+    var s = Math.round(secfloat);
+    // After rounding, the seconds might become 60. These two
+    // if-tests are not necessary if no rounding is done.
+    if (s == 60) {
+      m++;
+      s = 0;
+    }
+    if (m == 60) {
+      d++;
+      m = 0;
+    }
+    return {
+      degree: d,
+      minute: m,
+      second: s,
+      direction: 'N'
+    }
+  }
+  convertDMSToDD(degrees, minutes, seconds, direction) {
+    var dd = degrees + minutes / 60 + seconds / (60 * 60);
+
+    if (direction == "S" || direction == "W") {
+      dd = dd * -1;
+    }
+    return dd;
+  }
   refresh() {
     const self = this;
 
@@ -161,7 +254,7 @@ export class CreateCaseFormComponent implements OnInit, Listener {
   /*setStatus(statusId : string){
     this.case.state = this.stateList[statusId];
   }
-
+ 
   logItem(item) {
       console.log(item);
   }*/
