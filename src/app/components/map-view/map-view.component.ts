@@ -28,16 +28,14 @@ export class MapViewComponent implements OnInit {
   ngOnInit() {
     this.initMap();
     this.drawVehicles();
-    this.drawCases();
+    //this.drawCases();
   }
 
   drawCases() {
     this.casesService.getCases().then((data) => {
       this.cases = data;
       for (let incident of this.cases) {
-        let location_promise = this.locationsService.getLastLocationMatching({
-          'itemId': incident._id,
-        });
+        let location_promise = this.locationsService.getLastLocationMatching(incident._id);
         location_promise.then((location) => {
           let location_doc = location.docs[0];
           if (!location_doc || !location_doc.latitude) {
@@ -49,7 +47,7 @@ export class MapViewComponent implements OnInit {
             'cases',
             location_doc.latitude,
             location_doc.longitude,
-            incident._id,
+            incident._id + ' at ' + location_doc.latitude + ' ' + location_doc.longitude,
           );
         });
       }
@@ -60,13 +58,11 @@ export class MapViewComponent implements OnInit {
     this.vehiclesService.getVehicles().then((data) => {
       this.vehicles = data;
       for (let vehicle of this.vehicles) {
-        let location_promise = this.locationsService.getLastLocationMatching({
-          'itemId': vehicle._id,
-        });
+        let location_promise = this.locationsService.getLastLocationMatching(vehicle._id);
         location_promise.then((location) => {
           let location_doc = location.docs[0];
           if (!location_doc || !location_doc.latitude) {
-            console.log('No location found for vehicle: ' + vehicle.name);
+            console.log('No location found for vehicle: ' + vehicle.title);
             return;
           }
           this.mapService.setMarker(
@@ -74,7 +70,7 @@ export class MapViewComponent implements OnInit {
             'vehicles',
             location_doc.latitude,
             location_doc.longitude,
-            vehicle.name,
+            vehicle.title + ' at ' + location_doc.latitude + ' ' + location_doc.longitude,
           );
         });
       }
