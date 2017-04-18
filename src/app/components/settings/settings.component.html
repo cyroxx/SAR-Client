@@ -1,0 +1,32 @@
+<div class="modal-background-container" [hidden]="!settings_info.show">
+    <div class="modal-container" id="SettingsContainer">
+            <div class="row">
+                <div class="col-md-12 header">
+                    <h2>
+                        SETTINGS
+                    </h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div  [hidden]="update_info.status_obj.status != 'update_required'">
+                        <h3>Update required</h3>
+                        <p>You need to update your application!</p>
+                    </div>
+                    <div [hidden]="update_info.status_obj.status != 'update_possible'">
+                        <h3>Update required</h3>
+                        <p>Please update your application</p>
+                    </div>
+                    <div>
+                        <a (click)="openExternal(update_info.status_obj.link)">Download New Version</a></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>
+                        Remote
+                    </h3>
+                </div>
+            </div>
+    </div>
+</div>

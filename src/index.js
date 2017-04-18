@@ -1,6 +1,7 @@
 // src/electron.js
 
 const {app, BrowserWindow} = require('electron')
+const {semver} = require('semver')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
