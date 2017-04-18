@@ -14,6 +14,7 @@ a {
 a:hover, a:focus, a:active {
   color:rgb(0,122,204);
   text-decoration:none;
+  cursor:pointer;
 }
 
 a.gray {
@@ -1026,4 +1027,23 @@ a.gray:hover, a.gray:focus, a.gray:active {
     left:50%;
     top:50%;
     margin-left:-10vw;
+}
+
+
+.container-flex {
+  display: flex;
+  flex-direction: row;
+}
+
+.status_bar {
+  width:240px;
+}
+
+.content_center {
+  width:100%;
+}
+
+
+.chat_bar {
+  width:360px;
 }
