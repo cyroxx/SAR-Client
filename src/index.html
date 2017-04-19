@@ -46,6 +46,16 @@
       const {shell} = require('electron')
 
       var fs = require('fs');
+
+
+      var helpers = new function(){
+        this.alert = function(msg){
+          alert(msg)
+        }
+        this.reload = function(){
+          window.location = window.location.href + 'index.html';
+        }
+      }
      
     </script>
 

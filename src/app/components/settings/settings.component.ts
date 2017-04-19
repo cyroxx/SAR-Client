@@ -6,6 +6,7 @@ import { ConfigService } from '../../services/config.service';
 declare var semver: any;
 declare var os: any;
 declare var shell: any;
+declare var helpers: any;
 
 @Component({
   selector: 'app-settings',
@@ -22,31 +23,35 @@ export class SettingsComponent implements OnInit {
   configService
   platform
   settings_info
+  db_remote_url
 
   constructor(pouchService: PouchService, configService: ConfigService) {
 
     this.pouchService = pouchService
     this.configService = configService
 
+    this.db_remote_url = this.configService.getConfiguration('db_remote_url');
+
     this.settings_info = {};
     this.settings_info.show = false;
 
     this.db = this.pouchService.initDB('versions');
-    this.getLastVersion();
     this.checkForUpdates()
-    this.update_info = {}
-    this.update_info.status_obj = {}
     this.platform = os.platform();
   }
+
   ngOnInit() {
 
   }
-
   checkForUpdates() {
+
+    this.update_info = {}
+    this.update_info.status_obj = {}
+
+    this.getVersions();
 
     this.current_version = this.configService.getConfiguration('current_version');
     var self = this;
-
 
     this.db.allDocs({
 
@@ -138,13 +143,6 @@ export class SettingsComponent implements OnInit {
 
   }
 
-  getLastVersion() {
-
-    this.getVersions()
-    console.log(this.data);
-
-  }
-
   getVersions() {
 
     if (this.data) {
@@ -180,6 +178,16 @@ export class SettingsComponent implements OnInit {
     });
 
   }
+
+  updateRemote() {
+    this.configService.updateConfiguration('db_remote_url', this.db_remote_url, function() {
+      //updated!
+      helpers.alert('Remote URL was updated');
+      helpers.reload();
+
+    });
+  }
+
   openExternal(link) {
     shell.openExternal(link)
   }

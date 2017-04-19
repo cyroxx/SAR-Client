@@ -31,7 +31,7 @@ export class ConfigService {
 
     app_config_string += "\n}\n";
 
-    fs.writeFile("src/config/confix.js", app_config_string, function(err) {
+    fs.writeFile("src/config/config.js", app_config_string, function(err) {
       if (err) {
         return console.log(err);
       }

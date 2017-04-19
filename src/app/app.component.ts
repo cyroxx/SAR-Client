@@ -20,8 +20,6 @@ export class AppComponent {
     console.log(vehiclesService.getVehicles());
     this.title = 'SAR Client';
 
-    this.updateInfo = {};
-
     this.windowOptions = { 'showstartoverlay': true };
 
     this.hideCreateCaseForm = true;

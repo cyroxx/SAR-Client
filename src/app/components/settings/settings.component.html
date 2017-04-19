@@ -9,16 +9,19 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
+
+                    <div><h3>SAR-Client {{current_version}}</h3></div>
                     <div  [hidden]="update_info.status_obj.status != 'update_required'">
                         <h3>Update required</h3>
-                        <p>You need to update your application!</p>
+                        <p>You need to update your application to version {{update_info.status_obj.version}}!</p>
                     </div>
                     <div [hidden]="update_info.status_obj.status != 'update_possible'">
                         <h3>Update required</h3>
-                        <p>Please update your application</p>
+                        <p>Please update your application to version {{update_info.status_obj.version}}!</p>
                     </div>
                     <div>
-                        <a (click)="openExternal(update_info.status_obj.link)">Download New Version</a></div>
+                        <a (click)="openExternal(update_info.status_obj.link)" class="btn btn-primary">Download New Version</a>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -26,6 +29,10 @@
                     <h3>
                         Remote
                     </h3>
+                    <div>
+                        <input type="text" name="source_type" class="col-md-6" [(ngModel)]="db_remote_url">
+                        <a (click)="updateRemote()" class="btn btn-primary col-md-6">Update Remote DB</a>
+                    </div>
                 </div>
             </div>
     </div>
