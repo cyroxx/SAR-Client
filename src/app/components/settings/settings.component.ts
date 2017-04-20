@@ -3,6 +3,8 @@ import { PouchService } from '../../services/pouch.service';
 
 import { ConfigService } from '../../services/config.service';
 
+
+
 declare var semver: any;
 declare var os: any;
 declare var shell: any;
@@ -123,23 +125,6 @@ export class SettingsComponent implements OnInit {
       console.log(error);
 
     });
-
-
-
-
-    /*var minimum_accepted_version = '0.0.1-alpha.3'
-    var latest_accepted_version = '0.0.1-alpha.3'
-    //if current version of this client is lower than the minimum accepted version
-    if (semver.lt(this.current_version, minimum_accepted_version)) {
-      //update required
-      this.update_info = { 'status': 'update_required' }
-    }
-    if (semver.lt(this.current_version, latest_accepted_version)) {
-      this.update_info = { 'status': 'update_required' }
-    }
-
-    console.log(semver.valid(this.current_version))*/
-
 
   }
 
