@@ -42,6 +42,7 @@
       /* if os is importet via ts, it always returns 'browser' */
       var os = require('os');
       const {shell} = require('electron');
+      const electron_settings = require('electron-settings');
 
       var helpers = new function(){
         this.alert = function(msg){

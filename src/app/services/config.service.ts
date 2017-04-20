@@ -1,43 +1,37 @@
 import { Injectable } from '@angular/core';
 import * as fs from 'fs';
 
+
 declare var app_config: any;
+declare var electron_settings: any;
 
 @Injectable()
 export class ConfigService {
-  constructor() { }
 
   private result: Object;
 
+  constructor() {
+    //sett app_config if neccessary
+    if (!electron_settings.has('current_version'))
+      this.initConfiguration();
+  }
+
+  initConfiguration() {
+    for (var i in app_config) {
+      electron_settings.set(i, app_config[i]);
+      console.log(i + ' written to config');
+    }
+
+  }
+
   getConfiguration(key) {
-
-
-    return app_config[key]
+    return electron_settings.get(key)
   }
 
   updateConfiguration(key, value, cb) {
 
-    var app_config_string = "var app_config = {\n";
-
-    for (var i in app_config) {
-      if (key == i)
-        app_config_string += '"' + i + '":"' + value + '",\n';
-      else
-        app_config_string += '"' + i + '":"' + app_config[i] + '",\n';
-    }
-
-    //remove last comma
-    app_config_string = app_config_string.slice(0, -1);
-
-    app_config_string += "\n}\n";
-
-    fs.writeFile("dist/config/config.js", app_config_string, function(err) {
-      if (err) {
-        return console.log(err);
-      }
-      console.log("The config was updated.");
+    if (electron_settings.set(key, value))
       cb();
-    });
 
   }
 }
