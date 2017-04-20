@@ -3,11 +3,10 @@ import { PouchService } from '../../services/pouch.service';
 
 import { ConfigService } from '../../services/config.service';
 
+import * as semver from 'semver';
 
-
-declare var semver: any;
-declare var os: any;
 declare var shell: any;
+declare var os: any;
 declare var helpers: any;
 
 @Component({
@@ -37,9 +36,14 @@ export class SettingsComponent implements OnInit {
     this.settings_info = {};
     this.settings_info.show = false;
 
+    this.platform = os.platform();
+
+    console.log('PLATFORM');
+    console.log(this.platform);
+    console.log(os.platform());
+
     this.db = this.pouchService.initDB('versions');
     this.checkForUpdates()
-    this.platform = os.platform();
   }
 
   ngOnInit() {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import * as fs from 'fs';
 
 declare var app_config: any;
-declare var fs: any;
 
 @Injectable()
 export class ConfigService {

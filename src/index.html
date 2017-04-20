@@ -39,14 +39,9 @@
     <link href="components/leaflet/dist/leaflet.css" rel="stylesheet">
 
     <script type="text/javascript">
-      var semver = require('semver');
-
+      /* if os is importet via ts, it always returns 'browser' */
       var os = require('os');
-
-      const {shell} = require('electron')
-
-      var fs = require('fs');
-
+      const {shell} = require('electron');
 
       var helpers = new function(){
         this.alert = function(msg){
