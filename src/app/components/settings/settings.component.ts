@@ -180,4 +180,10 @@ export class SettingsComponent implements OnInit {
   openExternal(link) {
     shell.openExternal(link)
   }
+  closeSettings() {
+    if (this.update_info.status_obj.status != 'update_required')
+      this.settings_info.show = false;
+    else
+      helpers.alert('You need to update before you can proceed!')
+  }
 }

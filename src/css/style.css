@@ -1092,3 +1092,11 @@ a.gray:hover, a.gray:focus, a.gray:active {
 .refresh-link {
     cursor: pointer;
 }
+
+.close_modal{
+    position: absolute;
+    top: 30px;
+    right: 55px;
+    font-size: 30px;
+    color: #727881;
+}
