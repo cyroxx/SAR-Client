@@ -26,18 +26,14 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <h3>
-                        Remote
-                    </h3>
-                    <div>
-                        <input type="text" name="source_type" class="col-md-6" [(ngModel)]="db_remote_url">
-                        <a (click)="updateRemote()" class="btn btn-primary col-md-6">Update Remote DB</a>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <a class="btn btn-primary" (click)="closeSettings()">Close</a>
+                    <form>
+                        <div class="form-group">
+                            <label for="db-remote-url">Database URL</label>
+                            <input id="db-remote-url" type="text" class="form-control" name="db-remote-uri" [(ngModel)]="db_remote_url">
+                        </div>
+                        <button class="btn btn-primary" (click)="updateSettings()">Save</button>
+                        <button class="btn btn-default" (click)="closeSettings()">Close</button>
+                    </form>
                 </div>
             </div>
     </div>

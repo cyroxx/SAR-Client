@@ -166,12 +166,14 @@ export class SettingsComponent implements OnInit {
 
   }
 
-  updateRemote() {
-    this.configService.updateConfiguration('db_remote_url', this.db_remote_url, function() {
-      //updated!
-      helpers.alert('Remote URL was updated');
-      helpers.reload();
+  updateSettings() {
+    const update = {
+      db_remote_url: this.db_remote_url,
+    };
 
+    this.configService.updateConfiguration(update, () => {
+      helpers.alert('Settings update successful!');
+      helpers.reload();
     });
   }
 
