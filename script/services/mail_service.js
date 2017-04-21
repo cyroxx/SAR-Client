@@ -1,6 +1,10 @@
 var MailListener = require("mail-listener2");
 var PouchDB = require('pouchdb');
 var dJSON = require('dirty-json');
+var nodemailer = require('nodemailer');
+var smtpTransport = require("nodemailer-smtp-transport");
+var send_mail = false;
+
 var config = require('./config.js');
 //mail address of inreach service
 
@@ -63,7 +67,7 @@ var mail_service = new function(){
       tlsOptions: { rejectUnauthorized: false },
       mailbox: "INBOX", // mailbox to monitor
       searchFilter: ["UNSEEN"], // the search filter being used after an IDLE notification has been retrieved
-      markSeen: false, // all fetched email willbe marked as seen and not fetched next time
+      markSeen: true, // all fetched email willbe marked as seen and not fetched next time
       fetchUnreadOnStart: true, // use it only if you want to get all unread email on lib start. Default is `false`,
       mailParserOptions: {streamAttachments: true}, // options to be passed to mailParser lib.
       attachments: true, // download attachments as they are encountered to the project directory
@@ -230,13 +234,16 @@ var mail_service = new function(){
                   var boat_type = boat_type_array.indexOf('RUBBER');
                   var peopleCount = 100
                 break;
+                case'small WarShip':
+                  warship = true;
+                break;
+                case'middle WarShip':
+                  warship = true;
+                break;
+                case'Merchant Ship':
+                  warship = true;
+                break;
                 case'big WarShip':
-                  warship = true;
-                break;
-                case'middle WarShip':
-                  warship = true;
-                break;
-                case'middle WarShip':
                   warship = true;
                 break;
               }
@@ -251,7 +258,7 @@ var mail_service = new function(){
                 console.log('something went wrong')
               }else{
               
-                self.generateMails(case_obj);
+                self.generateMails(case_obj,warship);
 
                 self.casesDB.put({
                   "_id": case_id,
@@ -290,10 +297,9 @@ var mail_service = new function(){
 
   }
   this.sendMail = function (address, title, text_plain,text_html, callback){
+      address += ',swaircraft@myiridium.net,881631010516@msg.iridium.com,it@sea-watch.org'
 
-
-      var nodemailer = require('nodemailer');
-      var smtpTransport = require("nodemailer-smtp-transport");
+      console.log("START SENDING MAIL TO "+address);
 
       // create reusable transporter object using SMTP transport
       var transporter = nodemailer.createTransport(smtpTransport({
@@ -317,27 +323,35 @@ var mail_service = new function(){
       };
 
       // send mail with defined transport object
-      transporter.sendMail(mailOptions, function(error, info){
-          if(error){
-              return console.log(error);
-          }
-          console.log('Message sent: ' + info.response);
+      if(send_mail){
+        transporter.sendMail(mailOptions, function(error, info){
+            if(error){
+                return console.log(error);
+            }
+            console.log('Message sent: ' + info.response);
 
-      });
-
-
+        });
+      }else{
+        console.log('MAIL IS NOT SENT WITH THIS OPTION');
+        console.log(mailOptions);
+      }
 
   },
-  this.generateMails = function(case_obj){
+  this.generateMails = function(case_obj, warship){
     var text = 'Dear officer in charge,<br>\n the Sea-Watch aircraft just found a boat in distress. Here are the informations:<br><br>\n\n';
     for(var i in case_obj){
        text += i+' : '+case_obj[i]+"<br>\n";
     }
     text += '<br><br>\n\nThanks for your cooperation,<br>\nThe Sea-Watch Team.<br>\nPlease Note:<br>\nThis email is generated automatically by the Sea-Watch-App operational System.';
-
-    this.sendMail('test@mail.com', 'New Distress Case', text.replace('<br>',''),text);
-
-
+ 
+    console.log('warship: '+warship);
+    console.log('MAILTEXT');  
+    
+    if(warship)
+        this.sendMail('airborneoperations@sea-watch.org','New Warship spotted', text.replace('<br>',''),text);
+    else
+        this.sendMail('ship@sea-watch.org,airborneoperations@sea-watch.org','New Distress Case', text.replace('<br>',''),text);
+    
   }
 
 }
