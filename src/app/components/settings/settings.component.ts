@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PouchService } from '../../services/pouch.service';
 
 import { ConfigService } from '../../services/config.service';
+import AppVersion from 'config/version';
 
 import * as semver from 'semver';
 
@@ -30,7 +31,7 @@ export class SettingsComponent implements OnInit {
 
     this.pouchService = pouchService
     this.configService = configService
-
+    this.current_version = AppVersion.version;
     this.db_remote_url = this.configService.getConfiguration('db_remote_url');
 
     this.settings_info = {};
@@ -56,7 +57,6 @@ export class SettingsComponent implements OnInit {
 
     this.getVersions();
 
-    this.current_version = this.configService.getConfiguration('current_version');
     var self = this;
 
     this.db.allDocs({
