@@ -1,6 +1,5 @@
 <div class="modal-background-container" [hidden]="!settings_info.show">
     <div class="modal-container" id="SettingsContainer">
-            <a class="close_modal" (click)="closeSettings()">×</a>
             <div class="row">
                 <div class="col-md-12 header">
                     <h2>
@@ -34,6 +33,11 @@
                         <input type="text" name="source_type" class="col-md-6" [(ngModel)]="db_remote_url">
                         <a (click)="updateRemote()" class="btn btn-primary col-md-6">Update Remote DB</a>
                     </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" (click)="closeSettings()">Close</a>
                 </div>
             </div>
     </div>
