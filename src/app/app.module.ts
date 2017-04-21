@@ -23,6 +23,7 @@ import { MapService } from 'app/services/map.service';
 import { ModalPlaceholderComponent } from './components/modalplaceholder/modalplaceholder.component';
 import { CaseListComponent } from './components/case-list/case-list.component';
 import { StatusesService } from './services/statuses.service';
+import { SettingsComponent } from './components/settings/settings.component';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { StatusesService } from './services/statuses.service';
     LogInComponent,
     CreateCaseFormComponent,
     ModalPlaceholderComponent,
-    CaseListComponent
+    CaseListComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,

@@ -5,6 +5,7 @@ import { PouchService } from '../services/pouch.service';
 export class VehiclesService {
   db
   data
+  promise;
   remote
   pouchService
 
@@ -14,11 +15,22 @@ export class VehiclesService {
   }
 
   getVehicles() {
-
+    // If we already fetched the data, just return that
     if (this.data) {
       return Promise.resolve(this.data);
     }
 
+    // Check if there is an existing promise already to avoid the creation
+    // of another one when getVehicles() gets called before the promise
+    // has finished.
+    if (!this.promise) {
+      this.promise = this.newPromise();
+    }
+
+    return this.promise;
+  }
+
+  newPromise() {
     return new Promise(resolve => {
 
       this.db.allDocs({

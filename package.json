@@ -50,8 +50,10 @@
     "angular2-openlayers": "^0.4.5",
     "core-js": "^2.4.1",
     "cradle": "^0.7.1",
+    "electron-settings": "^3.0.14",
     "pouchdb": "^6.1.1",
     "rxjs": "^5.0.1",
+    "semver": "^5.3.0",
     "ts-helpers": "^1.1.1",
     "zone.js": "^0.7.4"
   },
