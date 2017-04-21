@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
-import * as fs from 'fs';
+import appConfig from 'config/config';
 
+// Use the globally defined remote object
+declare var remote: any;
 
-declare var app_config: any;
-declare var electron_settings: any;
+// Require the settings module via electron remote to use the same instance as the main
+// electron process. See: https://github.com/nathanbuchar/electron-settings/wiki/FAQs
+const electronSettings = remote.require('electron-settings');
 
 @Injectable()
 export class ConfigService {
@@ -11,27 +14,31 @@ export class ConfigService {
   private result: Object;
 
   constructor() {
-    //sett app_config if neccessary
-    if (!electron_settings.has('current_version'))
-      this.initConfiguration();
+    // We have to initialize the settings on every app start to make sure new settings will be
+    // written to the local storage
+    this.initConfiguration();
   }
 
   initConfiguration() {
-    for (var i in app_config) {
-      electron_settings.set(i, app_config[i]);
-      console.log(i + ' written to config');
+    for (const key in appConfig) {
+      // Use hasOwnProperty here to avoid setting inherited properties and to please tslint
+      if (appConfig.hasOwnProperty(key)) {
+        // Do not overwrite existing settings
+        if (!electronSettings.has(key)) {
+          console.log(`Initialize setting: ${key}="${appConfig[key]}"`);
+          electronSettings.set(key, appConfig[key]);
+        }
+      }
     }
-
   }
 
   getConfiguration(key) {
-    return electron_settings.get(key)
+    return electronSettings.get(key);
   }
 
   updateConfiguration(key, value, cb) {
-
-    if (electron_settings.set(key, value))
+    if (electronSettings.set(key, value)) {
       cb();
-
+    }
   }
 }

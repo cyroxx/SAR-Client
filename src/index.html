@@ -30,7 +30,6 @@
       </div>
     </app-root>
 
-    <script src="config/config.js"></script>
     <script src="components/pouchdb/dist/pouchdb.min.js"></script>
     <script src="components/pouchdb-authentication/dist/pouchdb.authentication.min.js"></script>
     <script src="components/pouchdb-find/dist/pouchdb.find.min.js"></script>
@@ -41,8 +40,7 @@
     <script type="text/javascript">
       /* if os is importet via ts, it always returns 'browser' */
       var os = require('os');
-      const {shell} = require('electron');
-      const electron_settings = require('electron-settings');
+      const { remote, shell } = require('electron');
 
       var helpers = new function(){
         this.alert = function(msg){
