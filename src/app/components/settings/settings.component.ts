@@ -39,9 +39,7 @@ export class SettingsComponent implements OnInit {
 
     this.platform = os.platform();
 
-    console.log('PLATFORM');
-    console.log(this.platform);
-    console.log(os.platform());
+    console.log('PLATFORM', this.platform);
 
     this.db = this.pouchService.initDB('versions');
     this.checkForUpdates()
