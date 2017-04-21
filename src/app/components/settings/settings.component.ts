@@ -153,7 +153,7 @@ export class SettingsComponent implements OnInit {
         resolve(this.data);
 
         this.db.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
-          this.pouchService.handleChange('vehicles', change);
+          this.pouchService.handleChange('versions', change);
         });
 
       }).catch((error) => {
