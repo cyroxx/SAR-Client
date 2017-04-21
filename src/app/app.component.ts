@@ -17,7 +17,7 @@ export class AppComponent {
   windowOptions = { 'showstartoverlay': false };
   constructor(private vehiclesService: VehiclesService, private modalService: ModalService) {
 
-    console.log(vehiclesService.getVehicles());
+    vehiclesService.getVehicles().then((vehicles) => console.log('VEHICLES', vehicles));
     this.title = 'SAR Client';
 
     this.windowOptions = { 'showstartoverlay': true };
