@@ -8,8 +8,12 @@ couch_url="http://localhost:5984"
 seeds="$(dirname $0)/../data/seeds"
 
 for seed in ${seeds}/*.json; do
+
 	echo "==> Processing: $seed"
 	dbname=$(basename $seed .json)
+
+	echo "==> Deleting Database $seed"
+	curl -X DELETE ${couch_url}/${dbname} || true
 
 	echo "==> Creating database: $dbname"
 	curl -s -XPUT ${couch_url}/${dbname} || true
