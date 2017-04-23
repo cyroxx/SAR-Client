@@ -39,7 +39,9 @@
                 </div>-->
                 <div class="form-group col-md-2">
                     <label style="display:block" for="ppl_in_water">People in Water</label>
-                    <input disabled type="checkbox" id="ppl_in_water" name="ppl_in_water" value="1"> 
+
+                    <input type="checkbox" [checked]="case.boatCondition == '2'" (change)="$event.target.checked? (case.boatCondition = 2) : (case.boatCondition = 1)">
+                    
                     <!-- Hier hätte ich gerneslo was: https://ziscloud.github.io/angular-bootstrap-toggle/ "No grey" > "Yes red"  -->
                 </div>
 
@@ -51,10 +53,7 @@
 
                 <div class="form-group col-md-4">
                     <label style="display:block" for="osc">On-Scene-Coordinator (OSC)</label>
-                    <select class="form-control" id="osc" name="osc" value="Sea-Watch 2">
-                        <option>Sea-Watch 2</option>
-                        <option>IUVENTA</option>
-                    </select>
+                    <input class="form-control" id="osc" name="osc" value="SW2">
                 </div>
             </div>
             <div class="row">
