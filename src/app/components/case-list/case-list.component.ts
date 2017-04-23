@@ -20,6 +20,7 @@ import { ModalService } from '../../services/modal.service';
 export class CaseListComponent implements OnInit {
 
   cases: Array<Case>;
+  toggled_cases;
   states = Status;
   boatTypes = BoatType;
   boatConditions = BoatCondition;
@@ -29,6 +30,8 @@ export class CaseListComponent implements OnInit {
 
   ngOnInit() {
 
+    this.toggled_cases = []
+
     this.caseService.getCases().then(data => {
       this.cases = data.sort(
         (a, b) => {
@@ -36,6 +39,13 @@ export class CaseListComponent implements OnInit {
         });
     });
 
+  }
+
+  toggleCase(case_id: string) {
+    if (this.toggled_cases.indexOf(case_id) === -1)
+      this.toggled_cases.push(case_id)
+    else
+      this.toggled_cases.splice(this.toggled_cases.indexOf(case_id))
   }
 
   getStateName(state: number): string {
