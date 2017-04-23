@@ -429,8 +429,7 @@ a.gray:hover, a.gray:focus, a.gray:active {
 
   .main.maps_display_mode {
       position: absolute;
-      
-      top: 62px;
+      top: 50px;
       left:0px;
       right: 0;
       bottom: 0
