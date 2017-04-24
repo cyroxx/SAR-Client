@@ -10,6 +10,7 @@ export class CasesService {
 
   db: any;
   data: Array<any>;
+  filtered_statuses: Array<any>;
   remote;
 
   constructor(private pouchService: PouchService, private locationService: LocationsService, private authService: AuthService) {
@@ -24,6 +25,7 @@ export class CasesService {
       console.log('Failed to create an index on cases:state');
       console.log(err);
     });
+    this.filtered_statuses = [];
   }
 
   store(currentCase: Case) {
@@ -47,10 +49,11 @@ export class CasesService {
       });
   }
 
-
-  getCases() {
-    console.log('getting cases');
-    return this.pouchService.get('cases');
+  getCases(where?: any) {
+    if (!where)
+      return this.pouchService.get('cases');
+    else
+      return this.getCasesMatching(where);
   }
 
   getCase(id: string) {
@@ -71,6 +74,13 @@ export class CasesService {
     delete selfCopy.location;
     return selfCopy;
   }
-
-
+  toggleStatusFilter(status_id) {
+    if (this.filtered_statuses.indexOf(status_id) === -1)
+      this.filtered_statuses.push(status_id)
+    else
+      this.filtered_statuses.splice(this.filtered_statuses.indexOf(status_id))
+  }
+  getFilteredStatuses() {
+    return this.filtered_statuses;
+  }
 }
