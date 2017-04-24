@@ -25,19 +25,31 @@ export class CaseListComponent implements OnInit {
   boatTypes = BoatType;
   boatConditions = BoatCondition;
 
-  constructor(private caseService: CasesService, private modalService: ModalService) {
+  constructor(public caseService: CasesService, private modalService: ModalService) {
   }
 
   ngOnInit() {
 
     this.toggled_cases = []
 
-    this.caseService.getCases().then(data => {
-      this.cases = data.sort(
-        (a, b) => {
-          return a._id < b._id ? 1 : (a._id > b._id ? -1 : 0);
+    this.caseService.filteredStatuses.subscribe((data) => {
+
+      console.log('filtered statuses subscription called');
+
+      let matchingPromise = this.caseService.getCasesMatching(
+        {
+          "state": {
+            "$in": this.caseService.data
+          }
         });
+
+      matchingPromise.then(data => {
+        this.cases = data.docs
+      });
+
+
     });
+
 
   }
 

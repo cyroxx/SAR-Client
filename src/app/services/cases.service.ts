@@ -1,4 +1,8 @@
 import { Injectable } from '@angular/core';
+
+import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
 import { PouchService } from '../services/pouch.service';
 import { AuthService } from '../services/auth.service';
 import { LocationsService } from '../services/locations.service';
@@ -12,7 +16,9 @@ export class CasesService {
   data: Array<any>;
   filtered_statuses: Array<any>;
   remote;
+  filteredStatusesSource = new Subject<Array<any>>();
 
+  public filteredStatuses = new BehaviorSubject([]);
   constructor(private pouchService: PouchService, private locationService: LocationsService, private authService: AuthService) {
     this.db = this.pouchService.initDB('cases');
     this.db.createIndex({
@@ -79,6 +85,9 @@ export class CasesService {
       this.filtered_statuses.push(status_id)
     else
       this.filtered_statuses.splice(this.filtered_statuses.indexOf(status_id))
+
+
+    this.filteredStatuses.next(this.filtered_statuses);
   }
   getFilteredStatuses() {
     return this.filtered_statuses;
