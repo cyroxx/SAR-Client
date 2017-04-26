@@ -39,6 +39,10 @@ export class LeftNavComponent implements OnInit {
     return this.states[status_index] + ' ' + ((this.casesService.getFilteredStatuses().indexOf(status_index) > -1) ? 'active' : '')
   }
 
+  go_to_vehicle(vehicle: any) {
+    this.mapService.centerMap(1, 1);
+  }
+
   filter_by_status(status_id) {
 
     //add or remove status from filters

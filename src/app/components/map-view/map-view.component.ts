@@ -70,7 +70,7 @@ export class MapViewComponent implements OnInit {
             'vehicles',
             location_doc.latitude,
             location_doc.longitude,
-            vehicle.title + ' at ' + location_doc.latitude + ' ' + location_doc.longitude,
+            '<h5>' + vehicle.title + '</h5>' + location_doc.latitude + ' ' + location_doc.longitude,
           );
         });
       }
