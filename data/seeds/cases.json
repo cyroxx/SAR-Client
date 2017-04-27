@@ -4,7 +4,7 @@
             "state": "1",
             "boatType": "1",
             "boatCondition": "2",
-            "engineWorking": false,
+            "engineWorking": true,
             "peopleCount": 150,
             "womenCount": 22,
             "childrenCount": 18,
