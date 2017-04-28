@@ -18,8 +18,9 @@
     "pretest": "run-s fmt",
     "pree2e": "webdriver-manager update --standalone false --gecko false",
     "e2e": "protractor",
-    "preng:build": "run-s fmt",
+    "preng:build": "run-s fmt generate:all",
     "postng:build": "run-s maptiles:clean maptiles:extract",
+    "preng:build:noprogress": "run-s generate:all",
     "postng:build:noprogress": "run-s maptiles:clean maptiles:extract",
     "ng:build": "ng build",
     "ng:build:watch": "ng build --watch",
@@ -35,7 +36,9 @@
     "pack:build:win": "build -c electron-builder.yml --win --ia32",
     "pack:build:linux": "build -c electron-builder.yml --linux --x64",
     "maptiles:clean": "rimraf dist/MapQuest",
-    "maptiles:extract": "extract-zip data/map-tiles.zip dist/"
+    "maptiles:extract": "extract-zip data/map-tiles.zip dist/",
+    "generate:all": "run-s generate:version",
+    "generate:version": "node script/generate-version.js"
   },
   "private": true,
   "dependencies": {
@@ -50,8 +53,10 @@
     "angular2-openlayers": "^0.4.5",
     "core-js": "^2.4.1",
     "cradle": "^0.7.1",
+    "electron-settings": "^3.0.14",
     "pouchdb": "^6.1.1",
     "rxjs": "^5.0.1",
+    "semver": "^5.3.0",
     "ts-helpers": "^1.1.1",
     "zone.js": "^0.7.4"
   },
@@ -72,6 +77,7 @@
     "karma-jasmine": "^1.0.2",
     "karma-phantomjs-launcher": "^1.0.2",
     "karma-remap-istanbul": "^0.6.0",
+    "mustache": "^2.3.0",
     "npm-run-all": "^4.0.1",
     "protractor": "~5.1.1",
     "rimraf": "^2.6.1",
