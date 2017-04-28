@@ -80,7 +80,7 @@ export class CasesService {
     delete selfCopy.location;
     return selfCopy;
   }
-  toggleStatusFilter(status_id) {
+  toggleStatusFilter(status_id: string) {
     if (this.filtered_statuses.indexOf(status_id) === -1)
       this.filtered_statuses.push(status_id)
     else

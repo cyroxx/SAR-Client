@@ -39,12 +39,12 @@ export class CaseListComponent implements OnInit {
 
     this.caseService.filteredStatuses.subscribe((data) => {
 
-      console.log('filtered statuses subscription called');
+      console.log('filtered statuses subscription called for statuses:' + this.caseService.filtered_statuses);
 
       let matchingPromise = this.caseService.getCasesMatching(
         {
           "state": {
-            "$in": this.caseService.data
+            "$in": this.caseService.filtered_statuses.map(String)
           }
         });
       var self = this;
@@ -57,43 +57,14 @@ export class CaseListComponent implements OnInit {
 
         var self = this;
         var initial_cases_length = this.cases.length;
+
+        //loop through cases and load location
         for (var x = 0; x < initial_cases_length; x++) {
-          console.log(x)
           if (this.cases[x] && this.cases[x]._id) {
-
-            console.log(this.cases[x]);
-
             var doc = this.cases[x];
-
-            console.log(doc._id);
             self.loadLocationForCase(doc._id);
-
           }
         }
-
-        /* OLD CRAPPY STUFF */
-        /*for (var doc of data.docs) {
-          self.locationService.getLastLocationMatching({
-            'itemId': doc._id,
-          }).then(function(loc) {
-      
-            console.log(doc);
-      
-            let case_id = doc._id;
-            console.log(case_id)
-            self.caseMeta.locations[case_id] = loc.docs[0];
-            console.log(self.caseMeta)
-      
-            /*self.casemeta.dd_location.longitude = self.case.location.longitude;
-            self.casemeta.dd_location.latitude = self.case.location.latitude;
-      
-            self.updateLocationType('DMS');
-            self.updateLocationType('DD');
-      
-          });
-        }*/
-
-        /* OLD CRAPPY STUFF */
 
 
       });
@@ -109,14 +80,11 @@ export class CaseListComponent implements OnInit {
     self.locationService.getLastLocationMatching({
       'itemId': case_id,
     }).then(function(loc) {
-
       self.caseMeta.locations[case_id] = loc.docs[0];
-
     });
   }
 
   getLocation(case_id: string) {
-
     if (this.caseMeta.locations[case_id] && this.caseMeta.locations[case_id]._id)
       return 'LAT: ' + this.caseMeta.locations[case_id].latitude + '<br>LON: ' + this.caseMeta.locations[case_id].longitude;
   }
