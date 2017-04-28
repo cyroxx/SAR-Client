@@ -46,3 +46,6 @@ Thumbs.db
 
 # Map tiles
 /src/MapQuest/
+
+# Generated config file
+/src/config/version.js

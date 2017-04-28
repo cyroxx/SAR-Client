@@ -26,17 +26,33 @@
   	<app-root>
       <div id="loadingOverlay">
           <img src="img/sea-watch_logo_2048-rgb-white.png"/>
-          <span>SAR-Client<br/>v 0.1.0</span>
+          <span>SAR-Client</span>
       </div>
     </app-root>
 
-    <script src="config/config.js"></script>
     <script src="components/pouchdb/dist/pouchdb.min.js"></script>
     <script src="components/pouchdb-authentication/dist/pouchdb.authentication.min.js"></script>
     <script src="components/pouchdb-find/dist/pouchdb.find.min.js"></script>
     <script src="components/jquery/dist/jquery.min.js" type="text/javascript"></script>
     <script src="components/leaflet/dist/leaflet.js" type="text/javascript"></script>
     <link href="components/leaflet/dist/leaflet.css" rel="stylesheet">
+
+    <script type="text/javascript">
+      /* if os is importet via ts, it always returns 'browser' */
+      var os = require('os');
+      const { remote, shell } = require('electron');
+
+      var helpers = new function(){
+        this.alert = function(msg){
+          alert(msg)
+        }
+        this.reload = function(){
+          window.location = window.location.href + 'index.html';
+        }
+      }
+     
+    </script>
+
 
     <script type="text/javascript" src="inline.bundle.js"></script>
     <script type="text/javascript" src="vendor.bundle.js"></script>

@@ -73,7 +73,7 @@ export class PouchService {
       this.databases[db_title]['pouchDB'] = new PouchDB(db_title);
 
       //add title to remote, apply options
-      console.log('initing sync:' + this.remote + db_title + " with options " + options);
+      console.log('initing sync:', this.remote + db_title, 'with options', options);
       this.databases[db_title]['pouchDB'].sync(this.remote + db_title, options).on('change', function(change) {
         // yo, something changed!
         console.log('on: true');
