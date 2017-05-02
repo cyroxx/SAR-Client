@@ -1,7 +1,4 @@
 export enum BoatCondition {
-  Unknown = 1,
-  Good,
-  Bad,
-  Sinking,
+  'No people in water' = 1,
   'People in water'
 }

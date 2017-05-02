@@ -16,41 +16,51 @@
                 </div>
             </div>
             <div class="row ">
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-2">
                     <label for="boat_type">Boat Type</label>
                     <select class="form-control" name="boat_type" id="boat_type" [(ngModel)]="case.boatType">
-                <option *ngFor="let key of boatTypeKeys" [value]="key">{{boatTypeList[key]}}</option>
-              </select>
+                        <option *ngFor="let key of boatTypeKeys" [value]="key">{{boatTypeList[key]}}</option>
+                    </select>
                 </div>
-                <div class="form-group col-md-3">
+
+                <div class="form-group col-md-2">
                     <label for="boat_status">Status</label>
                     <select class="form-control" name="boat_status" id="boat_status" [(ngModel)]="case.state">
-                <option *ngFor="let key of stateKeys" [value]="key">{{stateList[key]}}</option>
-              </select>
+                        <option *ngFor="let key of stateKeys" [value]="key">{{stateList[key]}}</option>
+                    </select>
                     <input type="hidden" name="source_type" value="create_case_form">
                 </div>
 
-
-
-                <div class="form-group col-md-3">
+                <!--<div class="form-group col-md-2">
                     <label for="boat_condition">Condition</label>
                     <select class="form-control" name="boat_condition" id="boat_condition" [(ngModel)]="case.boatCondition">
-                <option *ngFor="let key of boatConditionKeys" [value]="key">{{boatConditionList[key]}}</option>
-              </select>
+                        <option *ngFor="let key of boatConditionKeys" [value]="key">{{boatConditionList[key]}}</option>
+                    </select>
+                </div>-->
+                <div class="form-group col-md-2">
+                    <label style="display:block" for="ppl_in_water">People in Water</label>
+
+                    <input type="checkbox" [checked]="case.boatCondition == '2'" (change)="$event.target.checked? (case.boatCondition = 2) : (case.boatCondition = 1)">
+                    
+                    <!-- Hier hätte ich gerneslo was: https://ziscloud.github.io/angular-bootstrap-toggle/ "No grey" > "Yes red"  -->
                 </div>
 
-                <div class="form-group form-inline col-md-3">
-                    <div class="checkbox" style="padding-top:32px;">
-                        <input type="checkbox" id="engine_working" name="engine_working" value="1" [(ngModel)]="case.engineWorking"> <label for="engine_working">Working engine</label>
-                    </div>
+                <div class="form-group form-inline col-md-2">
+                        <label style="display:block" for="engine_working">Engine</label>
+                        <input type="checkbox" id="engine_working" name="engine_working" value="1" [(ngModel)]="case.engineWorking">
+                        <!-- Hier hätte ich gerne so was: https://ziscloud.github.io/angular-bootstrap-toggle/ "Working grey" > "Defect red"  -->
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label style="display:block" for="osc">On-Scene-Coordinator (OSC)</label>
+                    <input class="form-control" id="osc" name="osc" value="SW2" [(ngModel)]="case.osc">
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-3" ng>
-                    <label> Position</label>
-                    <div class="btn-group ">
-                        <a class="btn btn-default btn-sm" [ngClass]="{ 'active': casemeta.location_type == 'DMS' }" (click)="updateLocationType('DMS')">DMS</a>
-                        <a class="btn btn-default btn-sm" [ngClass]="{ 'active': casemeta.location_type == 'DD' }" (click)="updateLocationType('DD');">DD</a> {{casemeta.location_type}}
+                    <label style="display:block;">Position</label>
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-default btn-md">GMS</a> <a class="btn btn-default btn-md active">DD</a>
                     </div>
                 </div>
                 <div class="form-group col-md-3">
@@ -124,7 +134,7 @@
                 </div>
                 <div class="col-md-3">
                     <label>GPS</label>
-                    <a class="btn btn-sm   btn-default use_location" (click)="getCurrentPosition()"><i class="zmdi zmdi-pin"></i>Current Location</a>
+                    <a class="btn btn-md btn-block btn-primary use_location" (click)="getCurrentPosition()"><i class="zmdi zmdi-pin"></i> Current Location</a>
                 </div>
 
             </div>

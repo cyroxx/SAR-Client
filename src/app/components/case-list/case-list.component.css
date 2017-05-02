@@ -9,6 +9,10 @@
 
 }
 
+.case {
+    margin:15px 0px;
+}
+
 .cases {
     list-style-type: none;
     margin:0px;
@@ -17,14 +21,13 @@
 
 .case>.row {
     background: #ffffff;
-    margin: 15px 0px;
     padding: 15px 7px;
     font-size: 1.5rem;
     border-top:2px solid #727881;
 }
 
 .case>.meta {
-    margin-bottom:-7px;
+    margin-bottom:7px;
     color:rgba(114,120,129,0.7);
 }
 
@@ -43,6 +46,19 @@
     font-weight:normal;
 }
 
+
+.case_infos {
+    padding-top:15px;
+    background:rgba(255,255,255,0.5);
+    border-top:1px solid rgba(114,120,129,0.7);
+}
+
+.case_infos>.row {
+    margin:0px;
+    padding:7px 0px;
+}
+
+#cases .no-edit .form-control, .form-control[disabled], .form-control[readonly], fieldset[disabled] {color:rgba(114,120,129,0.7);}
 .status.critical,
 .status.needhelp {
     color: #ff4344;
