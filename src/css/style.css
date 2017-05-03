@@ -986,36 +986,32 @@ a.gray:hover, a.gray:focus, a.gray:active {
     right:0;
     bottom:0;
     left:0;
-    background:#17affa;
+    background:#002d45;
     z-index: 9999;
 }
 @keyframes pulse_animation {
-  0% { transform: scale(1); }
-  30% { transform: scale(1); }
-  40% { transform: scale(1.08); }
-  50% { transform: scale(1); }
-  60% { transform: scale(1); }
-  70% { transform: scale(1.05); }
-  80% { transform: scale(1); }
-  100% { transform: scale(1); }
+  0% {transform: scale(0); opacity: 0;}
+    8% {transform: scale(0); opacity: 0;}
+    15% {transform: scale(0.1); opacity: 1;}
+    30% {transform: scale(0.5); opacity: 1;}
+    100% { transform: scale(1); opacity: 0;}
+  
 }
 
 #loadingOverlay img{
     width:20vw;
-    height:18vw;
     position:absolute;
     left:50%;
     top:50%;
-    margin-top:-7.5vw;
+    margin-top:-10vw;
     margin-left:-10vw;
     animation-name: pulse_animation;
-    animation-duration: 5000ms;
-    transform-origin:70% 70%;
+    animation-duration: 3.5s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
 }
 
-#loadingOverlay span{
+#loadingOverlay p{
     color:#FFF;
     position:absolute;
     margin-top:15vw;
@@ -1041,7 +1037,6 @@ a.gray:hover, a.gray:focus, a.gray:active {
 .content_center {
   width:100%;
 }
-
 
 .chat_bar {
   width:360px;
