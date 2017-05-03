@@ -28,6 +28,15 @@ export class MapViewComponent implements OnInit {
   ngOnInit() {
     this.initMap();
     this.drawVehicles();
+    // call this every 60 seconds
+    const vehicle_interval = setInterval(function(self) {
+        return function() {
+          console.log('drawing!!');
+          self.drawVehicles();
+        };
+      }(this),
+      60 * 1000
+    );
     //this.drawCases();
   }
 
@@ -65,16 +74,44 @@ export class MapViewComponent implements OnInit {
             console.log('No location found for vehicle: ' + vehicle.title);
             return;
           }
+          let last_update = location_doc._id.substr(0, 19).replace('T', ' ');
           this.mapService.setMarker(
             vehicle._id,
             'vehicles',
             location_doc.latitude,
             location_doc.longitude,
-            '<h5>' + vehicle.title + '</h5>' + location_doc.latitude + ' ' + location_doc.longitude,
+            '<h5>' + vehicle.title + '</h5><b>' +
+            this.parseLatitude(parseFloat(location_doc.latitude)) + ' ' +
+            this.parseLongitude(parseFloat(location_doc.longitude)) +
+            '</b><br />' + last_update,
           );
         });
       }
     });
+  }
+  // the following is taken from stackoverflow user mckamey at
+  // http://stackoverflow.com/questions/4504956/formatting-double-to-latitude-longitude-human-readable-format
+  parseLatituteOrLongitude(value: number, direction: string) {
+      value = Math.abs(value);
+
+      const degrees = Math.trunc(value);
+
+      value = (value - degrees) * 60;
+
+      const minutes = Math.trunc(value);
+      const seconds = Math.round((value - minutes) * 60 * 10) / 10;
+
+      return degrees + '&deg; ' + minutes + '\'' + seconds + '\'\'' + direction;
+  }
+
+  parseLatitude(value: number) {
+    const direction = value < 0 ? 'S' : 'N';
+    return this.parseLatituteOrLongitude(value, direction);
+  }
+
+  parseLongitude(value: number) {
+      const direction = value < 0 ? 'W' : 'E';
+      return this.parseLatituteOrLongitude(value, direction);
   }
 
   initMap() {

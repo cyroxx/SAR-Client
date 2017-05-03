@@ -30,7 +30,7 @@ export class MapService {
   }
 
   centerMap(latitude: number, longitude: number) {
-    this.getMapObject().panTo(latitude, longitude);
+    this.getMapObject().panTo([latitude, longitude]);
   }
 
   setMarker(id: string, group: string, x: number, y: number, description?: string) {
