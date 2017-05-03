@@ -8,13 +8,13 @@ import { AuthService } from '../services/auth.service';
 import { LocationsService } from '../services/locations.service';
 import { Case } from '../interfaces/case';
 import { Location } from '../interfaces/location';
-
 @Injectable()
 export class CasesService {
 
   db: any;
   data: Array<any>;
   filtered_statuses: Array<any>;
+
   remote;
   filteredStatusesSource = new Subject<Array<any>>();
 
@@ -31,7 +31,7 @@ export class CasesService {
       console.log('Failed to create an index on cases:state');
       console.log(err);
     });
-    this.filtered_statuses = [];
+    this.filtered_statuses = [1, 2, 3, 4, 5, 6, 7];
   }
 
   store(currentCase: Case) {
