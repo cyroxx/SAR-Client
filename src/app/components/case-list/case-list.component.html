@@ -16,21 +16,23 @@
                 <div class="status col-xs-3 {{getStateClassName(case.state)}}">{{getStateName(case.state)}}</div>
                 <div class="col-xs-2 caseID">R3G</div>
                 <div class="col-xs-2 boatType">{{getBoatTypeName(case.boatType)}}</div>
-                <div class="col-xs-2">{{getBoatConditionName(case.boatCondition)}}</div>
-                <div class="col-xs-3 text-right"><i class="zmdi zmdi-edit" (click)="showEditCaseModal(case._id)"></i></div>
+                <div class="col-xs-3">{{getBoatConditionName(case.boatCondition)}}</div>
+                <div class="col-xs-2 text-right"><i class="zmdi zmdi-edit" (click)="showEditCaseModal(case._id)"></i></div>
             </div>
             <div class="case_infos" [hidden]="toggled_cases.indexOf( case._id ) === -1 ">
                 <div class="row">
                     <div class="form-group col-md-2">
                         
-                        <label for="boat_status">Boattype</label>
-                        {{getBoatTypeName(case.boatType)}}
+                        <label for="boat_type">Boat Type</label>
+                        <input disabled class="form-control" name="boat_type" type="text" value="{{getBoatTypeName(case.boatType)}}" id="boat_type">
+
+                        
                     </div>
                     <div class="form-group col-md-2">
-
-
                         <label for="boat_status">Status</label>
-                        {{getStateName(case.state)}}
+                        <input disabled class="form-control" name="boat_status" type="text" value="{{getStateName(case.state)}}" id="boat_status">
+
+                        
                         <!--<input disabled type="hidden" name="source_type" value="create_case_form">-->
                     </div>
                     <div class="form-group col-md-2">
@@ -41,18 +43,16 @@
                     <div class="form-group col-md-2">
                         <label style="display:block" for="engine_working">Engine</label>
                         <input disabled type="checkbox" id="engine_working" name="engine_working" value="1" [(ngModel)]="case.engineWorking"> 
-                        <!-- Hier hätte ich gerneslo was: https://ziscloud.github.io/angular-bootstrap-toggle/ "Working blue" > "Defect grey"  -->
+                        <!-- Hier hätte ich gerneslo was:    "Working blue" > "Defect grey"  -->
                     </div>
                     <div class="form-group col-md-4">
                         <label style="display:block" for="osc">On-Scene-Coordinator (OSC)</label>
-                        {{case.osc}}
+                        <input disabled class="form-control" name="osc" type="text" value="{{case.osc}}" id="osc">
                     </div>
                 </div>
                 <div class="row">
-
                     <div class="form-group col-md-6">
-                        <span [innerHTML]="this.getLocation(case._id)">
-                        </span>
+                        <span [innerHTML]="this.getLocation(case._id)"></span>
                     </div>
                 </div>
                 <div class="row">

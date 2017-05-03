@@ -33,9 +33,9 @@
 
 .caseID {font-weight:500;}
 
-.case.closed .row {border-color:rgb(66, 183, 42);}
-.case.attended .row, .case.possibletarget .row, .case.confirmed .row {border-color:#ff8942;}
-.case.critical .row, .case.need_help .row {border-color:#ff4344;}
+.case.closed .row, .case.rescued .row {border-color:rgb(66, 183, 42);}
+.case.attended .row, .case.possibletarget .row, .case.confirmedtarget .row {border-color:#ff8942;}
+.case.critical .row, .case.needhelp .row {border-color:#ff4344;}
 
 .case .status {font-weight:500;}
 
@@ -64,13 +64,14 @@
     color: #ff4344;
 }
 
-.status.confirmed,
+.status.confirmedtarget,
 .status.possibletarget,
 .status.attended {
     color: #ff8942;
 }
 
-.status.closed {
+.status.closed, 
+.status.rescued {
     color: rgb(66, 183, 42);
 }
 
