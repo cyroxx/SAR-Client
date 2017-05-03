@@ -189,9 +189,13 @@ export class PouchService {
 
   }
 
-  find(db_title: string, where: any) {
+  find(db_title: string, selector: any, sort_by = [{ '_id': 'asc' }], limit = 10000) {
     if (this.databases[db_title]['pouchDB']) {
-      return Promise.resolve(this.databases[db_title]['pouchDB'].find({ selector: where }));
+      return Promise.resolve(this.databases[db_title]['pouchDB'].find({
+        selector: selector,
+        limit: limit,
+        sort: sort_by,
+      }));
     }
     return Promise.reject('No database with name [' + db_title + ']');
   }

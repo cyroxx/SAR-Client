@@ -97,9 +97,7 @@ export class CreateCaseFormComponent implements OnInit, Listener {
       this.caseService.getCase(this.caseId).then(function(c) {
         self.case = <Case>c;
 
-        self.locationService.getLastLocationMatching({
-          'itemId': self.caseId,
-        }).then(function(loc) {
+        self.locationService.getLastLocationMatching(self.caseId).then(function(loc) {
           console.log(loc);
 
           self.case.location = <Location>loc.docs[0];
@@ -223,9 +221,7 @@ export class CreateCaseFormComponent implements OnInit, Listener {
     const self = this;
 
     this.case = this.change;
-    this.locationService.getLastLocationMatching({
-      'itemId': this.caseId,
-    }).then(function(loc) {
+    this.locationService.getLastLocationMatching(this.caseId).then(function(loc) {
       console.log(loc);
       self.case.location = <Location>loc.docs[0];
 

@@ -40,8 +40,15 @@ export class LocationsService {
    * 
    * @param foreignKey the key of the case or vehicle 
    */
-  getLastLocationMatching(where: any) {
-    return this.pouchService.find('locations', where);
+  getLastLocationMatching(foreignKey: string) {
+    return this.pouchService.find(
+      'locations',
+      {
+        'itemId': foreignKey,
+      },
+      [{ '_id': 'desc' }],
+      1,
+    );
   }
 
   store(location: Location) {

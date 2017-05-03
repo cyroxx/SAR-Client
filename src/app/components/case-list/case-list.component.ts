@@ -77,11 +77,11 @@ export class CaseListComponent implements OnInit {
 
   loadLocationForCase(case_id: string) {
     var self = this;
-    self.locationService.getLastLocationMatching({
-      'itemId': case_id,
-    }).then(function(loc) {
-      self.caseMeta.locations[case_id] = loc.docs[0];
-    });
+    self.locationService.getLastLocationMatching(case_id).then(
+      function(loc) {
+        self.caseMeta.locations[case_id] = loc.docs[0];
+      }
+    );
   }
 
   getLocation(case_id: string) {

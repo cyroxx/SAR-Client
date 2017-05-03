@@ -4,12 +4,14 @@
       <h3>Vehicles</h3>
     </li>
     <li *ngFor="let vehicle of vehicles;" class="vehicle filter" data-id="1337">
-      <a>{{vehicle.title}}</a>
+      
+      <a href="#" (click)="go_to_vehicle(vehicle)">
+        {{vehicle.title}}
+      </a>
     </li>
     <li class="vehicle filter" data-id="all">
       <a>All</a>
     </li>
-
     <li>
       <h3>Status</h3>
     </li>
