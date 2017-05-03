@@ -23,9 +23,14 @@ export class MapService {
   getLayerGroup(group_name: string) {
     if (!(group_name in this.layer_groups)) {
       this.layer_groups[group_name] = L.layerGroup();
-      this.layer_groups[group_name].addTo(this.map);
+      this.layer_groups[group_name].addTo(this.getMapObject());
+      L.control.layers({}, this.layer_groups).addTo(this.getMapObject());
     }
     return this.layer_groups[group_name];
+  }
+
+  centerMap(latitude: number, longitude: number) {
+    this.getMapObject().panTo([latitude, longitude]);
   }
 
   setMarker(id: string, group: string, x: number, y: number, description?: string) {
@@ -58,6 +63,7 @@ export class MapService {
     this.map = L.map(this.mapContainerId, '');
     this.map.options.maxZoom = 9;
     this.map.setView(this.startLocation, 7);
+    L.control.scale({ 'imperial': false }).addTo(this.map);
     switch (this.maptype) {
       case 'offline-map':
         /*Not working until maptiles are added to the repo*/

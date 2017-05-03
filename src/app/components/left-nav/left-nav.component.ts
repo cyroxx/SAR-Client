@@ -6,6 +6,7 @@ import { MapService } from 'app/services/map.service';
 import { CasesService } from '../../services/cases.service';
 
 import { Status } from '../../interfaces/status';
+import { LocationsService } from '../../services/locations.service';
 
 
 @Component({
@@ -23,6 +24,7 @@ export class LeftNavComponent implements OnInit {
     private statusesService: StatusesService,
     private mapService: MapService,
     private casesService: CasesService,
+    private locationsService: LocationsService,
   ) {
     this.statuses = statusesService.statuses;
   }
@@ -37,6 +39,18 @@ export class LeftNavComponent implements OnInit {
   }
   getStatusClasses(status_index) {
     return this.states[status_index] + ' ' + ((this.casesService.getFilteredStatuses().indexOf(status_index) > -1) ? 'active' : '')
+  }
+
+  go_to_vehicle(vehicle: any) {
+    const location_promise = this.locationsService.getLastLocationMatching(vehicle._id);
+    location_promise.then((location) => {
+      const location_doc = location.docs[0];
+      if (!location_doc || !location_doc.latitude) {
+        console.log('No location found for vehicle: ' + vehicle.title);
+        return;
+      }
+      this.mapService.centerMap(location_doc.latitude, location_doc.longitude);
+    });
   }
 
   filter_by_status(status_id) {
