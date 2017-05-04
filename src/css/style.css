@@ -395,10 +395,13 @@ a.gray:hover, a.gray:focus, a.gray:active {
   .sidebar li.away a:before   {
       color: #ff8942
   }
-
+.leaflet-top.leaflet-left {
+    top: 48px;
+}
 
   .sidebar li.closed a:before,
-  .sidebar li.online a:before {
+  .sidebar li.online a:before,
+  .sidebar li.rescued a:before {
       color: rgb(66, 183, 42);
   }
 
