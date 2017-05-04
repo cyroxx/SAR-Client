@@ -91,9 +91,11 @@ export class PouchService {
         //so the state will only be changed if it
         //is paused because of an error
 
-        if (error) {
+        if (!navigator.onLine) {
           self.setOnlineState('offline')
           console.log('on: false');
+        } else {
+          self.setOnlineState('online')
         }
       }).on('active', function(info) {
         console.log('on: true');
