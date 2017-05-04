@@ -158,12 +158,14 @@ export class CreateCaseFormComponent implements OnInit, Listener {
         if (!this.casemeta.dd_location) {
           this.casemeta.dd_location = {};
         }
+        /*
         this.casemeta.dd_location.latitude = this.convertDMSToDD(this.casemeta.dms_location.latitude.degree, this.casemeta.dms_location.latitude.minute, this.casemeta.dms_location.latitude.second, this.casemeta.dms_location.latitude.direction);
 
         //convert lon
         this.casemeta.dd_location.longitude = this.convertDMSToDD(this.casemeta.dms_location.longitude.degree, this.casemeta.dms_location.longitude.minute, this.casemeta.dms_location.longitude.second, this.casemeta.dms_location.longitude.direction);
         console.log(this.casemeta.dms_location);
         console.log(this.casemeta.dd_location);
+        */
         break;
       case 'DMS':
 
@@ -174,9 +176,9 @@ export class CreateCaseFormComponent implements OnInit, Listener {
           this.casemeta.dms_location = {};
         }
         //convert lon
-        this.casemeta.dms_location.latitude = this.convertDDToDMS(this.casemeta.dd_location.latitude);
+        /*this.casemeta.dms_location.latitude = this.convertDDToDMS(this.casemeta.dd_location.latitude);
 
-        this.casemeta.dms_location.longitude = this.convertDDToDMS(this.casemeta.dd_location.longitude);
+        this.casemeta.dms_location.longitude = this.convertDDToDMS(this.casemeta.dd_location.longitude);*/
         console.log(this.casemeta.dms_location.latitude);
         console.log(this.casemeta.dms_location.longitude);
 
@@ -185,6 +187,8 @@ export class CreateCaseFormComponent implements OnInit, Listener {
     }
     this.case.location.latitude = this.casemeta.dd_location.latitude
     this.case.location.longitude = this.casemeta.dd_location.longitude
+
+    console.log(this.case.location)
   }
 
   convertDDToDMS(deg) {
