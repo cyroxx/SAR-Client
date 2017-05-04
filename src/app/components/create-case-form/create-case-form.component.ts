@@ -80,7 +80,9 @@ export class CreateCaseFormComponent implements OnInit, Listener {
     //typecast needed because we only have the id at this moment and we don't want
     //to explicitly initialize all the other fields
     this.case = <Case>{
-      _id: new Date().toISOString() + "-reportedBy-" + authService.getUserData().name
+      _id: new Date().toISOString() + "-reportedBy-" + authService.getUserData().name,
+      createdAt: new Date().toISOString(),
+      lastUpdate: new Date().toISOString()
     };
   } // form builder simplify form initialization
 
