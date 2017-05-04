@@ -29,6 +29,14 @@ export class MapViewComponent implements OnInit {
     this.initMap();
     this.drawVehicles();
     // call this every 60 seconds
+    const vehicle_interval = setInterval(function(self) {
+      return function() {
+        console.log('drawing!!');
+        self.drawVehicles();
+      };
+    }(this),
+      60 * 1000
+    );
     //this.drawCases();
   }
 
