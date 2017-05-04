@@ -3,5 +3,6 @@ export enum Status {
   Critical,
   'Possible Target',
   Attended,
+  Rescued,
   Closed,
 }

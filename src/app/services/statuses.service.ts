@@ -17,16 +17,16 @@ export class StatusesService {
         title: 'Critical'
       },
       {
-        index: 'confirmed_target',
-        title: 'Confirmed'
-      },
-      {
         index: 'possible_target',
         title: 'Possible Target'
       },
       {
         index: 'attended',
         title: 'Attended'
+      },
+      {
+        index: 'rescued',
+        title: 'Rescued'
       },
       {
         index: 'closed',
