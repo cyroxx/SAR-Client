@@ -31,7 +31,7 @@ export class CasesService {
       console.log('Failed to create an index on cases:state');
       console.log(err);
     });
-    this.filtered_statuses = [1, 2, 3, 4, 5, 6, 7];
+    this.filtered_statuses = [1, 2, 3, 4, 5];
   }
 
   store(currentCase: Case) {
