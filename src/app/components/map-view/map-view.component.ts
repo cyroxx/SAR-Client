@@ -30,11 +30,11 @@ export class MapViewComponent implements OnInit {
     this.drawVehicles();
     // call this every 60 seconds
     const vehicle_interval = setInterval(function(self) {
-        return function() {
-          console.log('drawing!!');
-          self.drawVehicles();
-        };
-      }(this),
+      return function() {
+        console.log('drawing!!');
+        self.drawVehicles();
+      };
+    }(this),
       60 * 1000
     );
     //this.drawCases();
@@ -92,16 +92,16 @@ export class MapViewComponent implements OnInit {
   // the following is taken from stackoverflow user mckamey at
   // http://stackoverflow.com/questions/4504956/formatting-double-to-latitude-longitude-human-readable-format
   parseLatituteOrLongitude(value: number, direction: string) {
-      value = Math.abs(value);
+    value = Math.abs(value);
 
-      const degrees = Math.trunc(value);
+    const degrees = Math.trunc(value);
 
-      value = (value - degrees) * 60;
+    value = (value - degrees) * 60;
 
-      const minutes = Math.trunc(value);
-      const seconds = Math.round((value - minutes) * 60 * 10) / 10;
+    const minutes = Math.trunc(value);
+    const seconds = Math.round((value - minutes) * 60 * 10) / 10;
 
-      return degrees + '&deg; ' + minutes + '\'' + seconds + '\'\'' + direction;
+    return degrees + '&deg; ' + minutes + '\'' + seconds + '\'\'' + direction;
   }
 
   parseLatitude(value: number) {
@@ -110,8 +110,8 @@ export class MapViewComponent implements OnInit {
   }
 
   parseLongitude(value: number) {
-      const direction = value < 0 ? 'W' : 'E';
-      return this.parseLatituteOrLongitude(value, direction);
+    const direction = value < 0 ? 'W' : 'E';
+    return this.parseLatituteOrLongitude(value, direction);
   }
 
   initMap() {

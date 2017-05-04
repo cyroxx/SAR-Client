@@ -1,3 +1,9 @@
 .maps_display_mode {
     min-height: 800px;
+    height:100vh;
+    top:0px;
+}
+
+.leaflet-top.leaflet-left {
+    top: 48px;
 }

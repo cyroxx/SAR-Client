@@ -54,8 +54,7 @@ export class CreateCaseFormComponent implements OnInit, Listener {
 
   constructor(private _fb: FormBuilder, private caseService: CasesService, private locationService: LocationsService, private authService: AuthService, private pouchService: PouchService) {
 
-    this.hideCreateCaseForm = true;
-
+    this.hideCreateCaseForm = false;
     this.casemeta = {
       location_type: 'DD',
       dms_location: {
@@ -143,6 +142,8 @@ export class CreateCaseFormComponent implements OnInit, Listener {
   save() {
     this.submitted = true; // set form submit to true
     this.caseService.store(this.case);
+    //ModalContainer.closeModal();
+    this.hideCreateCaseForm = true;
   }
   updatePosition() {
     this.updateLocationType(this.casemeta.location_type);
