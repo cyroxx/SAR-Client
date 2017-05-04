@@ -5,7 +5,7 @@
     </li>
     <li *ngFor="let vehicle of vehicles;" class="vehicle filter" data-id="1337">
       
-      <a href="#" (click)="go_to_vehicle(vehicle)">
+      <a (click)="go_to_vehicle(vehicle)">
         {{vehicle.title}}
       </a>
     </li>
