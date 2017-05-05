@@ -5,6 +5,7 @@ import { CreateCaseFormComponent } from '../create-case-form/create-case-form.co
 import { CaseListComponent } from '../case-list/case-list.component';
 import { ModalService } from '../../services/modal.service';
 import { AuthService } from '../../services/auth.service';
+import { SettingsComponent } from 'app/components/settings/settings.component';
 
 @Component({
   selector: 'top-nav',
@@ -16,8 +17,10 @@ export class TopNavComponent implements OnInit {
   title: string;
   authService
   is_online
+  show_sub_menu
   constructor(private modalService: ModalService, AuthService: AuthService) {
     this.title = 'top nav'
+    this.show_sub_menu = false
     this.authService = AuthService
   }
 
@@ -35,6 +38,11 @@ export class TopNavComponent implements OnInit {
 
   showCreateCaseModal() {
     this.modalService.create<CreateCaseFormComponent>(AppModule, CreateCaseFormComponent,
+      {
+      });
+  }
+  showSettingsModal() {
+    this.modalService.create<SettingsComponent>(AppModule, SettingsComponent,
       {
       });
   }
