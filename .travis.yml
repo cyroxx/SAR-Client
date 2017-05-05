@@ -11,6 +11,14 @@ language: node_js
 node_js:
   - 6
 
+addons:
+  apt:
+    packages:
+      # Needed for electron-builder to process .icns icon image files
+      - icnsutils
+      - graphicsmagick
+      - xz-utils
+
 before_script:
   - npm install bower
   - ./node_modules/.bin/bower install
