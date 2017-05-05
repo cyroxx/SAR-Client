@@ -2,6 +2,11 @@
 
 const {app, BrowserWindow} = require('electron')
 
+// Needs to be loaded here so the renderer process can load it via the
+// remote.require() API.
+// See: https://github.com/nathanbuchar/electron-settings/wiki/FAQs
+const settings = require('electron-settings');
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win

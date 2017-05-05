@@ -19,6 +19,10 @@ dmg:
 files:
   - package.json
   - dist/**/*
+  # Needed to make sure we have all runtime dependencies.
+  # The devDependencies will NOT be packaged, electron-builder takes
+  # care of that.
+  - node_modules
 
 linux:
   category: Network
