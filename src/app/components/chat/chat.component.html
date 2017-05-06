@@ -1,47 +1,52 @@
 <div class="col-sm-3 col-md-3 col-sm-offset-9 col-md-offset-9 chat"  ng-controller="messageController">
 	        <div class="chat-control form-inline">
-	          <button class="btn btn-sm btn-default active">All</button>
-	          <button class="btn btn-sm btn-default">Chat</button>
-	          <button class="btn btn-sm btn-default">Log</button>
 	          <div class="searchbox">
 	            <input type="text" class="form-control">
 	          </div>
 	        </div>
+	        <div class="chat_filter">
+		        <div class="btn-group">
+		         <button class="btn btn-sm btn-default" (click)='updateFilterType("all")' [class.active]="filtertype == 'all'">All</button>
+			          <button class="btn btn-sm btn-default" (click)='updateFilterType("chat")' [class.active]="filtertype == 'chat'">Chat</button>
+			          <button disabled class="btn btn-sm btn-default" (click)='updateFilterType("log")' [class.active]="filtertype == 'log'">Log</button>
+				</div>
+				</div>
 	        <div class="message-list">
-	            <div><!--repeat messages-->
-	               <!-- <div class="message-container other_user">
+	        	 
+	            <div *ngFor="let message of messages;">
+		            <!--repeat messages-->
+		            <div class="message-container other_user" *ngIf="message.type == 'message'&&(filtertype == 'chat'||filtertype == 'all')">
+		                        <div class="image_box" data-toggle="tooltip" data-placement="left">
 
-	                        <div class="image_box" data-toggle="tooltip" data-placement="left">
+		                            <span class="img"></span>
+		                        </div>
 
-	                            <img src="{{getLogo(message.author.vehicle_id)}}">
-	                        </div>
+		                        <div class="message">
+		                            <div class="message-meta">
+		                              <span class="meta_user">{{message.author}}</span> · <span class="timestamp">{{message.createdAt}}</span>  
+		                            </div>
+		                            <div class="text">
+		                              {{message.text}}
+		                            </div>
 
-	                        <div class="message">
-	                            <div class="message-meta">
-	                              <span class="meta_user">{{message.author.username}}</span> · <span class="timestamp">{{getTime(message.created_at)}}</span>  
-	                            </div>
-	                            <div class="text">
-	                              message text
-	                            </div>
-
-	                        </div>
-	                </div>
-	                <div class="message-container log">
+		                        </div>
+		            </div>
+	                <div class="message-container log" *ngIf="message.type == 'log'&&(filtertype == 'log'||filtertype == 'all')">
 	                  <div class="message">
-	                  <div class="message-meta">{{getTime(message.created_at)}}</div>
+	                  <div class="message-meta">{{message.createdAt}}</div>
 	                  <div class="log-text">
-	                      <a class="meta_user">{{message.author.username}}</a> <span>logtext</span>
+	                      <a class="meta_user">{{message.author}}</a> <span>{{message.text}}</span>
 	                  </div>
 	                  </div>
-	                </div>-->
+	                </div>
 	            </div>
 	        </div>
 
 
 	        <div class="input-container">
-	          <form ng-submit="submitMessage()">
+	          <form (ngSubmit)="submitMessage()">
 	            <div class="input">
-	              <input type="text" id="chatInput" placeholder="Your message." ng-model="data.messagetext" style="width:100%;"/>
+	              <textarea name="chatInput" id="chatInput" placeholder="Your message…"  [(ngModel)]="data.messagetext" style="width:100%;"></textarea>
 	            </div>
 	          </form>
 	        </div>
