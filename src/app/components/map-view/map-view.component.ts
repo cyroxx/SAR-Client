@@ -17,6 +17,8 @@ export class MapViewComponent implements OnInit {
   vehicles;
   cases;
 
+  private drawVehicleInterval: any;
+
   constructor(
     private vehiclesService: VehiclesService,
     private casesService: CasesService,
@@ -29,7 +31,7 @@ export class MapViewComponent implements OnInit {
     this.initMap();
     this.drawVehicles();
     // call this every 60 seconds
-    const vehicle_interval = setInterval(function(self) {
+    this.drawVehicleInterval = setInterval(function(self) {
       return function() {
         console.log('drawing!!');
         self.drawVehicles();
@@ -38,6 +40,12 @@ export class MapViewComponent implements OnInit {
       60 * 1000
     );
     //this.drawCases();
+  }
+
+  ngOnDestroy() {
+    if (this.drawVehicleInterval) {
+      clearInterval(this.drawVehicleInterval);
+    }
   }
 
   drawCases() {

@@ -4,16 +4,21 @@
 	            <input type="text" class="form-control">
 	          </div>
 	        </div>
+	        <div class="chat_filter">
+		        <div class="btn-group">
+		         <button class="btn btn-sm btn-default" (click)='updateFilterType("all")' [class.active]="filtertype == 'all'">All</button>
+			          <button class="btn btn-sm btn-default" (click)='updateFilterType("chat")' [class.active]="filtertype == 'chat'">Chat</button>
+			          <button disabled class="btn btn-sm btn-default" (click)='updateFilterType("log")' [class.active]="filtertype == 'log'">Log</button>
+				</div>
+				</div>
 	        <div class="message-list">
-	        	  <a class="btn btn-sm btn-default" (click)='updateFilterType("all")' [class.active]="filtertype == 'all'">All</a>
-		          <a class="btn btn-sm btn-default" (click)='updateFilterType("chat")' [class.active]="filtertype == 'chat'">Chat</a>
-		          <a class="btn btn-sm btn-default" (click)='updateFilterType("log")' [class.active]="filtertype == 'log'">Log</a>
+	        	 
 	            <div *ngFor="let message of messages;">
 		            <!--repeat messages-->
 		            <div class="message-container other_user" *ngIf="message.type == 'message'&&(filtertype == 'chat'||filtertype == 'all')">
 		                        <div class="image_box" data-toggle="tooltip" data-placement="left">
 
-		                            <img style="background:#17affa">
+		                            <span class="img"></span>
 		                        </div>
 
 		                        <div class="message">
@@ -41,7 +46,7 @@
 	        <div class="input-container">
 	          <form (ngSubmit)="submitMessage()">
 	            <div class="input">
-	              <input type="text" name="chatInput" id="chatInput" placeholder="Your message." [(ngModel)]="data.messagetext" style="width:100%;"/>
+	              <textarea name="chatInput" id="chatInput" placeholder="Your message…"  [(ngModel)]="data.messagetext" style="width:100%;"></textarea>
 	            </div>
 	          </form>
 	        </div>
