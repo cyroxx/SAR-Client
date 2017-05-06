@@ -46,7 +46,7 @@
 	        <div class="input-container">
 	          <form (ngSubmit)="submitMessage()">
 	            <div class="input">
-	              <textarea name="chatInput" id="chatInput" placeholder="Your message…"  [(ngModel)]="data.messagetext" style="width:100%;"></textarea>
+	              <textarea name="chatInput" id="chatInput" placeholder="Your message…"  (keydown)="keyDownFunction($event)" [(ngModel)]="data.messagetext" style="width:100%;"></textarea>
 	            </div>
 	          </form>
 	        </div>

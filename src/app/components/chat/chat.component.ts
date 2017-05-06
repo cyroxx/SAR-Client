@@ -29,6 +29,11 @@ export class ChatComponent implements OnInit {
         });
     });
   }
+  keyDownFunction(event) {
+    if (event.keyCode == 13) {
+      this.submitMessage();
+    }
+  }
   submitMessage() {
 
     var message = {
