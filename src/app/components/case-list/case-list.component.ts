@@ -52,7 +52,11 @@ export class CaseListComponent implements OnInit {
 
 
 
-        this.cases = data.docs;
+        this.cases = data.docs.sort(
+          (a, b) => {
+            return a._id < b._id ? 1 : (a._id > b._id ? -1 : 0);
+          });;
+
         console.log(data.docs);
 
         var self = this;
