@@ -208,4 +208,18 @@ export class PouchService {
     }
     return Promise.reject('No database with name [' + db_title + ']');
   }
+
+  clearCache() {
+    for (var db_title in this.databases) {
+      this.databases[db_title]['pouchDB'].destroy().then(function() {
+
+        console.log('cache of db ' + db_title + ' cleared');
+      }).catch(function(err) {
+        // error occurred
+
+        console.log('error clearing cache of db ' + db_title + ':' + err);
+      })
+    }
+  }
+
 }
