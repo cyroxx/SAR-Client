@@ -35,7 +35,7 @@ export class SettingsComponent implements OnInit {
     this.db_remote_url = this.configService.getConfiguration('db_remote_url');
 
     this.settings_info = {};
-    this.settings_info.show = false;
+    this.settings_info.show = true;
 
     this.platform = os.platform();
 
@@ -175,6 +175,11 @@ export class SettingsComponent implements OnInit {
       helpers.alert('Settings update successful!');
       helpers.reload();
     });
+
+    //if more possible settings than change remote url will follow
+    //clearCache should only be called if remote url is changed
+
+    this.pouchService.clearCache();
   }
 
   openExternal(link) {
