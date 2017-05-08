@@ -21,10 +21,39 @@
 
 .case>.row {
     background: #ffffff;
-    padding: 15px 7px;
     font-size: 1.5rem;
+    position:relative;
     border-top:2px solid #727881;
 }
+
+.case>.row>.toggler {
+        cursor:pointer;
+        padding: 15px 15px;
+        height:50px;
+}
+
+.case>.row .btn-sm {
+    
+}
+
+.edit {opacity:0.5;     
+    position: absolute;
+    right: 10px;
+    top: 10px; 
+}
+.edit:hover {opacity:0.8;}
+
+.case>.row>.toggler>.col-xs-3 span:after {
+    content:'-';
+    visibility: hidden;
+    display:inline-block;
+}
+
+.case>.row>.toggler>.col-xs-3 [hidden] {
+    visibility: hidden;
+    display:block;
+}
+
 
 .case>.meta {
     margin-bottom:7px;

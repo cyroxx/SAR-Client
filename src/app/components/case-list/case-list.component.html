@@ -1,6 +1,6 @@
 <div class="cases-container" id="caseListContainer">
     <ul class="cases">
-        <li *ngFor="let case of cases;" class="case filter {{   getStateClassName(case.state)}}" (click)="toggleCase(case._id)">
+        <li *ngFor="let case of cases;" class="case filter {{   getStateClassName(case.state)}}">
             <div class="meta">
                 <div class="row">
                     <div class="col-md-7">
@@ -13,11 +13,17 @@
                 </div>
             </div>
             <div class="row">
+                <div class="toggler" (click)="toggleCase(case._id)">
                 <div class="status col-xs-3 {{getStateClassName(case.state)}}">{{getStateName(case.state)}}</div>
                 <div class="col-xs-2 caseID">R3G</div>
                 <div class="col-xs-2 boatType">{{getBoatTypeName(case.boatType)}}</div>
                 <div class="col-xs-3"><span [hidden]="case.boatCondition == 1">{{getBoatConditionName(case.boatCondition)}}</span></div>
-                <div class="col-xs-2 text-right"><i class="zmdi zmdi-edit" (click)="showEditCaseModal(case._id)"></i></div>
+                </div>
+                <div class="col-xs-2 edit text-right">
+                    <a class="btn btn-sm btn-default" (click)="showEditCaseModal(case._id)">
+                        <i class="zmdi zmdi-edit"></i>
+                    </a>
+                </div>
             </div>
             <div class="case_infos" [hidden]="toggled_cases.indexOf( case._id ) === -1 ">
                 <div class="row">
