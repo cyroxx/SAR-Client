@@ -47,6 +47,7 @@ export class CaseListComponent implements OnInit {
             "$in": this.caseService.filtered_statuses.map(String)
           }
         });
+
       var self = this;
       matchingPromise.then(data => {
 
@@ -63,12 +64,7 @@ export class CaseListComponent implements OnInit {
         var initial_cases_length = this.cases.length;
 
         //loop through cases and load location
-        for (var x = 0; x < initial_cases_length; x++) {
-          if (this.cases[x] && this.cases[x]._id) {
-            var doc = this.cases[x];
-            self.loadLocationForCase(doc._id);
-          }
-        }
+        self.loadLocationForCase();
 
 
       });
@@ -79,11 +75,20 @@ export class CaseListComponent implements OnInit {
 
   }
 
-  loadLocationForCase(case_id: string) {
+  loadLocationForCase() {
     var self = this;
-    self.locationService.getLastLocationMatching(case_id).then(
-      function(loc) {
-        self.caseMeta.locations[case_id] = loc.docs[0];
+    self.locationService.getAllLocations().then(
+      function(locations) {
+        console.log(locations)
+        for (let x = 0; x < self.cases.length; x++) {
+          if (self.cases[x] && self.cases[x]._id) {
+            let doc = self.cases[x];
+            self.caseMeta.locations[doc._id] = locations.rows.filter(function(item) {
+              return item.doc.itemId == doc._id;
+            })[0];
+            console.log(self.caseMeta.locations[doc._id]);
+          }
+        }
       }
     );
   }

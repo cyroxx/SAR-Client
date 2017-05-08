@@ -51,6 +51,10 @@ export class LocationsService {
     );
   }
 
+  getAllLocations() {
+    return this.pouchService.findAll('locations');
+  }
+
   store(location: Location) {
 
     console.log(location);
