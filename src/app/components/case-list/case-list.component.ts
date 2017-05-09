@@ -23,6 +23,7 @@ export class CaseListComponent implements OnInit {
   cases: Array<Case>;
   toggled_cases;
   states = Status;
+  getCaseHash;
   boatTypes = BoatType;
   boatConditions = BoatCondition;
   caseMeta: any;
@@ -31,6 +32,8 @@ export class CaseListComponent implements OnInit {
   constructor(public caseService: CasesService, public locationService: LocationsService, private modalService: ModalService) {
     this.JSON = JSON;
     this.caseMeta = { locations: {} };
+
+    this.getCaseHash = caseService.getCaseHash
   }
 
   ngOnInit() {
