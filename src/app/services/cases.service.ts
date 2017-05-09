@@ -3,6 +3,10 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+declare var md5: any;
+
+
+
 import { PouchService } from '../services/pouch.service';
 import { AuthService } from '../services/auth.service';
 import { LocationsService } from '../services/locations.service';
@@ -96,5 +100,9 @@ export class CasesService {
   }
   getFilteredStatuses() {
     return this.filtered_statuses;
+  }
+
+  getCaseHash(case_id: string) {
+    return md5(case_id).substr(0, 4).toUpperCase();
   }
 }
