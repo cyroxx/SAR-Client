@@ -4,7 +4,7 @@ example:
 $ node create_user.js -u SW2 -p abcabc -e sw2@mail.com -a SAR-Ship -v SW2 .
 */
 
-var config = require('./config.js');
+var config = require('./services/config.js');
 var program = require('commander');
 var CloudantUser = require("cloudant-user");
 
