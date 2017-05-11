@@ -1,6 +1,6 @@
 // src/electron.js
 
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow,ipcMain} = require('electron')
 
 // Needs to be loaded here so the renderer process can load it via the
 // remote.require() API.
@@ -16,23 +16,29 @@ function createWindow () {
   win = new BrowserWindow({width: 1024, height: 768})
 
   //clear sesssion on startup 
-  win.webContents.session.clearCache(function(){
-  
-    // and load the index.html of the app.
-    win.loadURL(`file://${__dirname}/index.html`)
 
-    // Open the DevTools.
-    //win.webContents.openDevTools()
+      // and load the index.html of the app.
+      win.loadURL(`file://${__dirname}/index.html`)
 
-    // Emitted when the window is closed.
-    win.on('closed', () => {
-      // Dereference the window object, usually you would store windows
-      // in an array if your app supports multi windows, this is the time
-      // when you should delete the corresponding element.
-      win = null
-    })
+      // Open the DevTools.
+      //win.webContents.openDevTools()
 
-  });
+      // Emitted when the window is closed.
+      win.on('closed', () => {
+        // Dereference the window object, usually you would store windows
+        // in an array if your app supports multi windows, this is the time
+        // when you should delete the corresponding element.
+        win = null
+      })
+
+      ipcMain.on('logout-called', (event, arg) => {
+          win.webContents.session.clearCache(function(){
+            win.webContents.session.clearStorageData(function(){
+              console.log('logout succeeded');
+              win.loadURL(`file://${__dirname}/index.html`)
+            });
+          });
+      })
   
 }
 
@@ -40,6 +46,8 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow)
+
+
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
