@@ -1,7 +1,7 @@
 export enum Status {
   'Need Help' = 1,
   Critical,
-  'Possible Target',
+  Possible,
   Attended,
   Rescued,
   Closed,
