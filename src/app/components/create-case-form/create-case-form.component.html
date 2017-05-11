@@ -151,17 +151,15 @@
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
-                    <input type="checkbox" id="otherBoats" name="other_involved" value="1">
-                    <label for="otherBoats">Other boat/s involved?</label>
+                    <label>Other boat/s involved?</label>
                     <div class="other_boats">
-                        <input class="form-control" type="text" id="additional_informations">
+                        <input class="form-control" type="text" id="other_boats">
                     </div>
                 </div>
                 <div class="form-group col-md-6">
-                    <input type="checkbox" id="additionalInfos">
-                    <label for="additionalInfos">Additional information</label>
+                    <label>Additional information</label>
                     <div class="additional_infos">
-                        <textarea class="form-control" placeholder="Additional informations…" rows="3" name="additional_informations" id="additional_informations" ng-model="case.additional_informations"></textarea>
+                        <textarea class="form-control" placeholder="Additional informations…" rows="3" name="addtitionalInformations" id="addtitionalInformations" [(ngModel)]="case.addtitionalInformations"></textarea>
                     </div>
                 </div>
             </div>
