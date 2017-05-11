@@ -9,6 +9,8 @@ import { PouchService } from './pouch.service';
 declare var PouchDB: any;
 declare var localStorage: any;
 declare var window: any;
+declare var ipcRenderer: any;
+
 @Injectable()
 export class AuthService {
   router
@@ -99,7 +101,8 @@ export class AuthService {
   logout() {
 
     this.changeLoginStateTo(false);
-    return this.db.logout()
+    ipcRenderer.send('logout-called');
+
   }
   is_logged_in() {
     return this.logged_in
