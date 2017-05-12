@@ -12,8 +12,8 @@ for seed in ${seeds}/*.json; do
 	echo "==> Processing: $seed"
 	dbname=$(basename $seed .json)
 
-	echo "==> Deleting Database $seed"
-	curl -X DELETE ${couch_url}/${dbname} || true
+	echo "==> Truncating database: $dbname"
+	node ./services/truncate_db.js -u ${couch_url} -d ${dbname} . || true
 
 	echo "==> Creating database: $dbname"
 	curl -s -XPUT ${couch_url}/${dbname} || true
