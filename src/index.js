@@ -42,7 +42,6 @@ function createWindow () {
             });
           });
       })
-
 }
 
 
@@ -76,6 +75,23 @@ function createMenu(){
 function init(){
   createWindow();
   createMenu();
+  // Emitted when the window is closed.
+  win.on('closed', () => {
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    win = null
+  })
+
+  let timer;
+  win.webContents.on('did-finish-load', () => {
+    // Needs to be replaced with the position logic
+    timer = setInterval(() => {
+      console.log('sending positions');
+      win.webContents.send('positions', {lat: 51.5033640, lon: -0.1276250});
+    }, 2000);
+  });
+>>>>>>> inreach-mail-service
 }
 
 // This method will be called when Electron has finished
