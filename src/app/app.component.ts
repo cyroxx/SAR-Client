@@ -1,4 +1,5 @@
 import { Component, Input, Output } from '@angular/core';
+<<<<<<< HEAD
 import { AppModule } from './app.module';
 import { VehiclesService } from 'app/services/vehicles.service';
 import { ChatService } from 'app/services/chat.service';
