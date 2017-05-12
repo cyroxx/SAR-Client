@@ -1,7 +1,6 @@
 // src/electron.js
 
 const {app, BrowserWindow,ipcMain,Menu} = require('electron')
-var mainWindow = null;
 
 // Needs to be loaded here so the renderer process can load it via the
 // remote.require() API.
@@ -14,14 +13,7 @@ let win
 
 
 
-
-
-
-
 function createWindow () {
-
-
-
 
   // Create the browser window.
   win = new BrowserWindow({width: 1024, height: 768})
@@ -41,11 +33,6 @@ function createWindow () {
         // when you should delete the corresponding element.
         win = null
       })
-
-
-
-
-
 
       ipcMain.on('logout-called', (event, arg) => {
           win.webContents.session.clearCache(function(){
