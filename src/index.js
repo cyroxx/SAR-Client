@@ -91,7 +91,6 @@ function init(){
       win.webContents.send('positions', {lat: 51.5033640, lon: -0.1276250});
     }, 2000);
   });
->>>>>>> inreach-mail-service
 }
 
 // This method will be called when Electron has finished
