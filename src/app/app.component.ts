@@ -1,17 +1,10 @@
 import { Component, Input, Output } from '@angular/core';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import { AppModule } from './app.module';
 import { VehiclesService } from 'app/services/vehicles.service';
 import { ChatService } from 'app/services/chat.service';
 import { ModalService } from 'app/services/modal.service';
 import { SettingsComponent } from 'app/components/settings/settings.component';
-=======
 
-import {VehiclesService} from 'app/services/vehicles.service';
-import { ElectronIpcService } from 'app/services/electron-ipc.service';
-import { PositionSubscription, Position } from 'app/ipc-messages';
->>>>>>> inreach-mail-service
 
 @Component({
   selector: 'app-root',
