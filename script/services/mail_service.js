@@ -297,7 +297,7 @@ var mail_service = new function(){
 
   }
   this.sendMail = function (address, title, text_plain,text_html, callback){
-      address += ',swaircraft@myiridium.net,881631010516@msg.iridium.com,it@sea-watch.org'
+      address += ','+config.gateway_cc;
 
       console.log("START SENDING MAIL TO "+address);
 
