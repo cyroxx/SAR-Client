@@ -5,13 +5,29 @@
 
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.25.5.
 
-Run `bower install`
+## Installation
 
-Run `npm install` to install dependencies.
+### Install Dependencies
+
+Run `bower install` to install bower dependencies.
+
+Run `npm install` to install npm dependencies.
+
+### Modify config files
+
+Add the remote db to:
+/src/config/config.js
+
+Add remote db and mail credentials for services in
+/script/services/config.js
+
+## Run Application
 
 Run `npm run electron` to build angular and electron application.
 
 Run `ng serve` inside the src/ directory to build and serve the angular application. 
+
+
 
 ## Contributing
 

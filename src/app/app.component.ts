@@ -5,6 +5,7 @@ import { ChatService } from 'app/services/chat.service';
 import { ModalService } from 'app/services/modal.service';
 import { SettingsComponent } from 'app/components/settings/settings.component';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

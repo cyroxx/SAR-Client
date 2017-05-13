@@ -1,6 +1,6 @@
 // src/electron.js
 
-const {app, BrowserWindow,ipcMain} = require('electron')
+const {app, BrowserWindow,ipcMain,Menu} = require('electron')
 
 // Needs to be loaded here so the renderer process can load it via the
 // remote.require() API.
@@ -11,7 +11,10 @@ const settings = require('electron-settings');
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 
+
+
 function createWindow () {
+
   // Create the browser window.
   win = new BrowserWindow({width: 1024, height: 768})
 
@@ -21,7 +24,7 @@ function createWindow () {
       win.loadURL(`file://${__dirname}/index.html`)
 
       // Open the DevTools.
-      //win.webContents.openDevTools()
+      //
 
       // Emitted when the window is closed.
       win.on('closed', () => {
@@ -39,13 +42,61 @@ function createWindow () {
             });
           });
       })
-  
+}
+
+
+function createMenu(){
+
+    // Create the Application's main menu
+    var template = [{
+        label: "SAR-Client",
+        submenu: [
+            { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
+            { label: "Debugger", click: function(){ win.webContents.openDevTools() }},
+            { type: "separator" },
+            { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
+        ]}, {
+        label: "Edit",
+        submenu: [
+            { label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
+            { label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
+            { type: "separator" },
+            { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
+            { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+            { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+            { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+        ]}
+    ];
+
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+
+}
+
+function init(){
+  createWindow();
+  createMenu();
+  // Emitted when the window is closed.
+  win.on('closed', () => {
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    win = null
+  })
+
+  let timer;
+  win.webContents.on('did-finish-load', () => {
+    // Needs to be replaced with the position logic
+    timer = setInterval(() => {
+      console.log('sending positions');
+      win.webContents.send('positions', {lat: 51.5033640, lon: -0.1276250});
+    }, 2000);
+  });
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', init)
 
 
 
