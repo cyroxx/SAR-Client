@@ -59,6 +59,7 @@
     "@types/node": "^6.0.42",
     "angular2-openlayers": "^0.4.5",
     "codelyzer": "~2.0.0-beta.1",
+    "commander": "^2.9.0",
     "core-js": "^2.4.1",
     "cradle": "^0.7.1",
     "electron": "^1.4.15",
