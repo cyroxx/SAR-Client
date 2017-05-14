@@ -27,7 +27,7 @@
                             </div>
                         </div>
                     </div>
-                    <div [hidden]="current_version == update_info.status_obj.version">
+                    <div [hidden]="update_info.status_obj.status != 'update_possible'&&update_info.status_obj.status != 'update_required'">
                         <a (click)="openExternal(update_info.status_obj.link)" class="btn btn-primary">Download New Version</a>
                     </div>
                 </div>
