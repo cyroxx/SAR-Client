@@ -61,7 +61,7 @@ export class MapService {
     this.maptype = 'offline-map';
 
     this.map = L.map(this.mapContainerId, '');
-    this.map.options.maxZoom = 9;
+    this.map.options.maxZoom = 8;
     this.map.setView(this.startLocation, 7);
     L.control.scale({ 'imperial': false }).addTo(this.map);
     switch (this.maptype) {
