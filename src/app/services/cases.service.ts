@@ -55,7 +55,7 @@ export class CasesService {
       .then(function(response) {
         console.log(response);
         //stupid fix until https://github.com/sea-watch/SAR-Client/issues/95 is resolved
-        //we just toggle a status that does'nt exist and the case list will be reloaded
+        //we just toggle a status that doesn't exist and the case list will be reloaded
 
         self.toggleStatusFilter('9');
       })
@@ -93,7 +93,7 @@ export class CasesService {
     if (this.filtered_statuses.indexOf(status_id) === -1)
       this.filtered_statuses.push(status_id)
     else
-      this.filtered_statuses.splice(this.filtered_statuses.indexOf(status_id))
+      this.filtered_statuses.splice(this.filtered_statuses.indexOf(status_id), 1)
 
 
     this.filteredStatuses.next(this.filtered_statuses);
