@@ -3,8 +3,6 @@ import { ChatService } from '../../services/chat.service';
 
 import { AuthService } from '../../services/auth.service';
 
-declare var jq: any;
-
 @Component({
   selector: 'chat',
   templateUrl: './chat.component.html',
