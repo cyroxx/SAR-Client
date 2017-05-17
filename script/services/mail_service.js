@@ -16,18 +16,6 @@ var mail_service = new function(){
 
     var self = this;
 
-    /*this.initMailListener({
-      imap_username:config.inreach_mail_username,
-      imap_password:config.inreach_mail_password,
-      imap_host:config.inreach_mail_host,
-
-      mail_callback:function(mail, seqno, attributes){
-        
-        self.inreachMailCallback(mail, seqno, attributes);
-
-      }
-    });*/
-
     this.initMailListener({
       imap_username:config.iridium_mail_username,
       imap_password:config.iridium_mail_password,
@@ -35,6 +23,7 @@ var mail_service = new function(){
 
       mail_callback:function(mail, seqno, attributes){
         self.iridiumMailCallback(mail, seqno, attributes);
+        self.positionCallback(mail, seqno, attributes);
       }
     });
 
@@ -49,7 +38,21 @@ var mail_service = new function(){
       };
 
       this.casesDB = new PouchDB(config.db_remote_url+'/cases', dbConfig);
+      this.vehiclesDB = new PouchDB(config.db_remote_url+'/vehicles', dbConfig);
       this.positionsDB = new PouchDB(config.db_remote_url+'/locations', dbConfig);
+
+  }
+  this.getVehicles = function(callback){
+    this.vehiclesDB.allDocs({
+      include_docs: true,
+      attachments: true
+    }).then(function (result) {
+      // handle result
+      callback(false,result.rows);
+    }).catch(function (err) {
+      callback(err);
+    });
+
   }
   this.initMailListener = function(listener_config){
     var self = this;
@@ -105,19 +108,6 @@ var mail_service = new function(){
         // do something with mail object including attachments
         if(mail.headers.from.indexOf(config.inreach_sender_mail)>-1){
 
-          /*
-          An example message would look like:
-          Refugee-Boat found – Status: GOOD
-
-          View the location or send a reply to {{NAME STRING}}
-
-          Iuventa Jugend Rettet e.V. sent this message from: Lat 52.367857 Lon 9.651468
-
-          Do not reply directly to this message.
-
-          This message was sent to you using the inReach two-way satellite communicator with GPS. To learn more, visit http://explore.garmin.com/inreach 
-          */
-
           //console.log("emailParsed", mail.text);
 
           //find text between defined strings and remove whitespaces
@@ -166,10 +156,113 @@ var mail_service = new function(){
           
           }
 
-          
-
           console.log(boat_status,lat,lon);
         }
+  }
+  this.positionCallback = function(mail, seqno, attributes){
+
+
+
+        var self = this;
+        var sender_mail = this.getEmailsFromString(mail.headers.from);
+        var sender_config_mail = this.getEmailsFromString(config.iridium_sender_mail)
+
+        console.log('getting vehicles...');
+
+        this.getVehicles(function(err,res){
+
+          console.log('got vehicles');
+              if(err)
+                console.log( err );
+
+              //loop through vehicles
+              for(var i in res){
+                if(typeof res[i].doc != 'undefined'){
+                  console.log('vehicle #'+i);
+
+                  var vehicle = res[i].doc;
+                  switch(vehicle.tracking_type){
+                    case'IRIDIUMGO':
+
+                      //message looks like "I am here Lat+35.777135 Lon+14.291735 Alt+2554ft GPS Sats seen 09 http://map.iridium.com/m?lat=35.777135&lon=14.291735 http://map.iridium.com/m?lat=35.777135&lon=14.291735 Sent via Iridium GO!"
+
+                      if(sender_mail.indexOf(vehicle.tracking_sender_address)>-1){
+                        
+                        console.log('Mail from gateway sender received:');
+
+                        console.log(mail.text);
+
+                        var lat = mail.text.substring( mail.text.indexOf('Lat+') + 4,
+                                                       mail.text.indexOf('Lon')).trim();
+
+                        var lon = mail.text.substring( mail.text.indexOf('Lon+') + 4,
+                                                       mail.text.indexOf('Alt')).trim();
+
+                        var alt = mail.text.substring( mail.text.indexOf('Alt+') + 4,
+                                                       mail.text.indexOf('GPS')).trim();
+
+                        var alt = alt.replace('ft','')
+
+                        console.log('adding position to db:')
+
+
+                                  //add position
+                                  self.positionsDB.put({
+                                    "_id": new Date().toISOString()+"-locationOf-"+res[i].doc._id,
+                                    "latitude": lat,
+                                    "longitude": lon,
+                                    "altitude": alt,
+                                    "heading": "0",
+                                    "origin": "IRIDIUMGO",
+                                    "type": "vehicle_location",
+                                    "itemId": res[i].doc._id
+                                  }).then(function (response) {
+                                    console.log('location created');
+                                  }).catch(function (err) {
+                                    console.log(err);
+                                  });
+
+
+
+                      }else{
+                        console.log('Mail is not from gateway sender');
+                      }
+
+
+
+
+
+                    break;
+                  }
+                }
+              }
+
+            });
+
+
+
+
+       
+
+  }
+
+  /*
+  *@strObj string String containg a mail like "Joe Smith <joe.smith@somemail.com>"
+  *returns mail (e.g. joe.smith@somemail.com)
+  */
+  this.getEmailsFromString = function(StrObj) {
+
+        var separateEmailsBy = ", ";
+        var email = "<none>"; // if no match, use this
+        var emailsArray = StrObj.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi);
+        if (emailsArray) {
+            email = "";
+            for (var i = 0; i < emailsArray.length; i++) {
+                if (i != 0) email += separateEmailsBy;
+                email += emailsArray[i];
+            }
+        }
+        return email;
   }
   this.iridiumMailCallback = function(mail, seqno, attributes){
     /*
@@ -197,6 +290,7 @@ var mail_service = new function(){
         */
 
         var self = this;
+
 
         if(mail.headers.from.indexOf(config.iridium_sender_mail)>-1){
 
@@ -355,20 +449,5 @@ var mail_service = new function(){
   }
 
 }
-
-/*
-Dear officer in charge,
-
-the Sea-Watch aircraft just found a boat in distress. Here are the informations:
-
-For any questions regarding this case or the aircraft mission please contact the aircraft via 881631010516@msg.iridium.com
-or our backoffice airborneoperations@sea-watch.org. 
-
-Thanks for your cooperation,
-The Sea-Watch Team.
-
-Please Note:
-This email is generated automatically by the Sea-Watch-App operational System.
-*/
 
 mail_service.init();
