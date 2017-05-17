@@ -27,6 +27,8 @@ export class ChatComponent implements OnInit {
         (a, b) => {
           return a._id > b._id ? 1 : (a._id < b._id ? -1 : 0);
         });
+
+      this.scrollDown();
     });
   }
   keyDownFunction(event) {
@@ -53,15 +55,18 @@ export class ChatComponent implements OnInit {
 
     this.data.messagetext = '';
 
+    this.scrollDown();
+
     console.log('message submitted:');
     console.log(message);
 
+    return message
+  }
+  scrollDown() {
     setTimeout(function() {
       var objDiv = document.getElementById("message_list");
       objDiv.scrollTop = objDiv.scrollHeight;
     }, 50)
-
-    return message
   }
 
 }
