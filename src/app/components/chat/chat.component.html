@@ -11,7 +11,7 @@
 			          <button disabled class="btn btn-sm btn-default" (click)='updateFilterType("log")' [class.active]="filtertype == 'log'">Log</button>
 				</div>
 				</div>
-	        <div class="message-list">
+	        <div class="message-list" id="message_list">
 	        	 
 	            <div *ngFor="let message of messages;">
 		            <!--repeat messages-->
