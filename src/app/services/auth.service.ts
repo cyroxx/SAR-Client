@@ -78,7 +78,7 @@ export class AuthService {
       if (err) {
         console.log(err)
         if (err.name === 'unauthorized') {
-          console.log('...password or username wrong');
+          alert('...password or username wrong');
         } else {
           // cosmic rays, a meteor, etc.
         }
