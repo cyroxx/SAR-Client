@@ -56,7 +56,7 @@ export class MapViewComponent implements OnInit {
     let list = [""],
       route = this.location.path();
 
-    return (!list.indexOf(route) > -1);
+    return (list.indexOf(route) === -1);
   }
 
   ngOnDestroy() {
