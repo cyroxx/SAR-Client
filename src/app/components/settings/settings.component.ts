@@ -167,8 +167,9 @@ export class SettingsComponent implements OnInit {
   }
 
   updateSettings() {
+
     const update = {
-      db_remote_url: this.db_remote_url,
+      db_remote_url: this.db_remote_url.replace(/\/?$/, '/'),
     };
 
     this.configService.updateConfiguration(update, () => {
