@@ -80,7 +80,7 @@ export class AuthService {
         if (err.name === 'unauthorized') {
           alert('...password or username wrong');
         } else {
-          // cosmic rays, a meteor, etc.
+        
         }
       } else {
         if (response.ok)
