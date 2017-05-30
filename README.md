@@ -5,10 +5,23 @@
 
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.25.5.
 
+## Installation
 
-Run `bower install`
+### Install Dependencies
 
-Run `npm install` to install dependencies.
+Run `bower install` to install bower dependencies.
+
+Run `npm install` to install npm dependencies.
+
+### Modify config files
+
+Add the remote db to:
+/src/config/config.js
+
+Add remote db and mail credentials for services in
+/script/services/config.js
+
+## Run Application
 
 Run `npm run electron` to build angular and electron application.
 
@@ -18,6 +31,7 @@ Run `ng serve` inside the src/ directory to build and serve the angular applicat
 If you want to use the services you also need to update the script/services/config.js with your couchDB remote and login data.
 
 If you want to use the create_user.js service, please modify the script/_security-docs/_security-couchdb.json and insert your couchDB admin there.
+
 
 
 

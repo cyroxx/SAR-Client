@@ -1,6 +1,7 @@
 import { Component, Input, Output } from '@angular/core';
 import { AppModule } from './app.module';
 import { VehiclesService } from 'app/services/vehicles.service';
+import { ChatService } from 'app/services/chat.service';
 import { ModalService } from 'app/services/modal.service';
 import { SettingsComponent } from 'app/components/settings/settings.component';
 
@@ -8,7 +9,7 @@ import { SettingsComponent } from 'app/components/settings/settings.component';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [VehiclesService]
+  providers: [VehiclesService, ChatService]
 })
 export class AppComponent {
   title;

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core'
+import { Location } from '@angular/common'
+
 import { MapService } from 'app/services/map.service'
 import { VehiclesService } from 'app/services/vehicles.service'
 import { CasesService } from 'app/services/cases.service'
@@ -6,6 +8,7 @@ import { LocationsService } from '../../services/locations.service';
 
 declare var L: any;
 declare var map: any;
+declare var map_inited: any;
 @Component({
   selector: 'app-map-view',
   templateUrl: './map-view.component.html',
@@ -13,23 +16,32 @@ declare var map: any;
 })
 export class MapViewComponent implements OnInit {
   public map: any;
+  public map_inited: any;
 
   vehicles;
   cases;
+
+  private drawVehicleInterval: any;
 
   constructor(
     private vehiclesService: VehiclesService,
     private casesService: CasesService,
     private locationsService: LocationsService,
     private mapService: MapService,
+    private location: Location
   ) {
+
   }
 
   ngOnInit() {
-    this.initMap();
+    if (!map_inited)
+      console.log(this.mapService.getMapObject());
+    else
+      this.initMap();
+
     this.drawVehicles();
     // call this every 60 seconds
-    const vehicle_interval = setInterval(function(self) {
+    this.drawVehicleInterval = setInterval(function(self) {
       return function() {
         console.log('drawing!!');
         self.drawVehicles();
@@ -38,6 +50,19 @@ export class MapViewComponent implements OnInit {
       60 * 1000
     );
     //this.drawCases();
+  }
+
+  public isHidden() {
+    let list = [""],
+      route = this.location.path();
+
+    return (list.indexOf(route) === -1);
+  }
+
+  ngOnDestroy() {
+    if (this.drawVehicleInterval) {
+      clearInterval(this.drawVehicleInterval);
+    }
   }
 
   drawCases() {
@@ -115,6 +140,9 @@ export class MapViewComponent implements OnInit {
   }
 
   initMap() {
+    console.log('initMap');
+
+    map_inited = true;
     this.mapService.initMap();
   }
 }

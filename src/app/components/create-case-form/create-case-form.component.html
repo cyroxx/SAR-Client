@@ -6,7 +6,7 @@
                     <h2>
                         {{caseId ? 'Edit case: ' + case._id : 'Create a new case'}}
                     </h2>
-                    <p *ngIf="caseId">Last updated at {{case.lastUpdate}} by {{case.reportedBy}}</p>
+                    <p *ngIf="caseId">Last updated at {{case.lastUpdate | date: 'y-MM-d · hh:mm:ss.'}} by {{case.reportedBy}}</p>
                     <p>A case contains all the important informations and should be updated durring the mission.</p>
                 </div>
             </div>
@@ -34,14 +34,14 @@
                     <label style="display:block" for="ppl_in_water">People in Water</label>
 
                     <input type="checkbox" [checked]="case.boatCondition == '2'" (change)="$event.target.checked? (case.boatCondition = 2) : (case.boatCondition = 1)">
-                    
+
                     <!-- Hier hätte ich gerneslo was: https://ziscloud.github.io/angular-bootstrap-toggle/ "No grey" > "Yes red"  -->
                 </div>
 
                 <div class="form-group form-inline col-md-2">
-                        <label style="display:block" for="engine_working">Engine</label>
-                        <input type="checkbox" id="engine_working" name="engine_working" value="1" [(ngModel)]="case.engineWorking">
-                        <!-- Hier hätte ich gerne so was: https://ziscloud.github.io/angular-bootstrap-toggle/ "Working grey" > "Defect red"  -->
+                    <label style="display:block" for="engine_working">Engine</label>
+                    <input type="checkbox" id="engine_working" name="engine_working" value="1" [(ngModel)]="case.engineWorking">
+                    <!-- Hier hätte ich gerne so was: https://ziscloud.github.io/angular-bootstrap-toggle/ "Working grey" > "Defect red"  -->
                 </div>
 
                 <div class="form-group col-md-4">
@@ -59,22 +59,22 @@
                 <div class="form-group col-md-3">
                     <div class="dd_input" [hidden]="casemeta.location_type == 'DMS'">
                         <label for="lat">Lat</label>
-                        <input class="form-control" type="number" step="0.000001" placeholder="Lat" name="lat" id="lat" [(ngModel)]="casemeta.dd_location && casemeta.dd_location.latitude" (ngModelChange)="updatePosition()">
+                        <input class="form-control" type="number" min="0" step="0.000001" placeholder="Lat" name="lat" id="lat" [(ngModel)]="casemeta.dd_location && casemeta.dd_location.latitude" (ngModelChange)="updatePosition()">
                     </div>
                     <!--DMS input area-->
                     <div class="dms_input" [hidden]="casemeta.location_type == 'DD'">
                         <div class="row">
                             <div class="col-xs-2">
                                 <label for="dms_lat_degree">Latitude</label>
-                                <input class="form-control" type="number" placeholder="D" name="dms_lat_degree" id="dms_lat_degree" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.latitude.degree" (ngModelChange)="updatePosition()">
+                                <input class="form-control" type="number" min="0" placeholder="D" name="dms_lat_degree" id="dms_lat_degree" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.latitude.degree" (ngModelChange)="updatePosition()">
                             </div>
                             <div class="col-xs-2">
                                 <label>&nbsp;</label>
-                                <input class="form-control" type="number" placeholder="M" name="dms_lat_minute" id="dms_lat_minute" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.latitude.minute" (ngModelChange)="updatePosition()">
+                                <input class="form-control" type="number" min="0" placeholder="M" name="dms_lat_minute" id="dms_lat_minute" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.latitude.minute" (ngModelChange)="updatePosition()">
                             </div>
                             <div class="col-xs-2">
                                 <label>&nbsp;</label>
-                                <input class="form-control" type="number" placeholder="D" name="latitude_second" id="latitude_second" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.latitude.second" (ngModelChange)="updatePosition()">
+                                <input class="form-control" type="number" min="0" placeholder="D" name="latitude_second" id="latitude_second" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.latitude.second" (ngModelChange)="updatePosition()">
                             </div>
                             <div class="col-xs-2">
                                 <label>&nbsp;</label>
@@ -93,7 +93,7 @@
                 <div class="form-group col-md-3">
                     <div class="dd_input" [hidden]="casemeta.location_type == 'DMS'">
                         <label for="lon">Longitude</label>
-                        <input class="form-control" type="number" step="0.000001" placeholder="Lon" name="lon" id="lon" [(ngModel)]="casemeta.dd_location && casemeta.dd_location.longitude" (ngModelChange)="updatePosition()">
+                        <input class="form-control" type="number" step="0.000001" min="0" placeholder="Lon" name="lon" id="lon" [(ngModel)]="casemeta.dd_location && casemeta.dd_location.longitude" (ngModelChange)="updatePosition()">
                     </div>
 
                     <!--DMS input area-->
@@ -101,15 +101,15 @@
                         <div class="row">
                             <div class="col-xs-2">
                                 <label for="dms_lon_degree">Longitude</label>
-                                <input class="form-control" type="number" placeholder="D" name="dms_lon_degree" id="dms_lon_degree" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.longitude.degree" (ngModelChange)="updatePosition()">
+                                <input class="form-control" type="number" placeholder="D" min="0" name="dms_lon_degree" id="dms_lon_degree" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.longitude.degree" (ngModelChange)="updatePosition()">
                             </div>
                             <div class="col-xs-2">
                                 <label>&nbsp;</label>
-                                <input class="form-control" type="number" placeholder="M" name="dms_lon_minute" id="dms_lon_minute" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.longitude.minute" (ngModelChange)="updatePosition()">
+                                <input class="form-control" type="number" placeholder="M" min="0" name="dms_lon_minute" id="dms_lon_minute" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.longitude.minute" (ngModelChange)="updatePosition()">
                             </div>
                             <div class="col-xs-2">
                                 <label>&nbsp;</label>
-                                <input class="form-control" type="number" placeholder="D" name="longitude_second" id="longitude_second" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.longitude.second" (ngModelChange)="updatePosition()">
+                                <input class="form-control" type="number" min="0" placeholder="D" name="longitude_second" id="longitude_second" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.longitude.second" (ngModelChange)="updatePosition()">
                             </div>
                             <div class="col-xs-2">
                                 <label>&nbsp;</label>
@@ -134,34 +134,32 @@
             <div class="row">
                 <div class="form-group col-md-3">
                     <label for="passenger_count">How many people?</label>
-                    <input class="form-control" name="passenger_count" type="number" placeholder="How many people?" id="passenger_count" [(ngModel)]="case.peopleCount">
+                    <input class="form-control" name="passenger_count" type="number" min="0" placeholder="How many people?" id="passenger_count" [(ngModel)]="case.peopleCount">
                 </div>
                 <div class="form-group col-md-3">
                     <label for="passenger_count">… women?</label>
-                    <input class="form-control" name="women_on_board" type="number" placeholder="How many woman?" id="women_on_board" [(ngModel)]="case.womenCount">
+                    <input class="form-control" name="women_on_board" type="number" min="0" placeholder="How many woman?" id="women_on_board" [(ngModel)]="case.womenCount">
                 </div>
                 <div class="form-group col-md-3">
                     <label for="passenger_count">… children?</label>
-                    <input class="form-control" name="children_on_board" type="number" placeholder="How many children?" id="children_on_board" [(ngModel)]="case.childrenCount">
+                    <input class="form-control" name="children_on_board" min="0" type="number" placeholder="How many children?" id="children_on_board" [(ngModel)]="case.childrenCount">
                 </div>
                 <div class="form-group col-md-3">
                     <label for="passenger_count">… disabled?</label>
-                    <input class="form-control" name="disabled_on_board" type="number" placeholder="How many disabled?" id="disabled_on_board" [(ngModel)]="case.disabledCount">
+                    <input class="form-control" name="disabled_on_board" type="number" min="0" placeholder="How many disabled?" id="disabled_on_board" [(ngModel)]="case.disabledCount">
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-6">
-                    <input type="checkbox" id="otherBoats" name="other_involved" value="1">
-                    <label for="otherBoats">Other boat/s involved?</label>
+                    <label>Other boat/s involved?</label>
                     <div class="other_boats">
-                        <input class="form-control" type="text" id="additional_informations">
+                        <input class="form-control" type="text" id="other_boats">
                     </div>
                 </div>
                 <div class="form-group col-md-6">
-                    <input type="checkbox" id="additionalInfos">
-                    <label for="additionalInfos">Additional information</label>
+                    <label>Additional information</label>
                     <div class="additional_infos">
-                        <input class="form-control" type="text" placeholder="Additional informations" name="additional_informations" id="additional_informations" ng-model="case.additional_informations">
+                        <textarea class="form-control" placeholder="Additional informations…" rows="3" name="addtitionalInformations" id="addtitionalInformations" [(ngModel)]="case.addtitionalInformations"></textarea>
                     </div>
                 </div>
             </div>
@@ -170,7 +168,7 @@
                     <input (click)="closeModal()" value="Cancel" class="btn btn-danger">
                 </div>
                 <div class="col-md-3">
-                    <input (click)="save()" value="Submit" class="btn btn-primary">
+                    <input (click)="save()" [disabled]="edited" value="Submit" class="btn btn-primary">
                 </div>
             </div>
 

@@ -46,7 +46,7 @@ import { SettingsComponent } from './components/settings/settings.component';
     RouterModule.forRoot([
       {
         path: '',
-        component: MapViewComponent
+        component: CaseListComponent
       },
       {
         path: 'cases',

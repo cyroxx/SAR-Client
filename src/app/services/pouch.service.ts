@@ -191,6 +191,19 @@ export class PouchService {
 
   }
 
+  findAll(db_title: string) {
+    if (this.databases[db_title]['pouchDB']) {
+      console.time('docs');
+      var docs = this.databases[db_title]['pouchDB'].allDocs({
+        include_docs: true,
+        descending: true
+      });
+      console.timeEnd('docs');
+      return docs;
+    }
+    return Promise.reject('No database with name [' + db_title + ']');
+  }
+
   find(db_title: string, selector: any, sort_by = [{ '_id': 'asc' }], limit = 10000) {
     if (this.databases[db_title]['pouchDB']) {
       return Promise.resolve(this.databases[db_title]['pouchDB'].find({
