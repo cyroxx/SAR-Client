@@ -27,6 +27,12 @@ Run `npm run electron` to build angular and electron application.
 
 Run `ng serve` inside the src/ directory to build and serve the angular application. 
 
+## Services
+If you want to use the services you also need to update the script/services/config.js with your couchDB remote and login data.
+
+If you want to use the create_user.js service, please modify the script/_security-docs/_security-couchdb.json and insert your couchDB admin there.
+
+
 
 
 ## Contributing
