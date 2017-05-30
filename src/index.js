@@ -52,7 +52,7 @@ function createMenu(){
         label: "SAR-Client",
         submenu: [
             { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
-            { label: "Debugger", click: function(){ win.webContents.openDevTools() }},
+            { label: "Debugger", accelerator: "Shift+CmdOrCtrl+I", click: function(){ win.webContents.openDevTools() }},
             { type: "separator" },
             { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
         ]}, {
