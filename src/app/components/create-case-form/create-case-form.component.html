@@ -43,7 +43,6 @@
                     <input type="checkbox" id="engine_working" name="engine_working" value="1" [(ngModel)]="case.engineWorking">
                     <!-- Hier hätte ich gerne so was: https://ziscloud.github.io/angular-bootstrap-toggle/ "Working grey" > "Defect red"  -->
                 </div>
-
                 <div class="form-group col-md-4">
                     <label style="display:block" for="osc">On-Scene-Coordinator (OSC)</label>
                     <input class="form-control" id="osc" name="osc" value="SW2" [(ngModel)]="case.osc">
@@ -53,30 +52,39 @@
                 <div class="col-md-3" ng>
                     <label style="display:block;">Position</label>
                     <div class="btn-group btn-group-justified">
-                        <a class="btn btn-default btn-md">GMS</a> <a class="btn btn-default btn-md active">DD</a>
+                        <a class="btn btn-default btn-md"
+                        [class.active]="casemeta.location_type == 'GMS'" (click)="casemeta.location_type = 'GMS'">GMS</a>
+                        <a class="btn btn-default btn-md active"
+                        [class.active]="casemeta.location_type == 'DD'" (click)="casemeta.location_type = 'DD'">DD</a>
                     </div>
                 </div>
+                <style>
+                .col-xs-3 input{
+                    min-width:40px;
+                    margin-right:30px;
+                }
+                </style>
                 <div class="form-group col-md-3">
-                    <div class="dd_input" [hidden]="casemeta.location_type == 'DMS'">
+                    <div class="dd_input" [hidden]="casemeta.location_type == 'GMS'">
                         <label for="lat">Lat</label>
                         <input class="form-control" type="number" min="0" step="0.000001" placeholder="Lat" name="lat" id="lat" [(ngModel)]="casemeta.dd_location && casemeta.dd_location.latitude" (ngModelChange)="updatePosition()">
                     </div>
                     <!--DMS input area-->
                     <div class="dms_input" [hidden]="casemeta.location_type == 'DD'">
                         <div class="row">
-                            <div class="col-xs-2">
+                            <div class="col-xs-3">
                                 <label for="dms_lat_degree">Latitude</label>
                                 <input class="form-control" type="number" min="0" placeholder="D" name="dms_lat_degree" id="dms_lat_degree" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.latitude.degree" (ngModelChange)="updatePosition()">
                             </div>
-                            <div class="col-xs-2">
+                            <div class="col-xs-3">
                                 <label>&nbsp;</label>
                                 <input class="form-control" type="number" min="0" placeholder="M" name="dms_lat_minute" id="dms_lat_minute" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.latitude.minute" (ngModelChange)="updatePosition()">
                             </div>
-                            <div class="col-xs-2">
+                            <div class="col-xs-3">
                                 <label>&nbsp;</label>
                                 <input class="form-control" type="number" min="0" placeholder="D" name="latitude_second" id="latitude_second" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.latitude.second" (ngModelChange)="updatePosition()">
                             </div>
-                            <div class="col-xs-2">
+                            <div class="col-xs-3">
                                 <label>&nbsp;</label>
                                 <select name="latitude_direction" id="latitude_direction" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.latitude.direction" (ngModelChange)="updatePosition()">
                                   <option value="N">N</option>
@@ -91,7 +99,7 @@
                 </div>
 
                 <div class="form-group col-md-3">
-                    <div class="dd_input" [hidden]="casemeta.location_type == 'DMS'">
+                    <div class="dd_input" [hidden]="casemeta.location_type == 'GMS'">
                         <label for="lon">Longitude</label>
                         <input class="form-control" type="number" step="0.000001" min="0" placeholder="Lon" name="lon" id="lon" [(ngModel)]="casemeta.dd_location && casemeta.dd_location.longitude" (ngModelChange)="updatePosition()">
                     </div>
