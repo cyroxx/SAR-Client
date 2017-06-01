@@ -80,19 +80,22 @@ export class AuthService {
         if (err.name === 'unauthorized') {
           alert('...password or username wrong');
         } else {
-        
+
         }
       } else {
         if (response.ok)
           self.sessiondata = response;
 
+        self.pouchService.reinitializeDBs();
+
         localStorage.username = userdata.username;
         localStorage.password = userdata.password;
         self.changeLoginStateTo(true);
 
-        //rerender
-        window.location = window.location.href + 'index.html';
-
+        /*rerender after short timeout (we would need a waterfall cb inside the pouchservice.reinitializeDBs, to have a more elegant solution)*/
+        setTimeout(function() {
+          window.location = window.location.href + 'index.html';
+        }, 1500)
 
         console.log('...log in successful');
       }
