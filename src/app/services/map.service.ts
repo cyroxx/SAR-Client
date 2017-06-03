@@ -68,7 +68,7 @@ export class MapService {
       case 'offline-map':
         /*Not working until maptiles are added to the repo*/
         L.tileLayer('MapQuest/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="https://sea-watch.org">Sea-Watch</a>'
+          attributionControl: false
         }).addTo(this.map);
         break;
       case 'osm':

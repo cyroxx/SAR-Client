@@ -438,6 +438,10 @@ a.gray:hover, a.gray:focus, a.gray:active {
       bottom: 0
   }
 
+  .leaflet-control-attribution{
+    display:none;
+  }
+
   /* Display Mode - Grid */
 
   #cases .panel {
@@ -489,7 +493,7 @@ a.gray:hover, a.gray:focus, a.gray:active {
       }
 
       div.other_boats, div.additional_infos  {
-         display:none;
+         /*display:none;*/
       }
 
       input[type=checkbox]#otherBoats:checked ~ div.other_boats, input[type=checkbox]#additionalInfos:checked ~ div.additional_infos {
@@ -1108,4 +1112,10 @@ a.gray:hover, a.gray:focus, a.gray:active {
 
 .refresh-link {
     cursor: pointer;
+}
+
+#createCaseForm .col-xs-3 input{
+    min-width:40px;
+    margin-right:30px;
+    padding:2px;
 }
