@@ -45,10 +45,6 @@ import { SettingsComponent } from './components/settings/settings.component';
     HttpModule,
     RouterModule.forRoot([
       {
-        path: '',
-        component: CaseListComponent
-      },
-      {
         path: 'cases',
         component: CaseListComponent
       }
