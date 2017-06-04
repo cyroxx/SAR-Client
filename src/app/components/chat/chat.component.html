@@ -23,7 +23,7 @@
 
 		                        <div class="message">
 		                            <div class="message-meta">
-		                              <span class="meta_user">{{message.author}}</span> · <span class="timestamp">{{message.createdAt | date: 'y-MM-d · hh:mm:ss.'}}</span>  
+		                              <span class="meta_user">{{message.author}}</span> · <span class="timestamp">{{message.createdAt | date: 'y-MM-dd · hh:mm:ss.'}}</span>  
 		                            </div>
 		                            <div class="text">
 		                              {{message.text}}
@@ -33,7 +33,7 @@
 		            </div>
 	                <div class="message-container log" *ngIf="message.type == 'log'&&(filtertype == 'log'||filtertype == 'all')">
 	                  <div class="message">
-	                  <div class="message-meta">{{message.createdAt | date: 'y-MM-d · hh:mm:ss.'}}</div>
+	                  <div class="message-meta">{{message.createdAt | date: 'y-MM-dd · hh:mm:ss.'}}</div>
 	                  <div class="log-text">
 	                      <a class="meta_user">{{message.author}}</a> <span>{{message.text}}</span>
 	                  </div>
@@ -42,11 +42,10 @@
 	            </div>
 	        </div>
 
-
 	        <div class="input-container">
 	          <form (ngSubmit)="submitMessage()">
 	            <div class="input">
-	              <textarea name="chatInput" id="chatInput" placeholder="Your message…"  (keydown)="keyDownFunction($event)" [(ngModel)]="data.messagetext" style="width:100%;"></textarea>
+	              <textarea name="chatInput" id="chatInput" placeholder="Your message…"  (keydown)="keyDownFunction($event)" style="width:100%;">{{data.messagetext}}</textarea>
 	            </div>
 	          </form>
 	        </div>
