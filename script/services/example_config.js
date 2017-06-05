@@ -3,6 +3,8 @@ module.exports = {
 	db_username:'',
 	db_password:'',
 
+	marinetraffic_api_key:'',
+
 	inreach_mail_username:'',
 	inreach_mail_password:'',
 	inreach_mail_host:'',
