@@ -4,7 +4,6 @@ import { BoatType } from './boat-type';
 import { BoatCondition } from './boat-condition';
 
 export interface Case {
-
   _id: string;
   location: Location;
   state: Status;
@@ -19,5 +18,6 @@ export interface Case {
   lastUpdate: string;
   osc: string;
   addtitionalInformations: string;
+  otherBoatsInvolved: string;
   reportedBy?: string;
 }
