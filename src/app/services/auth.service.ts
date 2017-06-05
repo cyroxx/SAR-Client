@@ -73,16 +73,18 @@ export class AuthService {
 
   //@param userdata {username:string, password:string}
   login(userdata) {
+
     var self = this;
     this.db.login(userdata.username, userdata.password, function(err, response) {
       if (err) {
         console.log(err)
-        if (err.name === 'unauthorized') {
+        if (err.name === 'unauthorized' || err.name === 'authentication_error') {
           alert('...password or username wrong');
         } else {
 
         }
       } else {
+
         if (response.ok)
           self.sessiondata = response;
 
