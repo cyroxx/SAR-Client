@@ -16,32 +16,10 @@ var location_service  = new function(){
       if(err)
         console.log( err );
 
-      //loop through vehicles
+      //loop through vehicle
       for(var i in res){
-        self.getLocation(res[i].doc.tracking_type, res[i].doc.api_key, function(error,result){
-          if(error){
-            console.log(error)
-          }else{
-            console.log('...got location:');
-
-            //add position
-            self.positionsDB.put({
-              "_id": new Date().toISOString()+"-locationOf-"+res[i].doc._id,
-              "latitude": result[0],
-              "longitude": result[1],
-              "heading": "0",
-              "origin": "EPAK",
-              "type": "vehicle_location",
-              "itemId": res[i].doc._id
-            }).then(function (response) {
-              // handle response
-              console.log(response);
-            }).catch(function (err) {
-              console.log(err);
-            });
-          }
-
-        });
+        console.log('checking tracking type for '+res[i].doc._id+'...');
+        self.getLocation(res[i].doc._id,res[i].doc.tracking_type, res[i].doc.api_key);
       }
 
     });
@@ -75,10 +53,13 @@ var location_service  = new function(){
   /*
   gets location froḿ different sources and apis
   */
-  this.getLocation = function(source_type, api_key, callback){
-    console.log('..getting location from '+source_type);
+  this.getLocation = function(id, source_type, api_key, callback){
+
+    var self = this;
+
     switch(source_type){
       case  'EPAK':
+        console.log('GETTING LOCATION FROM '+source_type);
         var url = 'https://monitor.epak.de/api.php?apikey='+api_key+'&tid=63&item=position:text';
         http.get(url, (res) => {
             const statusCode = res.statusCode;
@@ -97,6 +78,7 @@ var location_service  = new function(){
               return;
             }
 
+            console.log('got result from epak server');
             res.setEncoding('utf8');
             let rawData = '';
             res.on('data', (chunk) => rawData += chunk);
@@ -139,14 +121,26 @@ var location_service  = new function(){
 
 
 
-                callback(null,location_array);
+              self.positionsDB.put({
+                "_id": new Date().toISOString()+"-locationOf-"+id,
+                "latitude": location_array[0],
+                "longitude": location_array[1],
+                "heading": "0",
+                "origin": "EPAK",
+                "type": "vehicle_location",
+                "itemId": id
+              }).then(function (response) {
+                // handle response
+                console.log(response);
+              }).catch(function (err) {
+                console.log(err);
+              });
               } catch (e) {
                 console.log(e.message);
               }
             });
           }).on('error', (e) => {
             console.log(`Got error: ${e.message}`);
-                callback(e,null);
 
           });
 
