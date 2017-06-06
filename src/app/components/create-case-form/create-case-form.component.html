@@ -107,19 +107,19 @@
                     <!--DMS input area-->
                     <div class="dms_input" [hidden]="casemeta.location_type == 'DD'">
                         <div class="row">
-                            <div class="col-xs-2">
+                            <div class="col-xs-3">
                                 <label for="dms_lon_degree">Longitude</label>
                                 <input class="form-control" type="number" placeholder="D" min="0" name="dms_lon_degree" id="dms_lon_degree" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.longitude.degree" (ngModelChange)="updatePosition()">
                             </div>
-                            <div class="col-xs-2">
+                            <div class="col-xs-3">
                                 <label>&nbsp;</label>
                                 <input class="form-control" type="number" placeholder="M" min="0" name="dms_lon_minute" id="dms_lon_minute" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.longitude.minute" (ngModelChange)="updatePosition()">
                             </div>
-                            <div class="col-xs-2">
+                            <div class="col-xs-3">
                                 <label>&nbsp;</label>
                                 <input class="form-control" type="number" min="0" placeholder="D" name="longitude_second" id="longitude_second" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.longitude.second" (ngModelChange)="updatePosition()">
                             </div>
-                            <div class="col-xs-2">
+                            <div class="col-xs-3">
                                 <label>&nbsp;</label>
                                 <select name="longitude_direction" id="longitude_direction" [(ngModel)]="casemeta.dms_location && casemeta.dms_location.longitude.direction" (ngModelChange)="updatePosition()">
                                   <option value="N">N</option>
