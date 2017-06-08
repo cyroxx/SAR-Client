@@ -109,6 +109,9 @@ export class MapViewComponent implements OnInit {
             this.parseLatitude(parseFloat(location_doc.latitude)) + ' ' +
             this.parseLongitude(parseFloat(location_doc.longitude)) +
             '</b><br />' + last_update,
+
+            vehicle.marker_color,
+            vehicle._id
           );
         });
       }
