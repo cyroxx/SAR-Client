@@ -39,17 +39,19 @@ export class MapService {
     if (id in this.markers) {
       layer_group.removeLayer(this.markers[id]);
     }
-    const markerHtmlStyles = "background-color: #583470;width: 3rem;height: 3rem;display: block;left: -1.5rem;top: -1.5rem;position: relative;border - radius: 3rem 3rem 0;transform: rotate(45deg);border: 1px solid #FFFFFF";
+
+    if (!title)
+      title = '';
+    if (!color)
+      color = '#583470';
+    const markerHtmlStyles = "background-color: " + color;
 
 
-    if(!title)
-      const title = '';
     const icon = L.divIcon({
-      className: 'marker',
       iconAnchor: [0, 24],
       labelAnchor: [-6, 0],
       popupAnchor: [0, -36],
-      html: '<span style="' + markerHtmlStyles + '">"+title+"</span>'
+      html: '<div style="' + markerHtmlStyles + '" class="onefleet_marker"><span>' + title + '</span></div>'
     });
 
     /*const marker = L.marker([x, y]).addTo(layer_group);*/
