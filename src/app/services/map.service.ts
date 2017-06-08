@@ -33,16 +33,32 @@ export class MapService {
     this.getMapObject().panTo([latitude, longitude]);
   }
 
-  setMarker(id: string, group: string, x: number, y: number, description?: string) {
+  setMarker(id: string, group: string, x: number, y: number, description?: string, color?: string, title?: string) {
     const layer_group = this.getLayerGroup(group);
     // remove potential old marker
     if (id in this.markers) {
       layer_group.removeLayer(this.markers[id]);
     }
-    const marker = L.marker([x, y]).addTo(layer_group);
-    if (description) {
+    const markerHtmlStyles = "background-color: #583470;width: 3rem;height: 3rem;display: block;left: -1.5rem;top: -1.5rem;position: relative;border - radius: 3rem 3rem 0;transform: rotate(45deg);border: 1px solid #FFFFFF";
+
+
+    if(!title)
+      const title = '';
+    const icon = L.divIcon({
+      className: 'marker',
+      iconAnchor: [0, 24],
+      labelAnchor: [-6, 0],
+      popupAnchor: [0, -36],
+      html: '<span style="' + markerHtmlStyles + '">"+title+"</span>'
+    });
+
+    /*const marker = L.marker([x, y]).addTo(layer_group);*/
+
+    const marker = L.marker([x, y], { icon: icon }).addTo(layer_group);
+
+    /*if (description) {
       marker.bindPopup(description);
-    }
+    }*/
     this.markers[id] = marker;
     return marker;
   }
