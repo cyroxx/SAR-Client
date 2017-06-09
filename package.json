@@ -5,7 +5,7 @@
     "name": "Sea Watch",
     "email": "nic@sea-watch.org"
   },
-  "version": "0.0.1-beta.15",
+  "version": "0.0.1-beta.16",
   "license": "MIT",
   "main": "dist/index.js",
   "angular-cli": {},
