@@ -33,13 +33,31 @@ export class MapService {
     this.getMapObject().panTo([latitude, longitude]);
   }
 
-  setMarker(id: string, group: string, x: number, y: number, description?: string) {
+  setMarker(id: string, group: string, x: number, y: number, description?: string, color?: string, title?: string) {
     const layer_group = this.getLayerGroup(group);
     // remove potential old marker
     if (id in this.markers) {
       layer_group.removeLayer(this.markers[id]);
     }
-    const marker = L.marker([x, y]).addTo(layer_group);
+
+    if (!title)
+      title = '';
+    if (!color)
+      color = '#583470';
+    const markerHtmlStyles = "background-color: " + color;
+
+
+    const icon = L.divIcon({
+      iconAnchor: [0, 24],
+      labelAnchor: [-6, 0],
+      popupAnchor: [0, -36],
+      html: '<div style="' + markerHtmlStyles + '" class="onefleet_marker"><span>' + title + '</span></div>'
+    });
+
+    /*const marker = L.marker([x, y]).addTo(layer_group);*/
+
+    const marker = L.marker([x, y], { icon: icon }).addTo(layer_group);
+
     if (description) {
       marker.bindPopup(description);
     }

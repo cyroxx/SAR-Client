@@ -442,6 +442,29 @@ a.gray:hover, a.gray:focus, a.gray:active {
     display:none;
   }
 
+  .onefleet_marker{
+    width: 3rem;
+    height: 3rem;
+    display: block;
+    left: -1.5rem;
+    top: -1.5rem;
+    position: relative;
+    border-radius: 3rem 3rem 0;
+    transform: rotate(45deg);
+    border: 1px solid #FFFFFF;
+  }
+  .onefleet_marker span{
+    position: absolute;
+    transform: rotate(-45deg);
+    font-size: 15px;
+    margin-top: -22px;
+    margin-left: -24px;
+    background: rgba(0,0,0,0.85);
+    color: #FFF;
+    padding: 1px 5px;
+}
+  }
+
   /* Display Mode - Grid */
 
   #cases .panel {
