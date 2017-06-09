@@ -58,9 +58,9 @@ export class MapService {
 
     const marker = L.marker([x, y], { icon: icon }).addTo(layer_group);
 
-    /*if (description) {
+    if (description) {
       marker.bindPopup(description);
-    }*/
+    }
     this.markers[id] = marker;
     return marker;
   }
