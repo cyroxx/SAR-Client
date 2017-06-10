@@ -23,11 +23,11 @@ If no login is shown, check, if you are still logged in. Log out and log in agai
 
 
 ###Case Stati
-  Need Help
-  Possible Target
-  Attended
-  Rescued
-  Closed
+  - Need Help
+  - Possible Case
+  - Attended
+  - Rescued
+  - Closed
 
 # Create a case
 # Update a case
