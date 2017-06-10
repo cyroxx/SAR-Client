@@ -23,7 +23,7 @@
 
 		                        <div class="message">
 		                            <div class="message-meta">
-		                              <span class="meta_user">{{message.author}}</span> · <span class="timestamp">{{message.createdAt | date: 'y-MM-dd · hh:mm:ss.'}}</span>  
+		                              <span class="meta_user">{{message.author}}</span> · <span class="timestamp">{{message.createdAt | date: 'y-MM-dd · hh:mm:ss. z'}}</span>  
 		                            </div>
 		                            <div class="text">
 		                              {{message.text}}
@@ -33,7 +33,7 @@
 		            </div>
 	                <div class="message-container log" *ngIf="message.type == 'log'&&(filtertype == 'log'||filtertype == 'all')">
 	                  <div class="message">
-	                  <div class="message-meta">{{message.createdAt | date: 'y-MM-dd · hh:mm:ss.'}}</div>
+	                  <div class="message-meta">{{message.createdAt | date: 'y-MM-dd · hh:mm:ss. z'}}</div>
 	                  <div class="log-text">
 	                      <a class="meta_user">{{message.author}}</a> <span>{{message.text}}</span>
 	                  </div>
