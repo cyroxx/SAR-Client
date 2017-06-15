@@ -45,6 +45,10 @@ function createWindow () {
 }
 
 
+function toggleSearch(){
+        win.webContents.send('toggle-search', 'true');
+}
+
 function createMenu(){
 
     // Create the Application's main menu
@@ -60,6 +64,8 @@ function createMenu(){
         submenu: [
             { label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
             { label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
+            { type: "separator" },
+            { label: "Find", accelerator: "CmdOrCtrl+F", click: function() { toggleSearch() }},
             { type: "separator" },
             { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
             { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },

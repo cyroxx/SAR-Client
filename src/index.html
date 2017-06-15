@@ -23,6 +23,9 @@
 
 <body>
 
+  <style>
+  </style>
+
   	<app-root>
       <div id="loadingOverlay">
           <img src="img/sarapp_icon.png"/>
@@ -42,6 +45,28 @@
       var os = require('os');
       const { remote, shell } = require('electron');
       const {ipcRenderer} = require('electron');
+      // or
+     
+
+      const searchInPage = require('electron-in-page-search').default;
+      const searchRemote = require('electron').remote;
+
+      /*
+       * Create a search instance for the current page.
+       * Make sure that create the search instance per one WebContents instance.
+       */
+      const search = searchInPage(searchRemote.getCurrentWebContents());
+
+
+
+
+      ipcRenderer.on('toggle-search', (event, message) => {
+        if(!search.opened){
+          search.openSearchWindow();
+        }else{
+          search.closeSearchWindow();
+        }
+      });
 
       var helpers = new function(){
         this.alert = function(msg){
