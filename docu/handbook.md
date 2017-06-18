@@ -85,4 +85,4 @@ On the left-hand-side navigation you can filter after the status of a case, so t
 
 - Read / Write / Scrolling
 
-[NewCase]
+[NewCase]https://github.com/sea-watch/SAR-Client/tree/master/docu/newcase.jpg
