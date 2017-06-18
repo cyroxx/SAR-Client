@@ -3,25 +3,44 @@ SAR-Client Onefleet
 
 # Introduction
 
-# install the App
+## Supported Devices / Browser
+App supports operating systems Windows, OSX, Linux, Android and iOS.
+App is running with different screen breakpoints for Desktop, Tablet and Mobile Devices.
 
-## Microsoft Windows
-## Apple
-## Linux
+## Installing the App
+- Microsoft Windows
+- Apple
+- Linux
 
-# update new releases
+## Updating with new releases
 
-# start the App
-1. when you run the App the window "Settings" will open, the database should be: https://sea-watch.cloudant.com/
-Close this window.
-2. Login as #, Password: #
+## Starting the App
+System Settings windows opens automatically. 
+The database for working should be: https://sea-watch.cloudant.com/
+Press "Close" button and proceed with the login window with username / password.
+If no login window is shown, check if you are are still logged in. 
+Logout and login again -
+Open the dropdown flyout in the right corner of the navigation bar. Select the Logout link.
+App restarts and try again to login.
 
-If no login is shown, check, if you are still logged in. Log out and log in again.
-3. Window SETTINGS opens again: push close
+
+# Navigation
+## Header
+You have a navigation bar to navigate to all cases, see the map and create a new case.
+At the right end of the navigation bar you can open with the arrow symbol a flyout to goto the app settings or to logout
+
+
+## Footer
+abc
+## Filter on Left-Hand-Side
+- Vehicles
+- Case Status
 
 # Cases
 
-Boattype (rubber, wooden, other) Select the boattype if you know it.
+Boattype (Rubber, Wood, Steal or other)
+Select the boattype if you know it.
+
 Status
 - Critical
 - Rescued
@@ -40,6 +59,9 @@ Additional information:
 
 
 ## Create Case 
+Reference-style: 
+![alt text][NewCase]
+
 Goto Navigation Bar "+ Case" and add the corresponding information about a case into the fields.
 
 
@@ -54,3 +76,13 @@ On the left-hand-side navigation you can filter after the status of a case, so t
 
 
 # Map
+
+- Filter for vehicles
+- Zoom in/out
+- 
+
+# Chat
+
+- Read / Write / Scrolling
+
+[NewCase]
