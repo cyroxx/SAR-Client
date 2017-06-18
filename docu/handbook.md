@@ -24,25 +24,23 @@ Open the dropdown flyout in the right corner of the navigation bar. Select the L
 App restarts and try again to login.
 
 
-# Navigation
+#  Navigation
 ## Header
 You have a navigation bar to navigate to all cases, see the map and create a new case.
 At the right end of the navigation bar you can open with the arrow symbol a flyout to goto the app settings or to logout
 
-
 ## Footer
-abc
 ## Filter on Left-Hand-Side
 - Vehicles
 - Case Status
 
 # Cases
-
+## Fields for a case
 **Boattype**
+Select the boattype if you know it.
 - Rubber
 - Wood
-- Steal or other
-Select the boattype if you know it.
+- Steal or Other
 
 **Status**
 - Critical
@@ -72,7 +70,7 @@ Button to create with your actual positon new case. To be used, if you are on SA
 **How many people ?** Input number of all ppl on the boat.
 **Woman ?** Input number of woman on the boat.
 **Children ?** Input number of children on the boat.
-**Disabled ?**Input number of disabled ppl on the boat.
+**Disabled ?** Input number of disabled ppl on the boat.
 
 **Other boat/s involved ?** Input information if other acteurs involved in that case e.g. mrcc, sea-eye2, alarmphone
 
