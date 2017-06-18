@@ -19,17 +19,7 @@ Close this window.
 If no login is shown, check, if you are still logged in. Log out and log in again.
 3. Window SETTINGS opens again: push close
 
-# Cases
+# Cases - see seperate file cases.md
 
-
-###Case Stati
-  - Need Help
-  - Possible Case
-  - Attended
-  - Rescued
-  - Closed
-
-# Create a case
-# Update a case
 
 # Map
