@@ -38,30 +38,49 @@ abc
 
 # Cases
 
-Boattype (Rubber, Wood, Steal or other)
+**Boattype**
+- Rubber
+- Wood
+- Steal or other
 Select the boattype if you know it.
 
-Status
+**Status**
 - Critical
+- Possible 
+- Attended
 - Rescued
 - Closed
 
-People in water ? Yes/No
-Engine is working ? Yes/No
-OSC: Online-Scene-Coordinator. Person is responsible of the coordination of that case between the different acteurs.
-GPS Position: Button to create with your actual positon new case. To be used, if you are on SAR vessel and in the middle of an SAR Operation to document quick the cases.
-How many people ? Number of all ppl on the boat.
-How many woman ? 
-How many children ? 
-How many disabled ?
-Other boat/s involved ?
-Additional information:
+**People in water ?** 
+Select the checkbox if ppl in water (Yes), else deselect the checkbox (No).
+
+**Engine is working ?**
+Select if the motor is working (Yes), else deselect the checkbox (No).
+
+**On-Scene-Coordinator (OSC)**
+Person is responsible of the coordination of that case between the different acteurs.
+
+**Position**
+If you have the coordinates in 
+- Grad, Minutes,Seconds (GMS): Select Button "GMS" for the coordinate format and input the Grade, Minutes and Seconds for the Latidude and Longitude into the fields
+- Decimal Degrees (DD): Select Button DD for the coordinate format and input the Latidude and Longitude in decimal format into the fields
+
+**GPS Position** 
+Button to create with your actual positon new case. To be used, if you are on SAR vessel and in the middle of an SAR Operation to document quick the cases.
+
+**People**
+**How many people ?** Input number of all ppl on the boat.
+**Woman ?** Input number of woman on the boat.
+**Children ?** Input number of children on the boat.
+**Disabled ?**Input number of disabled ppl on the boat.
+
+**Other boat/s involved ?** Input information if other acteurs involved in that case e.g. mrcc, sea-eye2, alarmphone
+
+**Additional information** Input more infos e.g. contact to the boat, 
 
 
 ## Create Case 
-Reference-style: 
-![alt text][NewCase]
-
+![New Case][NewCase]
 Goto Navigation Bar "+ Case" and add the corresponding information about a case into the fields.
 
 
@@ -72,17 +91,15 @@ Each case entry has a Subject Bar with timestamp, unique identifier, who and whe
 
 ## View Case
 Goto Navigation Bar "Cases" you get a list with all the cases entered into the system.
-On the left-hand-side navigation you can filter after the status of a case, so that you easily find a case or to get a quick overview.
-
+On the left-hand-side navigation you can filter after the status of a case, so that you easily find a case e.g. in status critical or to get a quick overview.
 
 # Map
 
 - Filter for vehicles
 - Zoom in/out
-- 
+- Click on a boat icon then you get the excact position an name of the boat
 
 # Chat
-
 - Read / Write / Scrolling
 
-[NewCase]https://github.com/sea-watch/SAR-Client/tree/master/docu/newcase.jpg
+[NewCase]: https://github.com/sea-watch/SAR-Client/tree/master/docu/newcase.jpg "Creating New Case"
