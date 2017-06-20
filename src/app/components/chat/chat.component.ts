@@ -9,16 +9,16 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
-  messages
-  data
-  filtertype
+  messages;
+  data;
+  filtertype;
   constructor(public chatService: ChatService, private authService: AuthService) {
-    this.data = { messagetext: '' }
+    this.data = { messagetext: '' };
     this.filtertype = 'all';
   }
 
   updateFilterType(type) {
-    this.filtertype = type
+    this.filtertype = type;
   }
 
   ngOnInit() {
@@ -41,11 +41,11 @@ export class ChatComponent implements OnInit {
   submitMessage() {
     this.data.messagetext = this.data.messagetext.replace(/\s+/g, ' ');
     console.log('message' + this.data.messagetext + 'message');
-    if (this.data.messagetext == '' || this.data.messagetext == "\n" || this.data.messagetext == "\n\n")
+    if (this.data.messagetext == '' || this.data.messagetext == '\n' || this.data.messagetext == '\n\n')
       return false;
 
-    var message = {
-      _id: new Date().toISOString() + "-writtenBy-" + this.authService.getUserData().name,
+    const message = {
+      _id: new Date().toISOString() + '-writtenBy-' + this.authService.getUserData().name,
       author: this.authService.getUserData().name,
       type: 'message',
       createdAt: new Date().toISOString(),
@@ -60,13 +60,13 @@ export class ChatComponent implements OnInit {
     console.log('message submitted:');
     console.log(message);
 
-    return message
+    return message;
   }
   scrollDown() {
     setTimeout(function() {
-      var objDiv = document.getElementById("message_list");
+      const objDiv = document.getElementById('message_list');
       objDiv.scrollTop = objDiv.scrollHeight;
-    }, 50)
+    }, 50);
   }
 
 }

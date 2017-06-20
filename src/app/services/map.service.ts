@@ -44,7 +44,7 @@ export class MapService {
       title = '';
     if (!color)
       color = '#583470';
-    const markerHtmlStyles = "background-color: " + color;
+    const markerHtmlStyles = 'background-color: ' + color;
 
 
     const icon = L.divIcon({

@@ -1,7 +1,7 @@
 import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 
-import { AppComponent } from '../../app.component'
+import { AppComponent } from '../../app.component';
 
 import { Case } from '../../interfaces/case';
 import { Status } from '../../interfaces/status';
@@ -31,7 +31,7 @@ export class CreateCaseFormComponent implements OnInit, Listener {
   hideCreateCaseForm;
   public createCaseForm: FormGroup;
   public events: any[] = []; // use later to display form changes
-  public edited: boolean = false;
+  public edited = false;
 
   case: Case;
   change: Case;
@@ -65,7 +65,7 @@ export class CreateCaseFormComponent implements OnInit, Listener {
         latitude: 0,
         longitude: 0
       }
-    }
+    };
 
     this.stateList = Status;
     this.stateKeys = Object.keys(this.stateList).filter(Number);
@@ -80,7 +80,7 @@ export class CreateCaseFormComponent implements OnInit, Listener {
     //typecast needed because we only have the id at this moment and we don't want
     //to explicitly initialize all the other fields
     this.case = <Case>{
-      _id: new Date().toISOString() + "-reportedBy-" + authService.getUserData().name,
+      _id: new Date().toISOString() + '-reportedBy-' + authService.getUserData().name,
       createdAt: new Date().toISOString(),
       lastUpdate: new Date().toISOString()
     };
@@ -113,7 +113,7 @@ export class CreateCaseFormComponent implements OnInit, Listener {
       });
     } else {
       this.case.location = {
-        _id: new Date().toISOString() + "-reportedBy-" + self.authService.getUserData().name,
+        _id: new Date().toISOString() + '-reportedBy-' + self.authService.getUserData().name,
         longitude: 0,
         latitude: 0,
         heading: 0,
@@ -127,7 +127,7 @@ export class CreateCaseFormComponent implements OnInit, Listener {
   }
 
   notify(change): void {
-    console.log("CHANGE");
+    console.log('CHANGE');
     console.log(change);
     change.docs.forEach((c) => {
       console.log(c);
@@ -193,18 +193,18 @@ export class CreateCaseFormComponent implements OnInit, Listener {
         break;
 
     }
-    this.case.location.latitude = this.casemeta.dd_location.latitude
-    this.case.location.longitude = this.casemeta.dd_location.longitude
+    this.case.location.latitude = this.casemeta.dd_location.latitude;
+    this.case.location.longitude = this.casemeta.dd_location.longitude;
 
-    console.log(this.case.location)
+    console.log(this.case.location);
   }
 
   convertDDToDMS(deg) {
-    var d = Math.floor(deg);
-    var minfloat = (deg - d) * 60;
-    var m = Math.floor(minfloat);
-    var secfloat = (minfloat - m) * 60;
-    var s = Math.round(secfloat);
+    let d = Math.floor(deg);
+    const minfloat = (deg - d) * 60;
+    let m = Math.floor(minfloat);
+    const secfloat = (minfloat - m) * 60;
+    let s = Math.round(secfloat);
     // After rounding, the seconds might become 60. These two
     // if-tests are not necessary if no rounding is done.
     if (s == 60) {
@@ -220,12 +220,12 @@ export class CreateCaseFormComponent implements OnInit, Listener {
       minute: m,
       second: s,
       direction: 'N'
-    }
+    };
   }
   convertDMSToDD(degrees, minutes, seconds, direction) {
-    var dd = degrees + minutes / 60 + seconds / (60 * 60);
+    let dd = degrees + minutes / 60 + seconds / (60 * 60);
 
-    if (direction == "S" || direction == "W") {
+    if (direction == 'S' || direction == 'W') {
       dd = dd * -1;
     }
     return dd;
@@ -248,7 +248,7 @@ export class CreateCaseFormComponent implements OnInit, Listener {
       //console.log(position);
       //@TODO add reporter from currently logged in user
       self.case.location = {
-        _id: new Date().toISOString() + "-reportedBy-" + self.authService.getUserData().name,
+        _id: new Date().toISOString() + '-reportedBy-' + self.authService.getUserData().name,
         longitude: position.coords.longitude,
         latitude: position.coords.latitude,
         heading: position.coords.heading,
@@ -263,7 +263,7 @@ export class CreateCaseFormComponent implements OnInit, Listener {
   /*setStatus(statusId : string){
     this.case.state = this.stateList[statusId];
   }
- 
+
   logItem(item) {
       console.log(item);
   }*/

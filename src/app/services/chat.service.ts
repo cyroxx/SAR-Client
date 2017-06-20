@@ -58,7 +58,7 @@ export class ChatService {
    * Removes location
    */
   private getStorableForm(c: Message) {
-    let selfCopy = Object.assign({}, c);
+    const selfCopy = Object.assign({}, c);
     return selfCopy;
   }
 

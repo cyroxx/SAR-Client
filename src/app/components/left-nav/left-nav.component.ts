@@ -38,7 +38,7 @@ export class LeftNavComponent implements OnInit {
     return this.casesService.getFilteredStatuses();
   }
   getStatusClasses(status_index) {
-    return this.states[status_index] + ' ' + ((this.casesService.getFilteredStatuses().indexOf(status_index) > -1) ? 'active' : '')
+    return this.states[status_index] + ' ' + ((this.casesService.getFilteredStatuses().indexOf(status_index) > -1) ? 'active' : '');
   }
 
   go_to_vehicle(vehicle: any) {
@@ -61,10 +61,10 @@ export class LeftNavComponent implements OnInit {
     console.log('showing cases with statusses ' + JSON.stringify(this.casesService.getFilteredStatuses()));
 
 
-    let matchingPromise = this.casesService.getCasesMatching(
+    const matchingPromise = this.casesService.getCasesMatching(
       {
-        "state": {
-          "$in": this.casesService.getFilteredStatuses()
+        'state': {
+          '$in': this.casesService.getFilteredStatuses()
         }
       });
     matchingPromise.then((data) => {

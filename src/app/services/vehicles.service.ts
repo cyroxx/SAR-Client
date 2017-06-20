@@ -3,14 +3,14 @@ import { PouchService } from '../services/pouch.service';
 
 @Injectable()
 export class VehiclesService {
-  db
-  data
+  db;
+  data;
   promise;
-  remote
-  pouchService
+  remote;
+  pouchService;
 
   constructor(pouchService: PouchService) {
-    this.pouchService = pouchService
+    this.pouchService = pouchService;
     this.db = this.pouchService.initDB('vehicles');
   }
 
@@ -41,7 +41,7 @@ export class VehiclesService {
 
         this.data = [];
 
-        let docs = result.rows.map((row) => {
+        const docs = result.rows.map((row) => {
           this.data.push(row.doc);
         });
 
@@ -61,8 +61,8 @@ export class VehiclesService {
 
   }
   seedVehicles() {
-    console.log('seed vehicles...')
-    var vehicles = [{
+    console.log('seed vehicles...');
+    const vehicles = [{
       _id: new Date().toISOString(),
       title: 'Sea-Watch 2',
       tracking_type: 'EPAK',
@@ -92,8 +92,8 @@ export class VehiclesService {
     //store vehicles in db
     this.db.bulkDocs(vehicles).then(function(result) {
       // handle result
-      console.log(result)
-      console.log('...done')
+      console.log(result);
+      console.log('...done');
     }).catch(function(err) {
       console.log(err);
     });

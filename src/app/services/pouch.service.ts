@@ -7,11 +7,11 @@ import { Listener } from '../interfaces/listener';
 declare var PouchDB: any;
 @Injectable()
 export class PouchService {
-  databases: any
-  remote: string
+  databases: any;
+  remote: string;
   remoteChangeListeners: Array<Listener>;
   //onlineState: any
-  ConfigService: ConfigService  // Observable string source
+  ConfigService: ConfigService;  // Observable string source
   onlineStateSource = new Subject<string>();
 
   public onlineState = new BehaviorSubject('offline');
@@ -27,7 +27,7 @@ export class PouchService {
   }
 
   registerRemoteChangeListener(listener: Listener): void {
-    console.log("Registering Listener");
+    console.log('Registering Listener');
 
     this.remoteChangeListeners.push(listener);
 
@@ -35,11 +35,11 @@ export class PouchService {
 
   // Service message commands
   setOnlineState(state: string) {
-    this.onlineState.next(state)
+    this.onlineState.next(state);
   }
 
   reinitializeDBs() {
-    for (var key in this.databases) {
+    for (const key in this.databases) {
       this.initDB(key);
     }
   }
@@ -50,14 +50,14 @@ export class PouchService {
       this.databases = {};
     }
     //init object for db
-    this.databases[db_title] = {}
+    this.databases[db_title] = {};
 
-    var self = this;
+    const self = this;
 
     console.log('initializing database ' + db_title);
     if (options) {
       console.log('...with following options:');
-      console.log(options)
+      console.log(options);
     } else {
       options = {
         live: true,
@@ -80,30 +80,30 @@ export class PouchService {
         console.log('change detected: ');
         console.log(change);
 
-        //notify all listeners for remote changes        
+        //notify all listeners for remote changes
         if (change.direction === 'pull') {
           self.remoteChangeListeners.forEach((listener) => { listener.notify(change.change); });
         }
 
-        self.setOnlineState('online')
+        self.setOnlineState('online');
       }).on('paused', function(error) {
         //sync is paused even if everything is ok
         //so the state will only be changed if it
         //is paused because of an error
 
         if (!navigator.onLine) {
-          self.setOnlineState('offline')
+          self.setOnlineState('offline');
           console.log('on: false');
         } else {
-          self.setOnlineState('online')
+          self.setOnlineState('online');
         }
       }).on('active', function(info) {
         console.log('on: true');
-        self.setOnlineState('online')
+        self.setOnlineState('online');
         // replication was resumed
       }).on('error', function(err) {
         console.log('on: false');
-        self.setOnlineState('offline')
+        self.setOnlineState('offline');
         // totally unhandled error (shouldn't happen)
       });
     } else {
@@ -112,13 +112,13 @@ export class PouchService {
       //to authenticate before
       //the database can be initialized
     }
-    this.databases[db_title]['data'] = []
-    return this.databases[db_title]['pouchDB']
+    this.databases[db_title]['data'] = [];
+    return this.databases[db_title]['pouchDB'];
 
   }
 
   db(db_title: string) {
-    return this.databases[db_title]['pouchDB']
+    return this.databases[db_title]['pouchDB'];
   }
 
   handleChange(db_title: string, change) {
@@ -171,7 +171,7 @@ export class PouchService {
         console.log('result.rows');
         console.log(result.rows);
 
-        let docs = result.rows.map((row) => {
+        const docs = result.rows.map((row) => {
           this.databases[db_title]['data'].push(row.doc);
         });
 
@@ -194,7 +194,7 @@ export class PouchService {
   findAll(db_title: string) {
     if (this.databases[db_title]['pouchDB']) {
       console.time('docs');
-      var docs = this.databases[db_title]['pouchDB'].allDocs({
+      const docs = this.databases[db_title]['pouchDB'].allDocs({
         include_docs: true,
         descending: true
       });
@@ -223,7 +223,7 @@ export class PouchService {
   }
 
   clearCache() {
-    for (var db_title in this.databases) {
+    for (const db_title in this.databases) {
       this.databases[db_title]['pouchDB'].destroy().then(function() {
 
         console.log('cache of db ' + db_title + ' cleared');
@@ -231,7 +231,7 @@ export class PouchService {
         // error occurred
 
         console.log('error clearing cache of db ' + db_title + ':' + err);
-      })
+      });
     }
   }
 

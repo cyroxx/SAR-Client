@@ -33,25 +33,25 @@ export class CaseListComponent implements OnInit {
     this.JSON = JSON;
     this.caseMeta = { locations: {} };
 
-    this.getCaseHash = caseService.getCaseHash
+    this.getCaseHash = caseService.getCaseHash;
   }
 
   ngOnInit() {
 
-    this.toggled_cases = []
+    this.toggled_cases = [];
 
     this.caseService.filteredStatuses.subscribe((data) => {
 
       console.log('filtered statuses subscription called for statuses:' + this.caseService.filtered_statuses);
 
-      let matchingPromise = this.caseService.getCasesMatching(
+      const matchingPromise = this.caseService.getCasesMatching(
         {
-          "state": {
-            "$in": this.caseService.filtered_statuses.map(String)
+          'state': {
+            '$in': this.caseService.filtered_statuses.map(String)
           }
         });
 
-      var self = this;
+      const self = this;
       matchingPromise.then(data => {
 
 
@@ -59,12 +59,12 @@ export class CaseListComponent implements OnInit {
         this.cases = data.docs.sort(
           (a, b) => {
             return a._id < b._id ? 1 : (a._id > b._id ? -1 : 0);
-          });;
+          }); ;
 
         console.log(data.docs);
 
-        var self = this;
-        var initial_cases_length = this.cases.length;
+        const self = this;
+        const initial_cases_length = this.cases.length;
 
         //loop through cases and load location
         self.loadLocationForCase();
@@ -79,13 +79,13 @@ export class CaseListComponent implements OnInit {
   }
 
   loadLocationForCase() {
-    var self = this;
+    const self = this;
     self.locationService.getAllLocations().then(
       function(locations) {
-        console.log(locations)
+        console.log(locations);
         for (let x = 0; x < self.cases.length; x++) {
           if (self.cases[x] && self.cases[x]._id) {
-            let doc = self.cases[x];
+            const doc = self.cases[x];
             self.caseMeta.locations[doc._id] = locations.rows.filter(function(item) {
               return item.doc.itemId == doc._id;
             })[0];
@@ -103,9 +103,9 @@ export class CaseListComponent implements OnInit {
 
   toggleCase(case_id: string) {
     if (this.toggled_cases.indexOf(case_id) === -1)
-      this.toggled_cases.push(case_id)
+      this.toggled_cases.push(case_id);
     else
-      this.toggled_cases.splice(this.toggled_cases.indexOf(case_id))
+      this.toggled_cases.splice(this.toggled_cases.indexOf(case_id));
   }
 
   getStateName(state: number): string {

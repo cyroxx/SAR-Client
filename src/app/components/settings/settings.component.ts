@@ -16,21 +16,21 @@ declare var helpers: any;
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
-  db
-  data
-  remote
-  pouchService
-  current_version
-  update_info
-  configService
-  platform
-  settings_info
-  db_remote_url
+  db;
+  data;
+  remote;
+  pouchService;
+  current_version;
+  update_info;
+  configService;
+  platform;
+  settings_info;
+  db_remote_url;
 
   constructor(pouchService: PouchService, configService: ConfigService) {
 
-    this.pouchService = pouchService
-    this.configService = configService
+    this.pouchService = pouchService;
+    this.configService = configService;
     this.current_version = AppVersion.version;
     this.db_remote_url = this.configService.getConfiguration('db_remote_url');
 
@@ -42,7 +42,7 @@ export class SettingsComponent implements OnInit {
     console.log('PLATFORM', this.platform);
 
     this.db = this.pouchService.initDB('versions');
-    this.checkForUpdates()
+    this.checkForUpdates();
   }
 
   ngOnInit() {
@@ -50,12 +50,12 @@ export class SettingsComponent implements OnInit {
   }
   checkForUpdates() {
 
-    this.update_info = {}
-    this.update_info.status_obj = {}
+    this.update_info = {};
+    this.update_info.status_obj = {};
 
     this.getVersions();
 
-    var self = this;
+    const self = this;
 
     this.db.allDocs({
 
@@ -65,19 +65,19 @@ export class SettingsComponent implements OnInit {
 
       this.data = [];
 
-      let docs = result.rows.map((row) => {
+      const docs = result.rows.map((row) => {
         this.data.push(row.doc);
       });
 
       if (this.data[0]) {
 
 
-        var latest_version_obj = this.data[0]; var minimum_accepted_version = latest_version_obj.minimum_accepted_version;
+        const latest_version_obj = this.data[0]; const minimum_accepted_version = latest_version_obj.minimum_accepted_version;
 
-        var latest_accepted_version = latest_version_obj._id;
+        const latest_accepted_version = latest_version_obj._id;
 
-        var download_link;
-        var filesize;
+        let download_link;
+        let filesize;
         //get the right download link
         switch (self.platform) {
           case 'linux':
@@ -103,7 +103,7 @@ export class SettingsComponent implements OnInit {
             'version': latest_version_obj._id,
             'link': download_link,
             'filesize': filesize
-          }
+          };
           self.settings_info.show = true;
         }
 
@@ -114,7 +114,7 @@ export class SettingsComponent implements OnInit {
             'version': latest_version_obj._id,
             'link': download_link,
             'filesize': filesize
-          }
+          };
           self.settings_info.show = true;
         }
       }
@@ -146,7 +146,7 @@ export class SettingsComponent implements OnInit {
 
         this.data = [];
 
-        let docs = result.rows.map((row) => {
+        const docs = result.rows.map((row) => {
           this.data.push(row.doc);
         });
 
@@ -184,12 +184,12 @@ export class SettingsComponent implements OnInit {
   }
 
   openExternal(link) {
-    shell.openExternal(link)
+    shell.openExternal(link);
   }
   closeSettings() {
     if (this.update_info.status_obj.status != 'update_required')
       this.settings_info.show = false;
     else
-      helpers.alert('You need to update before you can proceed!')
+      helpers.alert('You need to update before you can proceed!');
   }
 }

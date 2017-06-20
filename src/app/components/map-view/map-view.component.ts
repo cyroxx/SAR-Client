@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core'
-import { Location } from '@angular/common'
+import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 
-import { MapService } from 'app/services/map.service'
-import { VehiclesService } from 'app/services/vehicles.service'
-import { CasesService } from 'app/services/cases.service'
+import { MapService } from 'app/services/map.service';
+import { VehiclesService } from 'app/services/vehicles.service';
+import { CasesService } from 'app/services/cases.service';
 import { LocationsService } from '../../services/locations.service';
 
 declare var L: any;
@@ -53,7 +53,7 @@ export class MapViewComponent implements OnInit {
   }
 
   public isHidden() {
-    let list = [""],
+    const list = [''],
       route = this.location.path();
 
     return (list.indexOf(route) === -1);
@@ -68,10 +68,10 @@ export class MapViewComponent implements OnInit {
   drawCases() {
     this.casesService.getCases().then((data) => {
       this.cases = data;
-      for (let incident of this.cases) {
-        let location_promise = this.locationsService.getLastLocationMatching(incident._id);
+      for (const incident of this.cases) {
+        const location_promise = this.locationsService.getLastLocationMatching(incident._id);
         location_promise.then((location) => {
-          let location_doc = location.docs[0];
+          const location_doc = location.docs[0];
           if (!location_doc || !location_doc.latitude) {
             console.log('No location found for case: ' + incident._id);
             return;
@@ -91,15 +91,15 @@ export class MapViewComponent implements OnInit {
   drawVehicles() {
     this.vehiclesService.getVehicles().then((data) => {
       this.vehicles = data;
-      for (let vehicle of this.vehicles) {
-        let location_promise = this.locationsService.getLastLocationMatching(vehicle._id);
+      for (const vehicle of this.vehicles) {
+        const location_promise = this.locationsService.getLastLocationMatching(vehicle._id);
         location_promise.then((location) => {
-          let location_doc = location.docs[0];
+          const location_doc = location.docs[0];
           if (!location_doc || !location_doc.latitude) {
             console.log('No location found for vehicle: ' + vehicle.title);
             return;
           }
-          let last_update = location_doc._id.substr(0, 19).replace('T', ' ');
+          const last_update = location_doc._id.substr(0, 19).replace('T', ' ');
           this.mapService.setMarker(
             vehicle._id,
             'vehicles',

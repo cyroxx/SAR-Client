@@ -15,24 +15,24 @@ import { SettingsComponent } from 'app/components/settings/settings.component';
 
 export class TopNavComponent implements OnInit {
   title: string;
-  authService
-  is_online
-  show_sub_menu
+  authService;
+  is_online;
+  show_sub_menu;
   constructor(private modalService: ModalService, AuthService: AuthService) {
-    this.title = 'top nav'
-    this.show_sub_menu = false
-    this.authService = AuthService
+    this.title = 'top nav';
+    this.show_sub_menu = false;
+    this.authService = AuthService;
   }
 
   ngOnInit() {
     //this.is_online = this.authService.pouchService.getConnectionState();
-    this.authService.pouchService.onlineState.subscribe((value: any) => this.is_online = value)
+    this.authService.pouchService.onlineState.subscribe((value: any) => this.is_online = value);
   }
 
   logout() {
     console.log('logout called');
-    window.localStorage.clear()
-    this.authService.logout()
+    window.localStorage.clear();
+    this.authService.logout();
     console.log('logout worked...');
   }
 

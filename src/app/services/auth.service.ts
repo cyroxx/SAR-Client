@@ -13,10 +13,10 @@ declare var ipcRenderer: any;
 
 @Injectable()
 export class AuthService {
-  router
+  router;
   logged_in;
   db;
-  sessiondata; // used to store couch user object 
+  sessiondata; // used to store couch user object
   pouchService;
   // Observable navItem source
   private _loginStateSource = new BehaviorSubject<boolean>(false);
@@ -25,8 +25,8 @@ export class AuthService {
 
   changeLoginState = new EventEmitter<boolean>();
 
-  ConfigService: ConfigService
-  remote: string
+  ConfigService: ConfigService;
+  remote: string;
 
   constructor(PouchService: PouchService, ConfigService: ConfigService, Router: Router) {
 
@@ -42,12 +42,12 @@ export class AuthService {
     this.db = new PouchDB(this.remote + '_users/', { skipSetup: true });
 
 
-    var self = this;
+    const self = this;
     self.changeLoginStateTo(false);
 
     this.db.getSession(function(err, response) {
 
-      console.log('...getting session:')
+      console.log('...getting session:');
       if (err) {
         // network error
       } else if (!response.userCtx.name) {
@@ -56,7 +56,7 @@ export class AuthService {
       } else {
         //store returned sessiondata
         if (response.ok)
-          self.sessiondata = response.userCtx
+          self.sessiondata = response.userCtx;
 
         self.changeLoginStateTo(true);
       }
@@ -67,17 +67,17 @@ export class AuthService {
 
   changeLoginStateTo(loginState) {
 
-    this.changeLoginState.emit(loginState)
+    this.changeLoginState.emit(loginState);
 
   }
 
   //@param userdata {username:string, password:string}
   login(userdata) {
 
-    var self = this;
+    const self = this;
     this.db.login(userdata.username, userdata.password, function(err, response) {
       if (err) {
-        console.log(err)
+        console.log(err);
         if (err.name === 'unauthorized' || err.name === 'authentication_error') {
           alert('...password or username wrong');
         } else {
@@ -97,7 +97,7 @@ export class AuthService {
         /*rerender after short timeout (we would need a waterfall cb inside the pouchservice.reinitializeDBs, to have a more elegant solution)*/
         setTimeout(function() {
           window.location = window.location.href + 'index.html';
-        }, 1500)
+        }, 1500);
 
         console.log('...log in successful');
       }
@@ -110,7 +110,7 @@ export class AuthService {
 
   }
   is_logged_in() {
-    return this.logged_in
+    return this.logged_in;
   }
   getUserData() {
     return this.sessiondata;

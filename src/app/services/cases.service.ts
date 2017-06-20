@@ -47,7 +47,7 @@ export class CasesService {
       currentCase.location.reportedBy = this.authService.getUserData().name;
       this.locationService.store(currentCase.location);
     }
-    var self = this;
+    const self = this;
     this
       .pouchService
       .db('cases')
@@ -85,15 +85,15 @@ export class CasesService {
    * Removes location
    */
   private getStorableForm(c: Case) {
-    let selfCopy = Object.assign({}, c);
+    const selfCopy = Object.assign({}, c);
     delete selfCopy.location;
     return selfCopy;
   }
   toggleStatusFilter(status_id: string) {
     if (this.filtered_statuses.indexOf(status_id) === -1)
-      this.filtered_statuses.push(status_id)
+      this.filtered_statuses.push(status_id);
     else
-      this.filtered_statuses.splice(this.filtered_statuses.indexOf(status_id), 1)
+      this.filtered_statuses.splice(this.filtered_statuses.indexOf(status_id), 1);
 
 
     this.filteredStatuses.next(this.filtered_statuses);

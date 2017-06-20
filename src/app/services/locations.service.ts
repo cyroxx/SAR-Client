@@ -37,8 +37,8 @@ export class LocationsService {
   }
 
   /**
-   * 
-   * @param foreignKey the key of the case or vehicle 
+   *
+   * @param foreignKey the key of the case or vehicle
    */
   getLastLocationMatching(foreignKey: string) {
     return this.pouchService.find(
