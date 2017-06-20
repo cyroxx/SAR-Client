@@ -101,7 +101,7 @@ export class CreateCaseFormComponent implements OnInit, Listener {
         self.locationService.getLastLocationMatching(self.caseId).then(function(loc) {
           console.log(loc);
 
-          self.case.location = <Location>loc.docs[0];
+          self.case.location = <Location>loc;
           self.casemeta.dd_location.longitude = self.case.location.longitude;
           self.casemeta.dd_location.latitude = self.case.location.latitude;
 
@@ -183,7 +183,7 @@ export class CreateCaseFormComponent implements OnInit, Listener {
         if (!this.casemeta.dms_location) {
           this.casemeta.dms_location = {};
         }
-        //convert lon
+        // convert lon
         this.casemeta.dms_location.latitude = this.convertDDToDMS(this.casemeta.dd_location.latitude);
 
         this.casemeta.dms_location.longitude = this.convertDDToDMS(this.casemeta.dd_location.longitude);
@@ -236,7 +236,7 @@ export class CreateCaseFormComponent implements OnInit, Listener {
     this.case = this.change;
     this.locationService.getLastLocationMatching(this.caseId).then(function(loc) {
       console.log(loc);
-      self.case.location = <Location>loc.docs[0];
+      self.case.location = <Location>loc;
 
     });
     this.edited = false;
@@ -245,8 +245,8 @@ export class CreateCaseFormComponent implements OnInit, Listener {
   getCurrentPosition() {
     const self = this;
     navigator.geolocation.getCurrentPosition((position) => {
-      //console.log(position);
-      //@TODO add reporter from currently logged in user
+      // console.log(position);
+      // @TODO add reporter from currently logged in user
       self.case.location = {
         _id: new Date().toISOString() + '-reportedBy-' + self.authService.getUserData().name,
         longitude: position.coords.longitude,

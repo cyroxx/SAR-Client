@@ -59,14 +59,14 @@ export class CaseListComponent implements OnInit {
         this.cases = data.docs.sort(
           (a, b) => {
             return a._id < b._id ? 1 : (a._id > b._id ? -1 : 0);
-          }); ;
+          });;
 
         console.log(data.docs);
 
         const self = this;
         const initial_cases_length = this.cases.length;
 
-        //loop through cases and load location
+        // loop through cases and load location
         self.loadLocationForCase();
 
 
@@ -86,8 +86,8 @@ export class CaseListComponent implements OnInit {
         for (let x = 0; x < self.cases.length; x++) {
           if (self.cases[x] && self.cases[x]._id) {
             const doc = self.cases[x];
-            self.caseMeta.locations[doc._id] = locations.rows.filter(function(item) {
-              return item.doc.itemId == doc._id;
+            self.caseMeta.locations[doc._id] = locations.filter(function(item) {
+              return item.itemId === doc._id;
             })[0];
             console.log(self.caseMeta.locations[doc._id]);
           }

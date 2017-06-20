@@ -44,7 +44,7 @@ export class LeftNavComponent implements OnInit {
   go_to_vehicle(vehicle: any) {
     const location_promise = this.locationsService.getLastLocationMatching(vehicle._id);
     location_promise.then((location) => {
-      const location_doc = location.docs[0];
+      const location_doc = location;
       if (!location_doc || !location_doc.latitude) {
         console.log('No location found for vehicle: ' + vehicle.title);
         return;
@@ -55,7 +55,7 @@ export class LeftNavComponent implements OnInit {
 
   filter_by_status(status_id) {
 
-    //add or remove status from filters
+    // add or remove status from filters
     this.casesService.toggleStatusFilter(status_id);
 
     console.log('showing cases with statusses ' + JSON.stringify(this.casesService.getFilteredStatuses()));

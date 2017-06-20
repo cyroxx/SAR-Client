@@ -49,7 +49,7 @@ export class MapViewComponent implements OnInit {
     }(this),
       60 * 1000
     );
-    //this.drawCases();
+    // this.drawCases();
   }
 
   public isHidden() {
@@ -71,7 +71,7 @@ export class MapViewComponent implements OnInit {
       for (const incident of this.cases) {
         const location_promise = this.locationsService.getLastLocationMatching(incident._id);
         location_promise.then((location) => {
-          const location_doc = location.docs[0];
+          const location_doc = location;
           if (!location_doc || !location_doc.latitude) {
             console.log('No location found for case: ' + incident._id);
             return;
@@ -94,7 +94,7 @@ export class MapViewComponent implements OnInit {
       for (const vehicle of this.vehicles) {
         const location_promise = this.locationsService.getLastLocationMatching(vehicle._id);
         location_promise.then((location) => {
-          const location_doc = location.docs[0];
+          const location_doc = location;
           if (!location_doc || !location_doc.latitude) {
             console.log('No location found for vehicle: ' + vehicle.title);
             return;
@@ -106,8 +106,8 @@ export class MapViewComponent implements OnInit {
             location_doc.latitude,
             location_doc.longitude,
             '<h5>' + vehicle.title + '</h5><b>' +
-            this.parseLatitude(parseFloat(location_doc.latitude)) + ' ' +
-            this.parseLongitude(parseFloat(location_doc.longitude)) +
+            this.parseLatitude(location_doc.latitude) + ' ' +
+            this.parseLongitude(location_doc.longitude) +
             '</b><br />' + last_update,
 
             vehicle.marker_color,

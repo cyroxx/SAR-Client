@@ -36,6 +36,13 @@ export class ConfigService {
     return electronSettings.get(key);
   }
 
+  getDBRemoteURL() {
+    const url = this.getConfiguration('db_remote_url');
+
+    // Remove all trailing "/" characters from the URL
+    return url ? url.replace(/\/+$/, '') : null;
+  }
+
   updateConfiguration(update, cb) {
     for (const key in update) {
       // Use hasOwnProperty here to avoid setting inherited properties and to please tslint

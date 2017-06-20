@@ -14,7 +14,7 @@
 	</script>
 
 	<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -42,6 +42,8 @@
       var os = require('os');
       const { remote, shell } = require('electron');
       const {ipcRenderer} = require('electron');
+
+      const dbWorker = new Worker('workers/db-worker.js');
 
       var helpers = new function(){
         this.alert = function(msg){
@@ -119,7 +121,7 @@
         }
         return calcMD5;
     }();
-     
+
     </script>
 
 
