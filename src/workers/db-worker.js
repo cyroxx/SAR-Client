@@ -35,29 +35,43 @@ class DBInitializer {
 
       console.log('db:initialize', localName, remoteName, options);
 
+      // TODO: Switch to "sync", based on a config option
       db.replicate.from(remoteName, options)
         .on('change', (info) => {
           console.log('replicate:change', info);
 
           // Notify all listeners for remote changes
-          if (info.direction === 'pull') {
-            onChange(localName, info.change);
-          }
+          // TODO: When using "replicate.from", thre is no info.direction field
+          //if (info.direction === 'pull') {
+            onChange(localName, {
+              docs: info.docs,
+              errors: info.errors,
+              docs_read: info.docs_read,
+              docs_written: info.docs_written,
+            });
+          //}
+
+          // TODO: publish online status
         })
         .on('paused', (err) => {
           console.log('replicate:paused', err);
+          // TODO: publish online status
         })
         .on('active', () => {
           console.log('replicate:active');
+          // TODO: publish online status
         })
         .on('denied', (err) => {
           console.log('replicate:denied', err);
+          // TODO: publish online status
         })
         .on('complete', (info) => {
           console.log('replicate:complete', info);
+          // TODO: publish online status
         })
         .on('error', (err) => {
           console.log('replicate:error', err);
+          // TODO: publish online status
         });
 
       resolve(db);
@@ -68,22 +82,41 @@ class DBInitializer {
 class DBLocations {
   constructor(db) {
     this.db = db;
+    this.createIndex();
+  }
+
+  createIndex() {
+    console.time('locations:create-index(itemId)');
+    this.db.createIndex({
+      index: {
+        fields: ['itemId']
+      }
+    }).then(function (result) {
+      console.timeEnd('locations:create-index(itemId)');
+    }).catch(function (err) {
+      console.log('Could not create index on locations=>itemId', err);
+    });
   }
 
   all(reply, error) {
-    console.time('allDocs');
+    console.time('locations:all');
     this.db.allDocs({ include_docs: true, descending: true }).then((data) => {
-      console.timeEnd('allDocs');
+      console.timeEnd('locations:all');
       reply(data);
     }).catch(error);
   }
 
   get(args, reply, error) {
-    this.db.get(args.id).then(reply).catch(error);
+    const timer = `locations:get(${args.id})`
+    console.time(timer)
+    this.db.get(args.id).then((data) => {
+      console.timeEnd(timer);
+      reply(data);
+    }).catch(error);
   }
 
   find(args, reply, error) {
-    const timer = `find(${JSON.stringify(args.selector)})`;
+    const timer = `locations:find(${JSON.stringify(args.selector)})`;
     console.time(timer);
     this.db.find({
       selector: args.selector,
@@ -100,7 +133,7 @@ class DBWorker {
   constructor() {
     this.databases = {};
 
-    self.onmessage = msg => this.dispatchMessage(msg.data);
+    self.onmessage = event => this.dispatchMessage(event.data);
   }
 
   /* Dispatches an incoming DB request message.
@@ -111,6 +144,11 @@ class DBWorker {
    * See: DBTxRequestMessage
    */
   dispatchMessage(msg) {
+    if (!msg || !msg.action) {
+      console.log('ERROR: Invalid message:', msg);
+      return;
+    }
+
     console.log('dispatchMessage', msg);
 
     try {
@@ -192,17 +230,6 @@ class DBWorker {
 const dbWorker = new DBWorker();
 
 /*
-this.db.createIndex({
-  index: {
-    fields: ['itemId']
-  }
-}).then(function (result) {
-  console.log('Created an index on location:itemId');
-}).catch(function (err) {
-  console.log('Failed to create an index on location:itemId');
-  console.log(err);
-});
-
 self.onmessage = (e) => dispatchMessage(e.data);
 
 function dispatchMessage(msg) {
