@@ -127,6 +127,15 @@ class DBLocations {
       reply(data);
     }).catch(error);
   }
+
+  store(args, repy, error) {
+    const timer = `locations:store(${JSON.stringify(args.location)})`;
+    console.time(timer);
+    this.db.post(args.location).then((data) => {
+      console.timeEnd(timer);
+      reply(data);
+    }).catch(error);
+  }
 }
 
 class DBWorker {
@@ -160,8 +169,7 @@ class DBWorker {
           this.db('locations').get(msg.args, this.reply(msg), this.error(msg));
           break;
         case 'locations:store':
-          // TODO
-          console.log(msg.action, 'not implemented yet!');
+          this.db('locations').store(msg.args, this.reply(msg), this.error(msg));
           break;
         case 'locations:find':
           this.db('locations').find(msg.args, this.reply(msg), this.error(msg));

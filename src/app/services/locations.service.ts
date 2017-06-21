@@ -60,7 +60,7 @@ export class LocationsService {
 
     return new Promise((resolve, reject) => {
       this.dbClientService.newTransaction(DBTxActions.LOCATIONS_STORE, {
-        payload: location,
+        location: location,
       }).then((msg: DBTxReplyMessage) => {
         const storedLocation: Location = msg.payload;
         resolve(storedLocation);
