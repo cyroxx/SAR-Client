@@ -106,8 +106,10 @@ export class MapViewComponent implements OnInit {
             location_doc.latitude,
             location_doc.longitude,
             '<h5>' + vehicle.title + '</h5><b>' +
-            this.parseLatitude(location_doc.latitude) + ' ' +
-            this.parseLongitude(location_doc.longitude) +
+            // TODO: The latitude and longitude value can be strings or numbers
+            //       This should be fixed to always be numbers!
+            this.parseLatitude(parseFloat(<any>location_doc.latitude)) + ' ' +
+            this.parseLongitude(parseFloat(<any>location_doc.longitude)) +
             '</b><br />' + last_update,
 
             vehicle.marker_color,
