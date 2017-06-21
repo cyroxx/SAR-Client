@@ -131,7 +131,7 @@ class DBLocations {
   store(args, repy, error) {
     const timer = `locations:store(${JSON.stringify(args.location)})`;
     console.time(timer);
-    this.db.post(args.location).then((data) => {
+    this.db.put(args.location).then((data) => {
       console.timeEnd(timer);
       reply(data);
     }).catch(error);
