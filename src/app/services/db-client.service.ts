@@ -7,18 +7,31 @@ import {
   DBTxRequestMessage,
   DBTxRequestArgs
 } from '../interfaces/db-tx';
+import { Listener } from '../interfaces/listener';
 
 // Use the globally defined dbWorker variable to be able to communicate
 // with the PouchDB web worker.
 declare const dbWorker: any;
 
+class ListenerEntry {
+  public dbName: string;
+  public listener: Listener;
+
+  constructor(dbName: string, listener: Listener) {
+    this.dbName = dbName;
+    this.listener = listener;
+  }
+}
+
 @Injectable()
 export class DBClientService {
   private dbWorker: Worker;
   private transactions: { [txid: string]: DBTxCallback };
+  private listeners: { [id: string]: ListenerEntry };
 
   constructor() {
     this.transactions = {};
+    this.listeners = {};
     this.dbWorker = dbWorker;
 
     this.dbWorker.onmessage = (msg) => this.dispatch(msg.data);
@@ -61,5 +74,15 @@ export class DBClientService {
       this.transactions[txid] = (msg: DBTxReplyMessage) => resolve(msg);
       this.dbWorker.postMessage(request);
     });
+  }
+
+  public addChangeListener(dbName: string, listener: Listener): string {
+    const id = uuid();
+    this.listeners[id] = new ListenerEntry(dbName, listener);
+    return id;
+  }
+
+  public removeChangeListener(id: string): void {
+    delete this.listeners[id];
   }
 }
