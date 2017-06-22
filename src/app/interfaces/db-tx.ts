@@ -13,6 +13,11 @@ export class DBTxActions {
 
   static readonly VEHICLES_INIT = 'vehicles:init';
   static readonly VEHICLES_ALL = 'vehicles:all';
+
+  static readonly MESSAGES_INIT = 'messages:init';
+  static readonly MESSAGES_ALL = 'messages:all';
+  static readonly MESSAGES_FIND = 'messages:find';
+  static readonly MESSAGES_STORE = 'messages:store';
 }
 
 export interface DBTxRequestMessage {

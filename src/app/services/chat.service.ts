@@ -1,55 +1,40 @@
 import { Injectable } from '@angular/core';
-import { PouchService } from '../services/pouch.service';
 import { AuthService } from '../services/auth.service';
 import { LocationsService } from '../services/locations.service';
 import { Message } from '../interfaces/message';
+import { DBClientService } from '../services/db-client.service';
+import { DBTxActions, DBTxReplyMessage } from '../interfaces/db-tx';
 
 @Injectable()
 export class ChatService {
 
-  db: any;
-  data: Array<any>;
-  remote;
+  private dbClientService: DBClientService;
 
-  constructor(private pouchService: PouchService, private authService: AuthService) {
-    this.db = this.pouchService.initDB('messages');
-    /*this.db.createIndex({
-      index: {
-        fields: ['state']
-      }
-    }).then(function(result) {
-      console.log('Created an index on messages:state');
-    }).catch(function(err) {
-      console.log('Failed to create an index on messages:state');
-      console.log(err);
-    });*/
-
-
+  constructor(dbclientService: DBClientService, authService: AuthService) {
+    this.dbClientService = dbclientService;
+    this.dbClientService.initializeDatabase('messages').catch(console.log);
   }
 
-  store(currentMessage: Message) {
+  store(currentMessage: Message): Promise<Message> {
     console.log(currentMessage);
     currentMessage.createdAt = new Date().toISOString();
 
-    this
-      .pouchService
-      .db('messages')
-      .put(this.getStorableForm(currentMessage))
-      .then(function(response) {
-        console.log(response);
-      })
-      .catch(function(err) {
-        console.error(err);
-      });
+    return new Promise((resolve, reject) => {
+      this.dbClientService.newTransaction(DBTxActions.MESSAGES_STORE, {
+        message: this.getStorableForm(currentMessage),
+      }).then((msg: DBTxReplyMessage) => {
+        resolve(<Message>msg.payload);
+      }).catch(reject);
+    });
   }
 
-
-  getMessages() {
-    return this.pouchService.get('messages');
-  }
-
-  getMessagesMatching(where: any) {
-    return this.pouchService.find('messages', where);
+  getMessages(): Promise<Array<Message>> {
+    return new Promise((resolve, reject) => {
+      this.dbClientService.newTransaction(DBTxActions.MESSAGES_ALL)
+        .then((msg: DBTxReplyMessage) => {
+          resolve(msg.payload.rows.map(r => <Message>r.doc));
+        }).catch(reject);
+    });
   }
 
   /**
@@ -61,6 +46,4 @@ export class ChatService {
     const selfCopy = Object.assign({}, c);
     return selfCopy;
   }
-
-
 }

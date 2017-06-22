@@ -38,7 +38,7 @@ class DBInitializer {
       // TODO: Switch to "sync", based on a config option
       db.replicate.from(remoteName, options)
         .on('change', (info) => {
-          console.log('replicate:change', info);
+          console.log('replicate:change', localName, info);
 
           // Notify all listeners for remote changes
           // TODO: When using "replicate.from", thre is no info.direction field
@@ -54,28 +54,72 @@ class DBInitializer {
           // TODO: publish online status
         })
         .on('paused', (err) => {
-          console.log('replicate:paused', err);
+          console.log('replicate:paused', localName, err);
           // TODO: publish online status
         })
         .on('active', () => {
-          console.log('replicate:active');
+          console.log('replicate:active', localName);
           // TODO: publish online status
         })
         .on('denied', (err) => {
-          console.log('replicate:denied', err);
+          console.log('replicate:denied', localName, err);
           // TODO: publish online status
         })
         .on('complete', (info) => {
-          console.log('replicate:complete', info);
+          console.log('replicate:complete', localName, info);
           // TODO: publish online status
         })
         .on('error', (err) => {
-          console.log('replicate:error', err);
+          console.log('replicate:error', localName, err);
           // TODO: publish online status
         });
 
       resolve(db);
     });
+  }
+}
+
+class DBMessages {
+  constructor(db) {
+    this.db = db;
+  }
+
+  all(reply, error) {
+    console.time('messages:all');
+    this.db.allDocs({ include_docs: true }).then((data) => {
+      console.timeEnd('messages:all');
+      reply(data);
+    }).catch(error);
+  }
+
+  find(args, reply, error) {
+    const findOptions = {};
+
+    if (args.selector) {
+      findOptions.selector = args.selector;
+    }
+    if (args.limit) {
+      findOptions.limit = args.limit;
+    }
+    if (args.sort) {
+      findOptions.sort = args.sort;
+    }
+
+    const timer = `messages:find(${JSON.stringify(args.selector)})`;
+    console.time(timer);
+    this.db.find(findOptions).then((data) => {
+      console.timeEnd(timer);
+      reply(data);
+    }).catch(error);
+  }
+
+  store(args, repy, error) {
+    const timer = `messages:store(${JSON.stringify(args.message)})`;
+    console.time(timer);
+    this.db.put(args.message).then((data) => {
+      console.timeEnd(timer);
+      reply(data);
+    }).catch(error);
   }
 }
 
@@ -297,6 +341,22 @@ class DBWorker {
           break;
         case 'vehicles:all':
           this.db('vehicles').all(this.reply(msg), this.error(msg));
+          break;
+
+        case 'messages:init':
+          DBInitializer.init(msg.args, this.onChange, this.reply(msg), this.error(msg))
+            .then((db) => {
+              this.databases['messages'] = new DBMessages(db);
+            })
+          break;
+        case 'messages:all':
+          this.db('messages').all(this.reply(msg), this.error(msg));
+          break;
+        case 'messages:find':
+          this.db('messages').find(msg.args, this.reply(msg), this.error(msg));
+          break;
+        case 'messages:store':
+          this.db('messages').store(msg.args, this.reply(msg), this.error(msg));
           break;
 
         case 'session:login':
