@@ -34,8 +34,11 @@ class DBInitializer {
       };
 
       console.log('db:initialize', localName, remoteName, options);
+      console.log('db:type', localName, db.type());
+      console.log('db:type', remoteName, new PouchDB(remoteName).type());
 
       // TODO: Switch to "sync", based on a config option
+      // TODO: Store the replication/sync object so we can cancel it!
       db.replicate.from(remoteName, options)
         .on('change', (info) => {
           console.log('replicate:change', localName, info);
@@ -113,13 +116,45 @@ class DBMessages {
     }).catch(error);
   }
 
-  store(args, repy, error) {
+  store(args, reply, error) {
     const timer = `messages:store(${JSON.stringify(args.message)})`;
     console.time(timer);
     this.db.put(args.message).then((data) => {
       console.timeEnd(timer);
       reply(data);
     }).catch(error);
+  }
+
+  clearLocalDatabase() {
+    // Make sure that we do not clear a remote database!
+    if (this.db.type().indexOf('http') < 0) {
+      return this.db.destroy();
+    } else {
+      return Promise.reject(new Error(`Not clearing remote database <${this.db.db_name}>`));
+    }
+  }
+}
+
+class DBVersions {
+  constructor(db) {
+    this.db = db;
+  }
+
+  all(reply, error) {
+    console.time('versions:all');
+    this.db.allDocs({ include_docs: true }).then((data) => {
+      console.timeEnd('versions:all');
+      reply(data);
+    }).catch(error);
+  }
+
+  clearLocalDatabase() {
+    // Make sure that we do not clear a remote database!
+    if (this.db.type().indexOf('http') < 0) {
+      return this.db.destroy();
+    } else {
+      return Promise.reject(new Error(`Not clearing remote database <${this.db.db_name}>`));
+    }
   }
 }
 
@@ -134,6 +169,15 @@ class DBVehicles {
       console.timeEnd('vehicles:all');
       reply(data);
     }).catch(error);
+  }
+
+  clearLocalDatabase() {
+    // Make sure that we do not clear a remote database!
+    if (this.db.type().indexOf('http') < 0) {
+      return this.db.destroy();
+    } else {
+      return Promise.reject(new Error(`Not clearing remote database <${this.db.db_name}>`));
+    }
   }
 }
 
@@ -194,13 +238,22 @@ class DBCases {
     }).catch(error);
   }
 
-  store(args, repy, error) {
+  store(args, reply, error) {
     const timer = `cases:store(${JSON.stringify(args.case)})`;
     console.time(timer);
     this.db.put(args.case).then((data) => {
       console.timeEnd(timer);
       reply(data);
     }).catch(error);
+  }
+
+  clearLocalDatabase() {
+    // Make sure that we do not clear a remote database!
+    if (this.db.type().indexOf('http') < 0) {
+      return this.db.destroy();
+    } else {
+      return Promise.reject(new Error(`Not clearing remote database <${this.db.db_name}>`));
+    }
   }
 }
 
@@ -261,13 +314,22 @@ class DBLocations {
     }).catch(error);
   }
 
-  store(args, repy, error) {
+  store(args, reply, error) {
     const timer = `locations:store(${JSON.stringify(args.location)})`;
     console.time(timer);
     this.db.put(args.location).then((data) => {
       console.timeEnd(timer);
       reply(data);
     }).catch(error);
+  }
+
+  clearLocalDatabase() {
+    // Make sure that we do not clear a remote database!
+    if (this.db.type().indexOf('http') < 0) {
+      return this.db.destroy();
+    } else {
+      return Promise.reject(new Error(`Not clearing remote database <${this.db.db_name}>`));
+    }
   }
 }
 
@@ -359,6 +421,20 @@ class DBWorker {
           this.db('messages').store(msg.args, this.reply(msg), this.error(msg));
           break;
 
+        case 'versions:init':
+          DBInitializer.init(msg.args, this.onChange, this.reply(msg), this.error(msg))
+            .then((db) => {
+              this.databases['versions'] = new DBVersions(db);
+            })
+          break;
+        case 'versions:all':
+          this.db('versions').all(this.reply(msg), this.error(msg));
+          break;
+
+        case 'db:clear:all':
+          this.clearAll(this.reply(msg), this.error(msg));
+          break;
+
         case 'session:login':
           console.log(msg.action, 'not implemented yet!');
         case 'session:logout':
@@ -380,6 +456,36 @@ class DBWorker {
     throw new Error(`Database <${name}> is not initialized`);
   }
 
+  clearAll(reply, error) {
+    let jobs = [];
+    let errors = [];
+
+    for (const dbName in this.databases) {
+      try {
+        const job = this.databases[dbName].clearLocalDatabase().then((result) => {
+          console.log(`Cleared local database <${dbName}>`, result);
+        }).catch((error) => {
+          console.log(`Couldn't clear local database <${dbName}>`, error);
+          errors.push(error);
+        });
+        jobs.push(job);
+      } catch (e) {
+        errors.push(e);
+      }
+    }
+
+    // Make sure we wait until all deletion jobs are finished before we reply
+    Promise.all(jobs).then(() => {
+      if (errors.length > 0) {
+        error(errors);
+      } else {
+        reply({ success: true });
+      }
+    }).catch((error) => {
+      error(error);
+    });
+  }
+
   reply(msg) {
     return (data) => {
       self.postMessage({
@@ -393,11 +499,17 @@ class DBWorker {
 
   error(msg) {
     return (error) => {
+      let errorObject = error;
+      // An Error object cannot be serialized in postMessage so make sure we have a
+      // serializable object.
+      if (error instanceof Error) {
+        errorObject = { message: error.toString() };
+      }
       self.postMessage({
         type: 'error',
         txid: msg.txid,
         action: msg.action,
-        error: error,
+        error: errorObject,
       });
     };
   }

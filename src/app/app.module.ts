@@ -15,6 +15,7 @@ import { CreateCaseFormComponent } from './components/create-case-form/create-ca
 import { ConfigService } from './services/config.service';
 import { PouchService } from './services/pouch.service';
 import { DBClientService } from './services/db-client.service';
+import { AppVersionsService } from './services/app-versions.service';
 import { AuthService } from './services/auth.service';
 import { LocationsService } from './services/locations.service';
 import { CasesService } from './services/cases.service';
@@ -61,6 +62,7 @@ import { SettingsComponent } from './components/settings/settings.component';
     MapService,
     StatusesService,
     DBClientService,
+    AppVersionsService,
   ],
   bootstrap: [AppComponent]
 })

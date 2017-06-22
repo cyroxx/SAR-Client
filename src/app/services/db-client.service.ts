@@ -90,6 +90,14 @@ export class DBClientService {
     });
   }
 
+  public clearAllDatabases(): Promise<DBTxReplyMessage> {
+    return new Promise((resolve, reject) => {
+      this.newTransaction(DBTxActions.DB_CLEAR_ALL)
+        .then(resolve)
+        .catch(reject);
+    });
+  }
+
   public addChangeListener(dbName: string, listener: Listener): string {
     const id = uuid();
     this.listeners[id] = new ListenerEntry(dbName, listener);

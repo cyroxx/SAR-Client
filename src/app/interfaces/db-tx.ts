@@ -18,6 +18,11 @@ export class DBTxActions {
   static readonly MESSAGES_ALL = 'messages:all';
   static readonly MESSAGES_FIND = 'messages:find';
   static readonly MESSAGES_STORE = 'messages:store';
+
+  static readonly VERSIONS_INIT = 'versions:init';
+  static readonly VERSIONS_ALL = 'versions:all';
+
+  static readonly DB_CLEAR_ALL = 'db:clear:all';
 }
 
 export interface DBTxRequestMessage {
