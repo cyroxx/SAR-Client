@@ -1,19 +1,15 @@
 import { Injectable } from '@angular/core';
 import { DBClientService } from '../services/db-client.service';
 import { DBTxActions, DBTxReplyMessage } from '../interfaces/db-tx';
-import { ConfigService } from './config.service';
 import { Location } from '../interfaces/location';
 
 @Injectable()
 export class LocationsService {
   dbClientService: DBClientService;
 
-  constructor(dbclientService: DBClientService, configService: ConfigService) {
+  constructor(dbclientService: DBClientService) {
     this.dbClientService = dbclientService;
-    this.dbClientService.newTransaction(DBTxActions.LOCATIONS_INIT, {
-      localName: 'locations',
-      remoteName: `${configService.getDBRemoteURL()}/locations`,
-    }).catch(console.log);
+    this.dbClientService.initializeDatabase('locations').catch(console.log);
   }
 
   getLocation(id: string): Promise<Location> {

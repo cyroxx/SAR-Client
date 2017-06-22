@@ -44,24 +44,19 @@ export class CaseListComponent implements OnInit {
 
       console.log('filtered statuses subscription called for statuses:' + this.caseService.filtered_statuses);
 
-      const matchingPromise = this.caseService.getCasesMatching(
-        {
-          'state': {
-            '$in': this.caseService.filtered_statuses.map(String)
-          }
-        });
+      const matchingPromise = this.caseService.getCasesForStates(this.caseService.getFilteredStatuses().map(String));
 
       const self = this;
-      matchingPromise.then(data => {
+      matchingPromise.then(cases => {
 
 
 
-        this.cases = data.docs.sort(
+        this.cases = cases.sort(
           (a, b) => {
             return a._id < b._id ? 1 : (a._id > b._id ? -1 : 0);
-          });;
+          });
 
-        console.log(data.docs);
+        console.log(cases);
 
         const self = this;
         const initial_cases_length = this.cases.length;

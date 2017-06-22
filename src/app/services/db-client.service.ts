@@ -8,6 +8,7 @@ import {
   DBTxRequestArgs
 } from '../interfaces/db-tx';
 import { Listener } from '../interfaces/listener';
+import { ConfigService } from './config.service';
 
 // Use the globally defined dbWorker variable to be able to communicate
 // with the PouchDB web worker.
@@ -25,11 +26,13 @@ class ListenerEntry {
 
 @Injectable()
 export class DBClientService {
+  private configService: ConfigService;
   private dbWorker: Worker;
   private transactions: { [txid: string]: DBTxCallback };
   private listeners: { [id: string]: ListenerEntry };
 
-  constructor() {
+  constructor(configService: ConfigService) {
+    this.configService = configService;
     this.transactions = {};
     this.listeners = {};
     this.dbWorker = dbWorker;
@@ -73,6 +76,17 @@ export class DBClientService {
     return new Promise((resolve, reject) => {
       this.transactions[txid] = (msg: DBTxReplyMessage) => resolve(msg);
       this.dbWorker.postMessage(request);
+    });
+  }
+
+  public initializeDatabase(dbName: string): Promise<DBTxReplyMessage> {
+    return new Promise((resolve, reject) => {
+      this.newTransaction(`${dbName}:init`, {
+        localName: dbName,
+        remoteName: `${this.configService.getDBRemoteURL()}/${dbName}`,
+      })
+        .then(resolve)
+        .catch(reject);
     });
   }
 

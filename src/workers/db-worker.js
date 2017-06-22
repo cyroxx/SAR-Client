@@ -79,6 +79,73 @@ class DBInitializer {
   }
 }
 
+class DBCases {
+  constructor(db) {
+    this.db = db;
+    this.createIndex();
+  }
+
+  createIndex() {
+    console.time('cases:create-index(state)');
+    this.db.createIndex({
+      index: {
+        fields: ['state']
+      }
+    }).then(function (result) {
+      console.timeEnd('cases:create-index(state)');
+    }).catch(function (err) {
+      console.log('Could not create index on cases=>state', err);
+    });
+  }
+
+  all(reply, error) {
+    console.time('cases:all');
+    this.db.allDocs({ include_docs: true }).then((data) => {
+      console.timeEnd('cases:all');
+      reply(data);
+    }).catch(error);
+  }
+
+  get(args, reply, error) {
+    const timer = `cases:get(${args.id})`
+    console.time(timer)
+    this.db.get(args.id).then((data) => {
+      console.timeEnd(timer);
+      reply(data);
+    }).catch(error);
+  }
+
+  find(args, reply, error) {
+    const findOptions = {};
+
+    if (args.selector) {
+      findOptions.selector = args.selector;
+    }
+    if (args.limit) {
+      findOptions.limit = args.limit;
+    }
+    if (args.sort) {
+      findOptions.sort = args.sort;
+    }
+
+    const timer = `cases:find(${JSON.stringify(args.selector)})`;
+    console.time(timer);
+    this.db.find(findOptions).then((data) => {
+      console.timeEnd(timer);
+      reply(data);
+    }).catch(error);
+  }
+
+  store(args, repy, error) {
+    const timer = `cases:store(${JSON.stringify(args.case)})`;
+    console.time(timer);
+    this.db.put(args.case).then((data) => {
+      console.timeEnd(timer);
+      reply(data);
+    }).catch(error);
+  }
+}
+
 class DBLocations {
   constructor(db) {
     this.db = db;
@@ -116,13 +183,21 @@ class DBLocations {
   }
 
   find(args, reply, error) {
+    const findOptions = {};
+
+    if (args.selector) {
+      findOptions.selector = args.selector;
+    }
+    if (args.limit) {
+      findOptions.limit = args.limit;
+    }
+    if (args.sort) {
+      findOptions.sort = args.sort;
+    }
+
     const timer = `locations:find(${JSON.stringify(args.selector)})`;
     console.time(timer);
-    this.db.find({
-      selector: args.selector,
-      limit: args.limit,
-      sort: args.sort,
-    }).then((data) => {
+    this.db.find(findOptions).then((data) => {
       console.timeEnd(timer);
       reply(data);
     }).catch(error);
@@ -180,6 +255,26 @@ class DBWorker {
               this.databases['locations'] = new DBLocations(db);
             })
           break;
+
+        case 'cases:init':
+          DBInitializer.init(msg.args, this.onChange, this.reply(msg), this.error(msg))
+            .then((db) => {
+              this.databases['cases'] = new DBCases(db);
+            })
+          break;
+        case 'cases:all':
+          this.db('cases').all(this.reply(msg), this.error(msg));
+          break;
+        case 'cases:get':
+          this.db('cases').get(msg.args, this.reply(msg), this.error(msg));
+          break;
+        case 'cases:find':
+          this.db('cases').find(msg.args, this.reply(msg), this.error(msg));
+          break;
+        case 'cases:store':
+          this.db('cases').store(msg.args, this.reply(msg), this.error(msg));
+          break;
+
         case 'session:login':
           console.log(msg.action, 'not implemented yet!');
         case 'session:logout':

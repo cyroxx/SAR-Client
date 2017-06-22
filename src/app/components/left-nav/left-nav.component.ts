@@ -61,12 +61,7 @@ export class LeftNavComponent implements OnInit {
     console.log('showing cases with statusses ' + JSON.stringify(this.casesService.getFilteredStatuses()));
 
 
-    const matchingPromise = this.casesService.getCasesMatching(
-      {
-        'state': {
-          '$in': this.casesService.getFilteredStatuses()
-        }
-      });
+    const matchingPromise = this.casesService.getCasesForStates(this.casesService.getFilteredStatuses().map(String));
     matchingPromise.then((data) => {
       console.log(data);
       this.mapService.filter_on_cases('wat');

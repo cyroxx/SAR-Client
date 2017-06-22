@@ -12,10 +12,13 @@ import { AuthService } from '../services/auth.service';
 import { LocationsService } from '../services/locations.service';
 import { Case } from '../interfaces/case';
 import { Location } from '../interfaces/location';
+import { DBClientService } from '../services/db-client.service';
+import { DBTxActions, DBTxReplyMessage } from '../interfaces/db-tx';
+
 @Injectable()
 export class CasesService {
 
-  db: any;
+  private dbClientService: DBClientService;
   data: Array<any>;
   filtered_statuses: Array<any>;
 
@@ -23,18 +26,9 @@ export class CasesService {
   filteredStatusesSource = new Subject<Array<any>>();
 
   public filteredStatuses = new BehaviorSubject([]);
-  constructor(private pouchService: PouchService, private locationService: LocationsService, private authService: AuthService) {
-    this.db = this.pouchService.initDB('cases');
-    this.db.createIndex({
-      index: {
-        fields: ['state']
-      }
-    }).then(function(result) {
-      console.log('Created an index on cases:state');
-    }).catch(function(err) {
-      console.log('Failed to create an index on cases:state');
-      console.log(err);
-    });
+  constructor(dbclientService: DBClientService, private locationService: LocationsService, private authService: AuthService) {
+    this.dbClientService = dbclientService;
+    this.dbClientService.initializeDatabase('cases').catch(console.log);
     this.filtered_statuses = [1, 2, 3, 4, 5];
   }
 
@@ -42,41 +36,57 @@ export class CasesService {
     console.log(currentCase);
     currentCase.reportedBy = this.authService.getUserData().name;
     currentCase.lastUpdate = new Date().toISOString();
-    //just to be safe check for undefined location
+    // just to be safe check for undefined location
     if (currentCase.location) {
       currentCase.location.reportedBy = this.authService.getUserData().name;
       this.locationService.store(currentCase.location);
     }
-    const self = this;
-    this
-      .pouchService
-      .db('cases')
-      .put(this.getStorableForm(currentCase))
-      .then(function(response) {
-        console.log(response);
-        //stupid fix until https://github.com/sea-watch/SAR-Client/issues/95 is resolved
-        //we just toggle a status that doesn't exist and the case list will be reloaded
+    this.dbClientService.newTransaction(DBTxActions.CASES_STORE, {
+      case: this.getStorableForm(currentCase),
+    }).then((msg: DBTxReplyMessage) => {
+      console.log(msg);
+      // stupid fix until https://github.com/sea-watch/SAR-Client/issues/95 is resolved
+      // we just toggle a status that doesn't exist and the case list will be reloaded
 
-        self.toggleStatusFilter('9');
-      })
-      .catch(function(err) {
-        console.error(err);
-      });
+      this.toggleStatusFilter('9');
+    }).catch((error) => {
+      console.log(error);
+      // stupid fix until https://github.com/sea-watch/SAR-Client/issues/95 is resolved
+      // we just toggle a status that doesn't exist and the case list will be reloaded
+
+      this.toggleStatusFilter('9');
+    });
   }
 
-  getCases(where?: any) {
-    if (!where)
-      return this.pouchService.get('cases');
-    else
-      return this.getCasesMatching(where);
+  getCases(): Promise<Array<Case>> {
+    return new Promise((resolve, reject) => {
+      this.dbClientService.newTransaction(DBTxActions.CASES_ALL)
+        .then((msg: DBTxReplyMessage) => {
+          const list: Array<Case> = msg.payload.rows.map(r => r.doc);
+          resolve(list);
+        }).catch(reject);
+    });
   }
 
-  getCase(id: string) {
-    return this.pouchService.findById('cases', id);
+  getCase(id: string): Promise<Case> {
+    return new Promise((resolve, reject) => {
+      this.dbClientService.newTransaction(DBTxActions.CASES_GET, { id: id })
+        .then((msg: DBTxReplyMessage) => {
+          resolve(<Case>msg.payload);
+        }).catch(reject);
+    });
   }
 
-  getCasesMatching(where: any) {
-    return this.pouchService.find('cases', where);
+  getCasesForStates(states: Array<string>): Promise<Array<Case>> {
+    return new Promise((resolve, reject) => {
+      this.dbClientService.newTransaction(DBTxActions.CASES_FIND, {
+        selector: {
+          state: { '$in': states },
+        },
+      }).then((msg: DBTxReplyMessage) => {
+        resolve(msg.payload.docs.map((doc) => <Case>doc));
+      }).catch(reject);
+    });
   }
 
   /**
