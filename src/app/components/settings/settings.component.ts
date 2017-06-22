@@ -119,15 +119,23 @@ export class SettingsComponent implements OnInit {
       db_remote_url: this.db_remote_url.replace(/\/?$/, '/'),
     };
 
-    this.configService.updateConfiguration(update, () => {
-      // if more possible settings than change remote url will follow
-      // clearCache should only be called if remote url is changed
-      this.dbClientService.clearAllDatabases().then(() => {
+    this.configService.updateConfiguration(update, (updatedKeys: Array<string>) => {
+      const reload = () => {
         helpers.alert('Settings update successful!');
         helpers.reload();
-      }).catch((error) => {
-        helpers.alert('Error clearing databases!');
-      });
+      };
+
+      // Do not clear databases if the DB URL didn't change
+      if (updatedKeys.indexOf('db_remote_url') > -1) {
+        console.log('DB URL changed, clearing databases');
+        this.dbClientService.clearAllDatabases().then(() => {
+          reload();
+        }).catch((error) => {
+          helpers.alert('Error clearing databases!');
+        });
+      } else {
+        reload();
+      }
     });
 
   }

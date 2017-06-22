@@ -44,16 +44,25 @@ export class ConfigService {
   }
 
   updateConfiguration(update, cb) {
+    const updatedKeys = [];
+
     for (const key in update) {
       // Use hasOwnProperty here to avoid setting inherited properties and to please tslint
       if (update.hasOwnProperty(key)) {
-        electronSettings.set(key, update[key]);
+        const prev = electronSettings.get(key);
+        if (prev !== update[key]) {
+          console.log(`Update setting ${key}=${update[key]}`);
+          electronSettings.set(key, update[key]);
+          updatedKeys.push(key);
+        } else {
+          console.log(`Not updating setting ${key} because it didn't change`);
+        }
       }
     }
 
     // Execute callback after all settings have been updated
     if (cb) {
-      cb();
+      cb(updatedKeys);
     }
   }
 }
