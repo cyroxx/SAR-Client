@@ -7,7 +7,6 @@ declare var md5: any;
 
 
 
-import { PouchService } from '../services/pouch.service';
 import { AuthService } from '../services/auth.service';
 import { LocationsService } from '../services/locations.service';
 import { Case } from '../interfaces/case';
