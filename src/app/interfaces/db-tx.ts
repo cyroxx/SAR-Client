@@ -10,6 +10,9 @@ export class DBTxActions {
   static readonly CASES_FIND = 'cases:find';
   static readonly CASES_STORE = 'cases:store';
   static readonly CASES_INIT = 'cases:init';
+
+  static readonly VEHICLES_INIT = 'vehicles:init';
+  static readonly VEHICLES_ALL = 'vehicles:all';
 }
 
 export interface DBTxRequestMessage {

@@ -79,6 +79,20 @@ class DBInitializer {
   }
 }
 
+class DBVehicles {
+  constructor(db) {
+    this.db = db;
+  }
+
+  all(reply, error) {
+    console.time('vehicles:all');
+    this.db.allDocs({ include_docs: true }).then((data) => {
+      console.timeEnd('vehicles:all');
+      reply(data);
+    }).catch(error);
+  }
+}
+
 class DBCases {
   constructor(db) {
     this.db = db;
@@ -273,6 +287,16 @@ class DBWorker {
           break;
         case 'cases:store':
           this.db('cases').store(msg.args, this.reply(msg), this.error(msg));
+          break;
+
+        case 'vehicles:init':
+          DBInitializer.init(msg.args, this.onChange, this.reply(msg), this.error(msg))
+            .then((db) => {
+              this.databases['vehicles'] = new DBVehicles(db);
+            })
+          break;
+        case 'vehicles:all':
+          this.db('vehicles').all(this.reply(msg), this.error(msg));
           break;
 
         case 'session:login':
