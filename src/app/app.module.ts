@@ -16,6 +16,7 @@ import { ConfigService } from './services/config.service';
 import { PouchService } from './services/pouch.service';
 import { DBClientService } from './services/db-client.service';
 import { AppVersionsService } from './services/app-versions.service';
+import { NetworkStateService } from './services/network-state.service';
 import { AuthService } from './services/auth.service';
 import { LocationsService } from './services/locations.service';
 import { CasesService } from './services/cases.service';
@@ -63,6 +64,7 @@ import { SettingsComponent } from './components/settings/settings.component';
     StatusesService,
     DBClientService,
     AppVersionsService,
+    NetworkStateService,
   ],
   bootstrap: [AppComponent]
 })
