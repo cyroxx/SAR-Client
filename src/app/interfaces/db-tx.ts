@@ -48,3 +48,10 @@ export type DBTxCallback = (msg: DBTxReplyMessage) => void;
 export interface DBTxRequestArgs {
   [name: string]: any;
 }
+
+export interface DBReplicationChange {
+  docs: Array<any>;
+  errors: Array<any>;
+  docs_read: number;
+  docs_written: number;
+}

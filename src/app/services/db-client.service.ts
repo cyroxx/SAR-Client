@@ -1,40 +1,31 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 import uuid from 'uuid/v4';
 import {
   DBTxActions,
   DBTxCallback,
   DBTxReplyMessage,
   DBTxRequestMessage,
-  DBTxRequestArgs
+  DBTxRequestArgs,
+  DBReplicationChange
 } from '../interfaces/db-tx';
 import { Listener } from '../interfaces/listener';
 import { ConfigService } from './config.service';
+import { NetworkStateService } from './network-state.service';
 
 // Use the globally defined dbWorker variable to be able to communicate
 // with the PouchDB web worker.
 declare const dbWorker: any;
 
-class ListenerEntry {
-  public dbName: string;
-  public listener: Listener;
-
-  constructor(dbName: string, listener: Listener) {
-    this.dbName = dbName;
-    this.listener = listener;
-  }
-}
-
 @Injectable()
 export class DBClientService {
-  private configService: ConfigService;
   private dbWorker: Worker;
   private transactions: { [txid: string]: DBTxCallback };
-  private listeners: { [id: string]: ListenerEntry };
+  private changeListeners: { [dbName: string]: EventEmitter<DBReplicationChange>};
 
-  constructor(configService: ConfigService) {
-    this.configService = configService;
+  constructor(private configService: ConfigService, private networkStateService: NetworkStateService) {
     this.transactions = {};
-    this.listeners = {};
+    this.changeListeners = {};
     this.dbWorker = dbWorker;
 
     this.dbWorker.onmessage = (msg) => this.dispatch(msg.data);
@@ -61,8 +52,19 @@ export class DBClientService {
   }
 
   private dispatchChange(msg: DBTxReplyMessage): void {
-    // TODO: Notify all change listeners!
-    console.log('GOT CHANGE', msg);
+    const dbName = msg.payload.dbName;
+    if (!dbName) {
+      console.log('Could not emit DB change event, dbName missing', msg.payload);
+      return;
+    }
+    if (!this.changeListeners[dbName]) {
+      return;
+    }
+    if (!msg.payload.change) {
+      console.log('Could not emit DB change event, change object is missing', msg.payload);
+      return;
+    }
+    this.changeListeners[dbName].emit(<DBReplicationChange>msg.payload.change);
   }
 
   private dispatchReply(msg: DBTxReplyMessage): void {
@@ -149,13 +151,10 @@ export class DBClientService {
     });
   }
 
-  public addChangeListener(dbName: string, listener: Listener): string {
-    const id = uuid();
-    this.listeners[id] = new ListenerEntry(dbName, listener);
-    return id;
-  }
-
-  public removeChangeListener(id: string): void {
-    delete this.listeners[id];
+  public addChangeListener(dbName: string, listener: Listener): Subscription {
+    if (!this.changeListeners[dbName]) {
+      this.changeListeners[dbName] = new EventEmitter<DBReplicationChange>();
+    }
+    return this.changeListeners[dbName].subscribe(listener.notify);
   }
 }
