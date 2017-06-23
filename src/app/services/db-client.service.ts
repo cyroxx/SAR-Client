@@ -38,6 +38,16 @@ export class DBClientService {
     this.dbWorker = dbWorker;
 
     this.dbWorker.onmessage = (msg) => this.dispatch(msg.data);
+
+    this.initializeSession();
+  }
+
+  private initializeSession() {
+    this.newTransaction(DBTxActions.SESSION_INIT, {
+      remoteName: `${this.configService.getDBRemoteURL()}/_users`,
+    })
+      .then((response) => console.log('Initialized session db'))
+      .catch((error) => console.log('Error initializing session db', error));
   }
 
   private dispatch(msg: DBTxReplyMessage): void {
@@ -76,6 +86,35 @@ export class DBClientService {
     return new Promise((resolve, reject) => {
       this.transactions[txid] = (msg: DBTxReplyMessage) => resolve(msg);
       this.dbWorker.postMessage(request);
+    });
+  }
+
+  public login(username: string, password: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.newTransaction(DBTxActions.SESSION_LOGIN, {
+        username: username,
+        password: password,
+      }).then((response) => {
+        if (response.type === 'error') {
+          reject(response.error);
+        } else {
+          resolve(response.payload);
+        }
+      }).catch(reject);
+    });
+  }
+
+  public getSession(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.newTransaction(DBTxActions.SESSION_GET)
+        .then((response) => {
+          if (response.type === 'error') {
+            reject(response.error);
+          } else {
+            resolve(response.payload);
+          }
+        })
+        .catch(reject);
     });
   }
 

@@ -23,6 +23,10 @@ export class DBTxActions {
   static readonly VERSIONS_ALL = 'versions:all';
 
   static readonly DB_CLEAR_ALL = 'db:clear:all';
+
+  static readonly SESSION_INIT = 'session:init';
+  static readonly SESSION_LOGIN = 'session:login';
+  static readonly SESSION_GET = 'session:get';
 }
 
 export interface DBTxRequestMessage {

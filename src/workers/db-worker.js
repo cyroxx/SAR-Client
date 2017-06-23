@@ -1,12 +1,13 @@
 importScripts(
-  '../components/pouchdb/dist/pouchdb.min.js',
-  '../components/pouchdb-find/dist/pouchdb.find.min.js'
+  '../components/pouchdb/dist/pouchdb.js',
+  '../components/pouchdb-find/dist/pouchdb.find.js',
+  '../components/pouchdb-authentication/dist/pouchdb.authentication.js'
 );
 
-// We have to register the find plugin explicitly because there
-// is no window object in a web worker where it might be registered
-// automatically.
+// We have to register the find and authentication plugin explicitly because there
+// is no window object in a web worker where it might be registered automatically.
 PouchDB.plugin(pouchdbFind);
+PouchDB.plugin(PouchAuthentication);
 
 PouchDB.debug.enable('*');
 
@@ -333,9 +334,39 @@ class DBLocations {
   }
 }
 
+class Session {
+  constructor(args) {
+    this.db = new PouchDB(args.remoteName, { skip_setup: true });
+  }
+
+  login(args, reply, error) {
+    this.db.login(args.username, args.password, (err, response) => {
+      if (err) {
+        console.log('Error logging into database:', this.db.name || this.db.db_name, err);
+        error(err);
+      } else {
+        console.log('Successfully logged into database:', this.db.name || this.db.db_name);
+        reply(response);
+      }
+    });
+  }
+
+  getSession(reply, error) {
+    this.db.getSession((err, response) => {
+      if (err) {
+        console.log('Error getting database session info', err);
+        error(err);
+      } else {
+        reply(response);
+      }
+    });
+  }
+}
+
 class DBWorker {
   constructor() {
     this.databases = {};
+    this.session = null;
 
     self.onmessage = event => this.dispatchMessage(event.data);
   }
@@ -435,12 +466,31 @@ class DBWorker {
           this.clearAll(this.reply(msg), this.error(msg));
           break;
 
+        case 'session:init':
+          if (!msg.args.remoteName) {
+            this.error(msg)(new Error('No remote database given, unable to create session db.'));
+            return;
+          }
+          this.session = new Session(msg.args);
+          this.reply(msg)({ success: true });
+          break;
         case 'session:login':
-          console.log(msg.action, 'not implemented yet!');
+          if (!this.session) {
+            this.error(msg)(new Error('Session db has not been initialized yet'));
+            return;
+          }
+          this.session.login(msg.args, this.reply(msg), this.error(msg));
+          break;
         case 'session:logout':
           console.log(msg.action, 'not implemented yet!');
+          break;
         case 'session:get':
-          console.log(msg.action, 'not implemented yet!');
+          if (!this.session) {
+            this.error(msg)(new Error('Session db has not been initialized yet'));
+            return;
+          }
+          this.session.getSession(this.reply(msg), this.error(msg));
+          break;
         default:
           console.log('Unknown action', msg.action);
       }
@@ -503,7 +553,7 @@ class DBWorker {
       // An Error object cannot be serialized in postMessage so make sure we have a
       // serializable object.
       if (error instanceof Error) {
-        errorObject = { message: error.toString() };
+        errorObject = { message: error.toString(), name: error.name };
       }
       self.postMessage({
         type: 'error',
