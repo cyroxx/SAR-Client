@@ -41,7 +41,7 @@ export class CasesService {
       this.locationService.store(currentCase.location);
     }
     this.dbClientService.newTransaction(DBTxActions.CASES_STORE, {
-      case: this.getStorableForm(currentCase),
+      payload: this.getStorableForm(currentCase),
     }).then((msg: DBTxReplyMessage) => {
       console.log(msg);
       // stupid fix until https://github.com/sea-watch/SAR-Client/issues/95 is resolved

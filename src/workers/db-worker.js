@@ -83,137 +83,40 @@ class DBInitializer {
   }
 }
 
-class DBMessages {
-  constructor(db) {
+class DBBase {
+  constructor(dbName, db) {
+    this.dbName = dbName;
     this.db = db;
   }
 
-  all(reply, error) {
-    console.time('messages:all');
-    this.db.allDocs({ include_docs: true }).then((data) => {
-      console.timeEnd('messages:all');
-      reply(data);
-    }).catch(error);
-  }
-
-  find(args, reply, error) {
-    const findOptions = {};
-
-    if (args.selector) {
-      findOptions.selector = args.selector;
-    }
-    if (args.limit) {
-      findOptions.limit = args.limit;
-    }
-    if (args.sort) {
-      findOptions.sort = args.sort;
-    }
-
-    const timer = `messages:find(${JSON.stringify(args.selector)})`;
-    console.time(timer);
-    this.db.find(findOptions).then((data) => {
-      console.timeEnd(timer);
-      reply(data);
-    }).catch(error);
-  }
-
-  store(args, reply, error) {
-    const timer = `messages:store(${JSON.stringify(args.message)})`;
-    console.time(timer);
-    this.db.put(args.message).then((data) => {
-      console.timeEnd(timer);
-      reply(data);
-    }).catch(error);
-  }
-
-  clearLocalDatabase() {
-    // Make sure that we do not clear a remote database!
-    if (this.db.type().indexOf('http') < 0) {
-      return this.db.destroy();
-    } else {
-      return Promise.reject(new Error(`Not clearing remote database <${this.db.db_name}>`));
-    }
-  }
-}
-
-class DBVersions {
-  constructor(db) {
-    this.db = db;
-  }
-
-  all(reply, error) {
-    console.time('versions:all');
-    this.db.allDocs({ include_docs: true }).then((data) => {
-      console.timeEnd('versions:all');
-      reply(data);
-    }).catch(error);
-  }
-
-  clearLocalDatabase() {
-    // Make sure that we do not clear a remote database!
-    if (this.db.type().indexOf('http') < 0) {
-      return this.db.destroy();
-    } else {
-      return Promise.reject(new Error(`Not clearing remote database <${this.db.db_name}>`));
-    }
-  }
-}
-
-class DBVehicles {
-  constructor(db) {
-    this.db = db;
-  }
-
-  all(reply, error) {
-    console.time('vehicles:all');
-    this.db.allDocs({ include_docs: true }).then((data) => {
-      console.timeEnd('vehicles:all');
-      reply(data);
-    }).catch(error);
-  }
-
-  clearLocalDatabase() {
-    // Make sure that we do not clear a remote database!
-    if (this.db.type().indexOf('http') < 0) {
-      return this.db.destroy();
-    } else {
-      return Promise.reject(new Error(`Not clearing remote database <${this.db.db_name}>`));
-    }
-  }
-}
-
-class DBCases {
-  constructor(db) {
-    this.db = db;
-    this.createIndex();
-  }
-
-  createIndex() {
-    console.time('cases:create-index(state)');
+  createIndex(fields) {
+    const log = `${this.dbName}:create-index(${JSON.stringify(fields)})`;
+    console.time(log);
     this.db.createIndex({
       index: {
-        fields: ['state']
+        fields: fields,
       }
-    }).then(function (result) {
-      console.timeEnd('cases:create-index(state)');
-    }).catch(function (err) {
-      console.log('Could not create index on cases=>state', err);
+    }).then(result => {
+      console.timeEnd(log);
+    }).catch(err => {
+      console.log(`Could not create index on ${this.dbName}=>${JSON.stringify(fields)}`, err);
     });
   }
 
-  all(reply, error) {
-    console.time('cases:all');
-    this.db.allDocs({ include_docs: true }).then((data) => {
-      console.timeEnd('cases:all');
+  all(options, reply, error) {
+    const log = `${this.dbName}:all`;
+    console.time(log);
+    this.db.allDocs(options).then((data) => {
+      console.timeEnd(log);
       reply(data);
     }).catch(error);
   }
 
   get(args, reply, error) {
-    const timer = `cases:get(${args.id})`
-    console.time(timer)
+    const log = `${this.dbName}:get(${args.id})`
+    console.time(log)
     this.db.get(args.id).then((data) => {
-      console.timeEnd(timer);
+      console.timeEnd(log);
       reply(data);
     }).catch(error);
   }
@@ -231,18 +134,18 @@ class DBCases {
       findOptions.sort = args.sort;
     }
 
-    const timer = `cases:find(${JSON.stringify(args.selector)})`;
-    console.time(timer);
+    const log = `${this.dbName}:find(${JSON.stringify(args.selector)})`;
+    console.time(log);
     this.db.find(findOptions).then((data) => {
-      console.timeEnd(timer);
+      console.timeEnd(log);
       reply(data);
     }).catch(error);
   }
 
   store(args, reply, error) {
-    const timer = `cases:store(${JSON.stringify(args.case)})`;
+    const timer = `${this.dbName}:store(${JSON.stringify(args.payload)})`;
     console.time(timer);
-    this.db.put(args.case).then((data) => {
+    this.db.put(args.payload).then((data) => {
       console.timeEnd(timer);
       reply(data);
     }).catch(error);
@@ -253,84 +156,40 @@ class DBCases {
     if (this.db.type().indexOf('http') < 0) {
       return this.db.destroy();
     } else {
-      return Promise.reject(new Error(`Not clearing remote database <${this.db.db_name}>`));
+      return Promise.reject(new Error(`Not clearing remote database <${this.dbName}>`));
     }
   }
 }
 
-class DBLocations {
+class DBMessages extends DBBase {
   constructor(db) {
-    this.db = db;
-    this.createIndex();
+    super('messages', db);
   }
+}
 
-  createIndex() {
-    console.time('locations:create-index(itemId)');
-    this.db.createIndex({
-      index: {
-        fields: ['itemId']
-      }
-    }).then(function (result) {
-      console.timeEnd('locations:create-index(itemId)');
-    }).catch(function (err) {
-      console.log('Could not create index on locations=>itemId', err);
-    });
+class DBVersions extends DBBase {
+  constructor(db) {
+    super('versions', db);
   }
+}
 
-  all(reply, error) {
-    console.time('locations:all');
-    this.db.allDocs({ include_docs: true, descending: true }).then((data) => {
-      console.timeEnd('locations:all');
-      reply(data);
-    }).catch(error);
+class DBVehicles extends DBBase {
+  constructor(db) {
+    super('vehicles', db)
   }
+}
 
-  get(args, reply, error) {
-    const timer = `locations:get(${args.id})`
-    console.time(timer)
-    this.db.get(args.id).then((data) => {
-      console.timeEnd(timer);
-      reply(data);
-    }).catch(error);
+class DBCases extends DBBase {
+  constructor(db) {
+    super('cases', db);
+    this.createIndex(['state']);
   }
+}
 
-  find(args, reply, error) {
-    const findOptions = {};
-
-    if (args.selector) {
-      findOptions.selector = args.selector;
-    }
-    if (args.limit) {
-      findOptions.limit = args.limit;
-    }
-    if (args.sort) {
-      findOptions.sort = args.sort;
-    }
-
-    const timer = `locations:find(${JSON.stringify(args.selector)})`;
-    console.time(timer);
-    this.db.find(findOptions).then((data) => {
-      console.timeEnd(timer);
-      reply(data);
-    }).catch(error);
-  }
-
-  store(args, reply, error) {
-    const timer = `locations:store(${JSON.stringify(args.location)})`;
-    console.time(timer);
-    this.db.put(args.location).then((data) => {
-      console.timeEnd(timer);
-      reply(data);
-    }).catch(error);
-  }
-
-  clearLocalDatabase() {
-    // Make sure that we do not clear a remote database!
-    if (this.db.type().indexOf('http') < 0) {
-      return this.db.destroy();
-    } else {
-      return Promise.reject(new Error(`Not clearing remote database <${this.db.db_name}>`));
-    }
+class DBLocations extends DBBase {
+  constructor(db) {
+    super('locations', db);
+    this.createIndex(['itemId']);
   }
 }
 
@@ -369,6 +228,7 @@ class DBWorker {
     this.session = null;
 
     self.onmessage = event => this.dispatchMessage(event.data);
+    self.onerror = error => console.log('Error receiving message:', error);
   }
 
   /* Dispatches an incoming DB request message.
@@ -389,7 +249,10 @@ class DBWorker {
     try {
       switch (msg.action) {
         case 'locations:all':
-          this.db('locations').all(this.reply(msg), this.error(msg));
+          this.db('locations').all({
+            include_docs: true,
+            descending: true,
+          }, this.reply(msg), this.error(msg));
           break;
         case 'locations:get':
           this.db('locations').get(msg.args, this.reply(msg), this.error(msg));
@@ -414,7 +277,9 @@ class DBWorker {
             })
           break;
         case 'cases:all':
-          this.db('cases').all(this.reply(msg), this.error(msg));
+          this.db('cases').all({
+            include_docs: true
+          }, this.reply(msg), this.error(msg));
           break;
         case 'cases:get':
           this.db('cases').get(msg.args, this.reply(msg), this.error(msg));
@@ -433,7 +298,9 @@ class DBWorker {
             })
           break;
         case 'vehicles:all':
-          this.db('vehicles').all(this.reply(msg), this.error(msg));
+          this.db('vehicles').all({
+            include_docs: true,
+          },this.reply(msg), this.error(msg));
           break;
 
         case 'messages:init':
@@ -443,7 +310,9 @@ class DBWorker {
             })
           break;
         case 'messages:all':
-          this.db('messages').all(this.reply(msg), this.error(msg));
+          this.db('messages').all({
+            include_docs: true,
+          }, this.reply(msg), this.error(msg));
           break;
         case 'messages:find':
           this.db('messages').find(msg.args, this.reply(msg), this.error(msg));
@@ -459,7 +328,9 @@ class DBWorker {
             })
           break;
         case 'versions:all':
-          this.db('versions').all(this.reply(msg), this.error(msg));
+          this.db('versions').all({
+            include_docs: true,
+          }, this.reply(msg), this.error(msg));
           break;
 
         case 'db:clear:all':

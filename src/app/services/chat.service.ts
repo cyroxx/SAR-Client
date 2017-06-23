@@ -21,7 +21,7 @@ export class ChatService {
 
     return new Promise((resolve, reject) => {
       this.dbClientService.newTransaction(DBTxActions.MESSAGES_STORE, {
-        message: this.getStorableForm(currentMessage),
+        payload: this.getStorableForm(currentMessage),
       }).then((msg: DBTxReplyMessage) => {
         resolve(<Message>msg.payload);
       }).catch(reject);
