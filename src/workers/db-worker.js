@@ -11,82 +11,104 @@ PouchDB.plugin(PouchAuthentication);
 
 PouchDB.debug.enable('*');
 
-class DBInitializer {
-  static init(args, onChange, reply, error) {
+class DBReplicator {
+  constructor(dbName, db, remoteDb, onChange) {
+    this.dbName = dbName;
+    this.db = db;
+    this.remoteDb = remoteDb;
+    this.onChange = onChange;
+    this.replicator = null;
+  }
+
+  stop() {
+    if (this.replicator) {
+      this.replicator.cancel();
+    }
+  }
+
+  // Available options: {live: true, retry: true, continuous: true, include_docs: true}
+  startSync(options) {
+    if (this.replicator) {
+      return;
+    }
+    console.log('db:sync:start', this.dbName, options);
+    this.replicator = this.db.sync(this.remoteDb, options)
+      .on('change', (info) => {
+        console.log('replicate:change', this.dbName, info);
+
+        // Notify all listeners for remote changes
+        if (info.direction === 'pull') {
+          this.onChange(this.dbName, {
+            docs: info.docs,
+            errors: info.errors,
+            docs_read: info.docs_read,
+            docs_written: info.docs_written,
+          });
+        }
+      })
+      .on('paused', err => console.log('replicate:paused', this.dbName, err))
+      .on('active', () => console.log('replicate:active', this.dbName))
+      .on('denied', err => console.log('replicate:denied', this.dbName, err))
+      .on('complete', info => console.log('replicate:complete', this.dbName, info))
+      .on('error', err => console.log('replicate:error', this.dbName, err));
+  }
+
+  // Available options: {live: true, retry: true, continuous: true, include_docs: true}
+  startFromRemote(options) {
+    if (this.replicator) {
+      return;
+    }
+    console.log('db:replicate-from-remote:start', this.dbName, options);
+    this.replicator = this.db.replicate.from(this.remoteDb, options)
+      .on('change', (info) => {
+        console.log('replicate:change', this.dbName, info);
+
+        // Notify all listeners for remote changes
+        this.onChange(this.dbName, {
+          docs: info.docs,
+          errors: info.errors,
+          docs_read: info.docs_read,
+          docs_written: info.docs_written,
+        });
+      })
+      .on('paused', err => console.log('replicate:paused', this.dbName, err))
+      .on('active', () => console.log('replicate:active', this.dbName))
+      .on('denied', err => console.log('replicate:denied', this.dbName, err))
+      .on('complete', info => console.log('replicate:complete', this.dbName, info))
+      .on('error', err => console.log('replicate:error', this.dbName, err));
+  }
+}
+
+class DBCreator {
+  static init(args) {
     return new Promise((resolve, reject) => {
       const localName = args.localName;
       const remoteName = args.remoteName;
 
       if (!localName) {
-        error(new Error('Cannot initialize database without localName argument'));
+        reject(new Error('Cannot initialize database without localName argument'));
+        return;
       }
       if (!remoteName) {
-        error(new Error('Cannot initialize database without remoteName argument'));
+        reject(new Error('Cannot initialize database without remoteName argument'));
+        return;
       }
 
       const db = new PouchDB(localName);
+      const remoteDb = new PouchDB(remoteName, { skip_setup: true });
 
-      // TODO: Make configurable
-      const options = {
-        live: true,
-        retry: true,
-        continuous: true,
-        include_docs: true
-      };
-
-      console.log('db:initialize', localName, remoteName, options);
-      console.log('db:type', localName, db.type());
-      console.log('db:type', remoteName, new PouchDB(remoteName).type());
-
-      // TODO: Switch to "sync", based on a config option
-      // TODO: Store the replication/sync object so we can cancel it!
-      db.replicate.from(remoteName, options)
-        .on('change', (info) => {
-          console.log('replicate:change', localName, info);
-
-          // Notify all listeners for remote changes
-          // TODO: When using "replicate.from", thre is no info.direction field
-          //if (info.direction === 'pull') {
-            onChange(localName, {
-              docs: info.docs,
-              errors: info.errors,
-              docs_read: info.docs_read,
-              docs_written: info.docs_written,
-            });
-          //}
-
-          // TODO: publish online status
-        })
-        .on('paused', (err) => {
-          console.log('replicate:paused', localName, err);
-          // TODO: publish online status
-        })
-        .on('active', () => {
-          console.log('replicate:active', localName);
-          // TODO: publish online status
-        })
-        .on('denied', (err) => {
-          console.log('replicate:denied', localName, err);
-          // TODO: publish online status
-        })
-        .on('complete', (info) => {
-          console.log('replicate:complete', localName, info);
-          // TODO: publish online status
-        })
-        .on('error', (err) => {
-          console.log('replicate:error', localName, err);
-          // TODO: publish online status
-        });
-
-      resolve(db);
+      console.log(`db:initialize(local=${db.type()}:${localName}, remote=${remoteDb.type()}:${remoteName})`);
+      resolve({ db: db, remoteDb: remoteDb });
     });
   }
 }
 
 class DBBase {
-  constructor(dbName, db) {
+  constructor(dbName, db, remoteDb, onChange) {
     this.dbName = dbName;
     this.db = db;
+    this.remoteDb = remoteDb;
+    this.replicator = new DBReplicator(dbName, db, remoteDb, onChange);
   }
 
   createIndex(fields) {
@@ -162,34 +184,64 @@ class DBBase {
 }
 
 class DBMessages extends DBBase {
-  constructor(db) {
-    super('messages', db);
+  constructor(db, remoteDb, onChange) {
+    super('messages', db, remoteDb, onChange);
+    this.replicator.startSync({
+      live: true,
+      retry: true,
+      continuous: true,
+      include_docs: true
+    });
   }
 }
 
 class DBVersions extends DBBase {
-  constructor(db) {
-    super('versions', db);
+  constructor(db, remoteDb, onChange) {
+    super('versions', db, remoteDb, onChange);
+    this.replicator.startSync({
+      live: true,
+      retry: true,
+      continuous: true,
+      include_docs: true
+    });
   }
 }
 
 class DBVehicles extends DBBase {
-  constructor(db) {
-    super('vehicles', db)
+  constructor(db, remoteDb, onChange) {
+    super('vehicles', db, remoteDb, onChange);
+    this.replicator.startSync({
+      live: true,
+      retry: true,
+      continuous: true,
+      include_docs: true
+    });
   }
 }
 
 class DBCases extends DBBase {
-  constructor(db) {
-    super('cases', db);
+  constructor(db, remoteDb, onChange) {
+    super('cases', db, remoteDb, onChange);
     this.createIndex(['state']);
+    this.replicator.startSync({
+      live: true,
+      retry: true,
+      continuous: true,
+      include_docs: true
+    });
   }
 }
 
 class DBLocations extends DBBase {
-  constructor(db) {
-    super('locations', db);
+  constructor(db, remoteDb, onChange) {
+    super('locations', db, remoteDb, onChange);
     this.createIndex(['itemId']);
+    this.replicator.startSync({
+      live: true,
+      retry: true,
+      continuous: true,
+      include_docs: true
+    });
   }
 }
 
@@ -244,10 +296,15 @@ class DBWorker {
       return;
     }
 
-    console.log('dispatchMessage', msg);
+    //console.log('dispatchMessage', msg);
 
     try {
       switch (msg.action) {
+        case 'locations:init':
+          DBCreator.init(msg.args).then((v) => {
+            this.databases['locations'] = new DBLocations(v.db, v.remoteDb, this.onChange);
+          }).catch(console.log);
+          break;
         case 'locations:all':
           this.db('locations').all({
             include_docs: true,
@@ -257,24 +314,17 @@ class DBWorker {
         case 'locations:get':
           this.db('locations').get(msg.args, this.reply(msg), this.error(msg));
           break;
-        case 'locations:store':
-          this.db('locations').store(msg.args, this.reply(msg), this.error(msg));
-          break;
         case 'locations:find':
           this.db('locations').find(msg.args, this.reply(msg), this.error(msg));
           break;
-        case 'locations:init':
-          DBInitializer.init(msg.args, this.onChange, this.reply(msg), this.error(msg))
-            .then((db) => {
-              this.databases['locations'] = new DBLocations(db);
-            })
+        case 'locations:store':
+          this.db('locations').store(msg.args, this.reply(msg), this.error(msg));
           break;
 
         case 'cases:init':
-          DBInitializer.init(msg.args, this.onChange, this.reply(msg), this.error(msg))
-            .then((db) => {
-              this.databases['cases'] = new DBCases(db);
-            })
+          DBCreator.init(msg.args).then((v) => {
+            this.databases['cases'] = new DBCases(v.db, v.remoteDb, this.onChange);
+          }).catch(console.log);
           break;
         case 'cases:all':
           this.db('cases').all({
@@ -292,10 +342,9 @@ class DBWorker {
           break;
 
         case 'vehicles:init':
-          DBInitializer.init(msg.args, this.onChange, this.reply(msg), this.error(msg))
-            .then((db) => {
-              this.databases['vehicles'] = new DBVehicles(db);
-            })
+          DBCreator.init(msg.args).then((v) => {
+            this.databases['vehicles'] = new DBVehicles(v.db, v.remoteDb, this.onChange);
+          }).catch(console.log);
           break;
         case 'vehicles:all':
           this.db('vehicles').all({
@@ -304,10 +353,9 @@ class DBWorker {
           break;
 
         case 'messages:init':
-          DBInitializer.init(msg.args, this.onChange, this.reply(msg), this.error(msg))
-            .then((db) => {
-              this.databases['messages'] = new DBMessages(db);
-            })
+          DBCreator.init(msg.args).then((v) => {
+            this.databases['messages'] = new DBMessages(v.db, v.remoteDb, this.onChange);
+          }).catch(console.log);
           break;
         case 'messages:all':
           this.db('messages').all({
@@ -322,10 +370,9 @@ class DBWorker {
           break;
 
         case 'versions:init':
-          DBInitializer.init(msg.args, this.onChange, this.reply(msg), this.error(msg))
-            .then((db) => {
-              this.databases['versions'] = new DBVersions(db);
-            })
+          DBCreator.init(msg.args).then((v) => {
+            this.databases['versions'] = new DBVersions(v.db, v.remoteDb, this.onChange);
+          }).catch(console.log);
           break;
         case 'versions:all':
           this.db('versions').all({
