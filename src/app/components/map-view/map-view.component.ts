@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common';
 
 import { MapService } from 'app/services/map.service';
@@ -14,7 +14,7 @@ declare var map_inited: any;
   templateUrl: './map-view.component.html',
   styleUrls: ['./map-view.component.css'],
 })
-export class MapViewComponent implements OnInit {
+export class MapViewComponent implements OnInit, OnDestroy {
   public map: any;
   public map_inited: any;
 
