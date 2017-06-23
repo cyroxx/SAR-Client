@@ -85,7 +85,13 @@ export class DBClientService {
         localName: dbName,
         remoteName: `${this.configService.getDBRemoteURL()}/${dbName}`,
       })
-        .then(resolve)
+        .then((response) => {
+          if (response.type === 'error') {
+            reject(response.error);
+          } else {
+            resolve(response.payload);
+          }
+        })
         .catch(reject);
     });
   }
@@ -93,7 +99,13 @@ export class DBClientService {
   public clearAllDatabases(): Promise<DBTxReplyMessage> {
     return new Promise((resolve, reject) => {
       this.newTransaction(DBTxActions.DB_CLEAR_ALL)
-        .then(resolve)
+        .then((response) => {
+          if (response.type === 'error') {
+            reject(response.error);
+          } else {
+            resolve(response.payload);
+          }
+        })
         .catch(reject);
     });
   }
