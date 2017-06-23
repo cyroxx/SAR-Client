@@ -7,7 +7,6 @@ import { ConfigService } from './config.service';
 import { DBClientService } from '../services/db-client.service';
 import { DBTxActions, DBTxReplyMessage } from '../interfaces/db-tx';
 
-declare var PouchDB: any;
 declare var localStorage: any;
 declare var window: any;
 declare var ipcRenderer: any;
