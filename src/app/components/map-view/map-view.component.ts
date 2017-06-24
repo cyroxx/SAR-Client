@@ -49,7 +49,7 @@ export class MapViewComponent implements OnInit {
     }(this),
       60 * 1000
     );
-    //this.drawCases();
+    this.drawCases();
   }
 
   public isHidden() {
@@ -69,21 +69,23 @@ export class MapViewComponent implements OnInit {
     this.casesService.getCases().then((data) => {
       this.cases = data;
       for (const incident of this.cases) {
-        const location_promise = this.locationsService.getLastLocationMatching(incident._id);
-        location_promise.then((location) => {
-          const location_doc = location.docs[0];
-          if (!location_doc || !location_doc.latitude) {
-            console.log('No location found for case: ' + incident._id);
-            return;
-          }
-          this.mapService.setMarker(
-            incident._id,
-            'cases',
-            location_doc.latitude,
-            location_doc.longitude,
-            incident._id + ' at ' + location_doc.latitude + ' ' + location_doc.longitude,
-          );
-        });
+        if (parseInt(incident.state) < 5) {
+          let location_promise = this.locationsService.getLastLocationMatching(incident._id);
+          location_promise.then((location) => {
+            let location_doc = location.docs[0];
+            if (!location_doc || !location_doc.latitude) {
+              console.log('No location found for case: ' + incident._id);
+              return;
+            }
+            this.mapService.setMarker(
+              incident._id,
+              'cases',
+              location_doc.latitude,
+              location_doc.longitude,
+              incident._id + ' at ' + location_doc.latitude + ' ' + location_doc.longitude,
+            );
+          });
+        }
       }
     });
   }
