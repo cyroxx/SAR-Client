@@ -43,6 +43,8 @@ export class MapViewComponent implements OnInit, OnDestroy {
     this.runDrawTimer = true;
     // Update the vehicles on the map every 60 seconds
     this.drawVehicles().then(() => this.drawVehiclesWithTimer(60 * 1000));
+    // TODO: Periodically render cases
+    this.drawCases();
   }
 
   private drawVehiclesWithTimer(interval: number) {
@@ -86,21 +88,23 @@ export class MapViewComponent implements OnInit, OnDestroy {
     this.casesService.getCases().then((data) => {
       this.cases = data;
       for (const incident of this.cases) {
-        const location_promise = this.locationsService.getLastLocationMatching(incident._id);
-        location_promise.then((location) => {
-          const location_doc = location;
-          if (!location_doc || !location_doc.latitude) {
-            console.log('No location found for case: ' + incident._id);
-            return;
-          }
-          this.mapService.setMarker(
-            incident._id,
-            'cases',
-            location_doc.latitude,
-            location_doc.longitude,
-            incident._id + ' at ' + location_doc.latitude + ' ' + location_doc.longitude,
-          );
-        });
+        if (parseInt(incident.state) < 5) {
+          const location_promise = this.locationsService.getLastLocationMatching(incident._id);
+          location_promise.then((location) => {
+            let location_doc = location;
+            if (!location_doc || !location_doc.latitude) {
+              console.log('No location found for case: ' + incident._id);
+              return;
+            }
+            this.mapService.setMarker(
+              incident._id,
+              'cases',
+              location_doc.latitude,
+              location_doc.longitude,
+              incident._id + ' at ' + location_doc.latitude + ' ' + location_doc.longitude,
+            );
+          });
+        }
       }
     });
   }
