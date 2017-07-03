@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { PouchService } from '../../services/pouch.service';
+import { DBClientService } from '../../services/db-client.service';
+import { DBTxActions } from '../../interfaces/db-tx';
+import { AppVersionsService } from '../../services/app-versions.service';
 
 import { ConfigService } from '../../services/config.service';
 import AppVersion from 'config/version';
@@ -16,20 +18,20 @@ declare var helpers: any;
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
-  db;
   data;
-  remote;
-  pouchService;
   current_version;
   update_info;
   configService;
   platform;
   settings_info;
   db_remote_url;
+  private appVersionsService: AppVersionsService;
+  private dbClientService: DBClientService;
 
-  constructor(pouchService: PouchService, configService: ConfigService) {
+  constructor(appVersionsService: AppVersionsService, dbClientService: DBClientService, configService: ConfigService) {
 
-    this.pouchService = pouchService;
+    this.appVersionsService = appVersionsService;
+    this.dbClientService = dbClientService;
     this.configService = configService;
     this.current_version = AppVersion.version;
     this.db_remote_url = this.configService.getConfiguration('db_remote_url');
@@ -41,7 +43,6 @@ export class SettingsComponent implements OnInit {
 
     console.log('PLATFORM', this.platform);
 
-    this.db = this.pouchService.initDB('versions');
     this.checkForUpdates();
   }
 
@@ -53,32 +54,20 @@ export class SettingsComponent implements OnInit {
     this.update_info = {};
     this.update_info.status_obj = {};
 
-    this.getVersions();
-
     const self = this;
 
-    this.db.allDocs({
+    this.appVersionsService.getVersions().then((versions) => {
 
-      include_docs: true
-
-    }).then((result) => {
-
-      this.data = [];
-
-      const docs = result.rows.map((row) => {
-        this.data.push(row.doc);
-      });
+      this.data = versions;
 
       if (this.data[0]) {
-
-
         const latest_version_obj = this.data[0]; const minimum_accepted_version = latest_version_obj.minimum_accepted_version;
 
         const latest_accepted_version = latest_version_obj._id;
 
         let download_link;
         let filesize;
-        //get the right download link
+        // get the right download link
         switch (self.platform) {
           case 'linux':
             download_link = latest_version_obj.download_links.linux.link;
@@ -94,10 +83,10 @@ export class SettingsComponent implements OnInit {
             break;
         }
 
-        //if current version of this client is lower than the minimum accepted version
-        //update required
+        // if current version of this client is lower than the minimum accepted version
+        // update required
         if (semver.lt(this.current_version, minimum_accepted_version)) {
-          //update required
+          // update required
           self.update_info.status_obj = {
             'status': 'update_required',
             'version': latest_version_obj._id,
@@ -107,7 +96,7 @@ export class SettingsComponent implements OnInit {
           self.settings_info.show = true;
         }
 
-        //update possible
+        // update possible
         if (semver.lt(this.current_version, latest_accepted_version)) {
           self.update_info.status_obj = {
             'status': 'update_possible',
@@ -118,50 +107,8 @@ export class SettingsComponent implements OnInit {
           self.settings_info.show = true;
         }
       }
-
-
-
-
     }).catch((error) => {
-
       console.log(error);
-
-    });
-
-  }
-
-  getVersions() {
-
-    if (this.data) {
-      return Promise.resolve(this.data);
-    }
-
-    return new Promise(resolve => {
-
-      this.db.allDocs({
-
-        include_docs: true
-
-      }).then((result) => {
-
-        this.data = [];
-
-        const docs = result.rows.map((row) => {
-          this.data.push(row.doc);
-        });
-
-        resolve(this.data);
-
-        this.db.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
-          this.pouchService.handleChange('versions', change);
-        });
-
-      }).catch((error) => {
-
-        console.log(error);
-
-      });
-
     });
 
   }
@@ -172,22 +119,32 @@ export class SettingsComponent implements OnInit {
       db_remote_url: this.db_remote_url.replace(/\/?$/, '/'),
     };
 
-    this.configService.updateConfiguration(update, () => {
-      helpers.alert('Settings update successful!');
-      helpers.reload();
+    this.configService.updateConfiguration(update, (updatedKeys: Array<string>) => {
+      const reload = () => {
+        helpers.alert('Settings update successful!');
+        helpers.reload();
+      };
+
+      // Do not clear databases if the DB URL didn't change
+      if (updatedKeys.indexOf('db_remote_url') > -1) {
+        console.log('DB URL changed, clearing databases');
+        this.dbClientService.clearAllDatabases().then(() => {
+          reload();
+        }).catch((error) => {
+          helpers.alert('Error clearing databases!');
+        });
+      } else {
+        reload();
+      }
     });
 
-    //if more possible settings than change remote url will follow
-    //clearCache should only be called if remote url is changed
-
-    this.pouchService.clearCache();
   }
 
   openExternal(link) {
     shell.openExternal(link);
   }
   closeSettings() {
-    if (this.update_info.status_obj.status != 'update_required')
+    if (this.update_info.status_obj.status !== 'update_required')
       this.settings_info.show = false;
     else
       helpers.alert('You need to update before you can proceed!');

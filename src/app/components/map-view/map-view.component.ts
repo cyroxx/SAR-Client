@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common';
 
 import { MapService } from 'app/services/map.service';
@@ -14,14 +14,15 @@ declare var map_inited: any;
   templateUrl: './map-view.component.html',
   styleUrls: ['./map-view.component.css'],
 })
-export class MapViewComponent implements OnInit {
+export class MapViewComponent implements OnInit, OnDestroy {
   public map: any;
   public map_inited: any;
 
   vehicles;
   cases;
 
-  private drawVehicleInterval: any;
+  private runDrawTimer: boolean = false;
+  private drawVehicleTimeout: any;
 
   constructor(
     private vehiclesService: VehiclesService,
@@ -39,17 +40,30 @@ export class MapViewComponent implements OnInit {
     else
       this.initMap();
 
-    this.drawVehicles();
-    // call this every 60 seconds
-    this.drawVehicleInterval = setInterval(function(self) {
-      return function() {
-        console.log('drawing!!');
-        self.drawVehicles();
-      };
-    }(this),
-      60 * 1000
-    );
+    this.runDrawTimer = true;
+    // Update the vehicles on the map every 60 seconds
+    this.drawVehicles().then(() => this.drawVehiclesWithTimer(60 * 1000));
+    // TODO: Periodically render cases
     this.drawCases();
+  }
+
+  private drawVehiclesWithTimer(interval: number) {
+    if (!this.runDrawTimer) {
+      return;
+    }
+    // We are using setTimeout instead of setInterval to make sure the
+    // next update is only scheduled after this one is done.
+    // Using setInterval would schedule a new update even if the previous
+    // one is not finished yet.
+    this.drawVehicleTimeout = window.setTimeout(() => {
+        console.log('drawing!!');
+        this.drawVehicles().then(() => {
+          this.drawVehiclesWithTimer(interval);
+        }).catch(error => {
+          console.log('Error drawing vehicles', error);
+          this.drawVehiclesWithTimer(interval);
+        });
+    }, interval);
   }
 
   public isHidden() {
@@ -59,9 +73,14 @@ export class MapViewComponent implements OnInit {
     return (list.indexOf(route) === -1);
   }
 
+  // This will basically never be called because we only render this component
+  // once during app startup. (See commit: 4fca17d7b62727d43e2518b72007af0d40345da9)
+  // We still cancel the timer in here because we might destroy the component at
+  // one point.
   ngOnDestroy() {
-    if (this.drawVehicleInterval) {
-      clearInterval(this.drawVehicleInterval);
+    this.runDrawTimer = false;
+    if (this.drawVehicleTimeout) {
+      clearTimeout(this.drawVehicleTimeout);
     }
   }
 
@@ -70,9 +89,9 @@ export class MapViewComponent implements OnInit {
       this.cases = data;
       for (const incident of this.cases) {
         if (parseInt(incident.state) < 5) {
-          let location_promise = this.locationsService.getLastLocationMatching(incident._id);
+          const location_promise = this.locationsService.getLastLocationMatching(incident._id);
           location_promise.then((location) => {
-            let location_doc = location.docs[0];
+            let location_doc = location;
             if (!location_doc || !location_doc.latitude) {
               console.log('No location found for case: ' + incident._id);
               return;
@@ -90,33 +109,46 @@ export class MapViewComponent implements OnInit {
     });
   }
 
-  drawVehicles() {
-    this.vehiclesService.getVehicles().then((data) => {
-      this.vehicles = data;
-      for (const vehicle of this.vehicles) {
-        const location_promise = this.locationsService.getLastLocationMatching(vehicle._id);
-        location_promise.then((location) => {
-          const location_doc = location.docs[0];
-          if (!location_doc || !location_doc.latitude) {
-            console.log('No location found for vehicle: ' + vehicle.title);
-            return;
-          }
-          const last_update = location_doc._id.substr(0, 19).replace('T', ' ');
-          this.mapService.setMarker(
-            vehicle._id,
-            'vehicles',
-            location_doc.latitude,
-            location_doc.longitude,
-            '<h5>' + vehicle.title + '</h5><b>' +
-            this.parseLatitude(parseFloat(location_doc.latitude)) + ' ' +
-            this.parseLongitude(parseFloat(location_doc.longitude)) +
-            '</b><br />' + last_update,
+  drawVehicles(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.vehiclesService.getVehicles().then((data) => {
+        this.vehicles = data;
+        const promises = [];
 
-            vehicle.marker_color,
-            vehicle._id
-          );
-        });
-      }
+        for (const vehicle of this.vehicles) {
+          const location_promise = this.locationsService.getLastLocationMatching(vehicle._id);
+          location_promise.then((location) => {
+            const location_doc = location;
+            if (!location_doc || !location_doc.latitude) {
+              console.log('No location found for vehicle: ' + vehicle.title);
+              return;
+            }
+            const last_update = location_doc._id.substr(0, 19).replace('T', ' ');
+            this.mapService.setMarker(
+              vehicle._id,
+              'vehicles',
+              location_doc.latitude,
+              location_doc.longitude,
+              '<h5>' + vehicle.title + '</h5><b>' +
+              // TODO: The latitude and longitude value can be strings or numbers
+              //       This should be fixed to always be numbers!
+              this.parseLatitude(parseFloat(<any>location_doc.latitude)) + ' ' +
+              this.parseLongitude(parseFloat(<any>location_doc.longitude)) +
+              '</b><br />' + last_update,
+
+              vehicle.marker_color,
+              vehicle._id
+            );
+          });
+
+          promises.push(location_promise);
+        }
+
+        // We want to wait for all location updates to be finished before
+        // moving on. Otherwise we might schedule a new update before this
+        // one has finished.
+        Promise.all(promises).then(resolve).catch(reject);
+      });
     });
   }
   // the following is taken from stackoverflow user mckamey at

@@ -1,5 +1,5 @@
+import { DBReplicationChange } from './db-tx';
+
 export interface Listener {
-
-  notify(change): void;
-
+  notify(change: DBReplicationChange): void;
 }

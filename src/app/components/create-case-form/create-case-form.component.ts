@@ -1,5 +1,6 @@
-import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
+import { Component, Input, Output, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs/Subscription';
 
 import { AppComponent } from '../../app.component';
 
@@ -10,12 +11,13 @@ import { BoatCondition } from '../../interfaces/boat-condition';
 import { Location } from '../../interfaces/location';
 import { LocationType } from '../../interfaces/location-type';
 import { Listener } from '../../interfaces/listener';
+import { DBReplicationChange } from '../../interfaces/db-tx';
 
 import { ModalContainer, Modal } from '../../interfaces/modalcontainer';
 import { CasesService } from '../../services/cases.service';
 import { LocationsService } from '../../services/locations.service';
 import { AuthService } from '../../services/auth.service';
-import { PouchService } from '../../services/pouch.service';
+import { DBClientService } from '../../services/db-client.service';
 
 
 @Component({
@@ -26,7 +28,7 @@ import { PouchService } from '../../services/pouch.service';
 })
 
 @Modal()
-export class CreateCaseFormComponent implements OnInit, Listener {
+export class CreateCaseFormComponent implements OnInit, OnDestroy, Listener {
   private submitted;
   hideCreateCaseForm;
   public createCaseForm: FormGroup;
@@ -51,8 +53,14 @@ export class CreateCaseFormComponent implements OnInit, Listener {
   boatConditionList: any;
   boatConditionKeys: string[];
   casemeta: any;
+  private dbChangeSubscription: Subscription;
 
-  constructor(private _fb: FormBuilder, private caseService: CasesService, private locationService: LocationsService, private authService: AuthService, private pouchService: PouchService) {
+  constructor(
+    private _fb: FormBuilder,
+    private caseService: CasesService,
+    private locationService: LocationsService,
+    private authService: AuthService,
+    private dbClientService: DBClientService) {
 
     this.hideCreateCaseForm = false;
     this.casemeta = {
@@ -77,8 +85,8 @@ export class CreateCaseFormComponent implements OnInit, Listener {
     this.boatConditionKeys = Object.keys(this.boatConditionList).filter(Number);
 
 
-    //typecast needed because we only have the id at this moment and we don't want
-    //to explicitly initialize all the other fields
+    // typecast needed because we only have the id at this moment and we don't want
+    // to explicitly initialize all the other fields
     this.case = <Case>{
       _id: new Date().toISOString() + '-reportedBy-' + authService.getUserData().name,
       createdAt: new Date().toISOString(),
@@ -87,10 +95,10 @@ export class CreateCaseFormComponent implements OnInit, Listener {
   } // form builder simplify form initialization
 
   ngOnInit() {
-    this.pouchService.registerRemoteChangeListener(this);
+    this.dbChangeSubscription = this.dbClientService.addChangeListener('cases', this);
 
     // we will initialize our form model here
-    //if caseId is present from input load it from the database
+    // if caseId is present from input load it from the database
     const self = this;
 
     if (this.caseId) {
@@ -101,7 +109,7 @@ export class CreateCaseFormComponent implements OnInit, Listener {
         self.locationService.getLastLocationMatching(self.caseId).then(function(loc) {
           console.log(loc);
 
-          self.case.location = <Location>loc.docs[0];
+          self.case.location = <Location>loc;
           self.casemeta.dd_location.longitude = self.case.location.longitude;
           self.casemeta.dd_location.latitude = self.case.location.latitude;
 
@@ -122,11 +130,13 @@ export class CreateCaseFormComponent implements OnInit, Listener {
         type: LocationType.Case
       };
     }
-
-
   }
 
-  notify(change): void {
+  ngOnDestroy() {
+    this.dbChangeSubscription.unsubscribe();
+  }
+
+  notify(change: DBReplicationChange): void {
     console.log('CHANGE');
     console.log(change);
     change.docs.forEach((c) => {
@@ -139,12 +149,10 @@ export class CreateCaseFormComponent implements OnInit, Listener {
     });
   }
 
-
-
   save() {
     this.submitted = true; // set form submit to true
     this.caseService.store(this.case);
-    //ModalContainer.closeModal();
+    // ModalContainer.closeModal();
     this.hideCreateCaseForm = true;
   }
   updatePosition() {
@@ -159,14 +167,14 @@ export class CreateCaseFormComponent implements OnInit, Listener {
     switch (type) {
 
       case 'GMS':
-        //convert lat
+        // convert lat
         if (!this.casemeta.dd_location) {
           this.casemeta.dd_location = {};
         }
 
         this.casemeta.dd_location.latitude = this.convertDMSToDD(this.casemeta.dms_location.latitude.degree, this.casemeta.dms_location.latitude.minute, this.casemeta.dms_location.latitude.second, this.casemeta.dms_location.latitude.direction);
 
-        //convert lon
+        // convert lon
         this.casemeta.dd_location.longitude = this.convertDMSToDD(this.casemeta.dms_location.longitude.degree, this.casemeta.dms_location.longitude.minute, this.casemeta.dms_location.longitude.second, this.casemeta.dms_location.longitude.direction);
 
 
@@ -183,7 +191,7 @@ export class CreateCaseFormComponent implements OnInit, Listener {
         if (!this.casemeta.dms_location) {
           this.casemeta.dms_location = {};
         }
-        //convert lon
+        // convert lon
         this.casemeta.dms_location.latitude = this.convertDDToDMS(this.casemeta.dd_location.latitude);
 
         this.casemeta.dms_location.longitude = this.convertDDToDMS(this.casemeta.dd_location.longitude);
@@ -207,11 +215,11 @@ export class CreateCaseFormComponent implements OnInit, Listener {
     let s = Math.round(secfloat);
     // After rounding, the seconds might become 60. These two
     // if-tests are not necessary if no rounding is done.
-    if (s == 60) {
+    if (s === 60) {
       m++;
       s = 0;
     }
-    if (m == 60) {
+    if (m === 60) {
       d++;
       m = 0;
     }
@@ -225,7 +233,7 @@ export class CreateCaseFormComponent implements OnInit, Listener {
   convertDMSToDD(degrees, minutes, seconds, direction) {
     let dd = degrees + minutes / 60 + seconds / (60 * 60);
 
-    if (direction == 'S' || direction == 'W') {
+    if (direction === 'S' || direction === 'W') {
       dd = dd * -1;
     }
     return dd;
@@ -236,7 +244,7 @@ export class CreateCaseFormComponent implements OnInit, Listener {
     this.case = this.change;
     this.locationService.getLastLocationMatching(this.caseId).then(function(loc) {
       console.log(loc);
-      self.case.location = <Location>loc.docs[0];
+      self.case.location = <Location>loc;
 
     });
     this.edited = false;
@@ -245,8 +253,8 @@ export class CreateCaseFormComponent implements OnInit, Listener {
   getCurrentPosition() {
     const self = this;
     navigator.geolocation.getCurrentPosition((position) => {
-      //console.log(position);
-      //@TODO add reporter from currently logged in user
+      // console.log(position);
+      // @TODO add reporter from currently logged in user
       self.case.location = {
         _id: new Date().toISOString() + '-reportedBy-' + self.authService.getUserData().name,
         longitude: position.coords.longitude,
