@@ -4,116 +4,93 @@ import { Router } from '@angular/router';
 
 
 import { ConfigService } from './config.service';
-import { PouchService } from './pouch.service';
+import { DBClientService } from '../services/db-client.service';
+import { DBTxActions, DBTxReplyMessage } from '../interfaces/db-tx';
 
-declare var PouchDB: any;
 declare var localStorage: any;
 declare var window: any;
 declare var ipcRenderer: any;
 
 @Injectable()
 export class AuthService {
-  router
   logged_in;
-  db;
-  sessiondata; // used to store couch user object 
-  pouchService;
-  // Observable navItem source
-  private _loginStateSource = new BehaviorSubject<boolean>(false);
-  // Observable navItem stream
-  navItem$ = this._loginStateSource.asObservable();
+  sessiondata; // used to store couch user object
 
   changeLoginState = new EventEmitter<boolean>();
 
-  ConfigService: ConfigService
-  remote: string
+  private dbClientService: DBClientService;
+  ConfigService: ConfigService;
 
-  constructor(PouchService: PouchService, ConfigService: ConfigService, Router: Router) {
+  constructor(dbClientService: DBClientService, ConfigService: ConfigService) {
 
-    this.router = Router;
+    this.dbClientService = dbClientService;
 
-    this.pouchService = PouchService;
+    console.log('Initializing authentication');
 
-    console.log('initializing login...');
-
-    //this.db = PouchService.initDB('mydb', {skipSetup:true});
-    this.remote = ConfigService.getConfiguration('db_remote_url');
-
-    this.db = new PouchDB(this.remote + '_users/', { skipSetup: true });
-
-
-    var self = this;
+    const self = this;
     self.changeLoginStateTo(false);
 
-    this.db.getSession(function(err, response) {
-
-      console.log('...getting session:')
-      if (err) {
-        // network error
-      } else if (!response.userCtx.name) {
-        console.log('...no existing session');
+    console.log('Getting db session');
+    this.dbClientService.getSession().then((response) => {
+      if (!response.userCtx.name) {
+        console.log('No existing session found');
         self.changeLoginStateTo(false);
       } else {
-        //store returned sessiondata
-        if (response.ok)
-          self.sessiondata = response.userCtx
+        // store returned sessiondata
+        if (response.ok) {
+          self.sessiondata = response.userCtx;
+        }
 
+        console.log('Session found', response.userCtx.name, response);
         self.changeLoginStateTo(true);
       }
+    }).catch((error) => {
+      console.log('Error getting session', error);
     });
   }
 
-
-
   changeLoginStateTo(loginState) {
-
-    this.changeLoginState.emit(loginState)
-
+    this.changeLoginState.emit(loginState);
   }
 
-  //@param userdata {username:string, password:string}
+  // @param userdata {username:string, password:string}
   login(userdata) {
-
-    var self = this;
-    this.db.login(userdata.username, userdata.password, function(err, response) {
-      if (err) {
-        console.log(err)
-        if (err.name === 'unauthorized' || err.name === 'authentication_error') {
-          alert('...password or username wrong');
-        } else {
-
-        }
-      } else {
-
-        if (response.ok)
+    const self = this;
+    this.dbClientService.login(userdata.username, userdata.password)
+      .then((response) => {
+        console.log('Login successful', response);
+        if (response.ok) {
           self.sessiondata = response;
+        }
 
-        self.pouchService.reinitializeDBs();
-
+        // TODO: Why are we storing this? Is this supposed to be used as auto-login?
         localStorage.username = userdata.username;
         localStorage.password = userdata.password;
         self.changeLoginStateTo(true);
 
-        /*rerender after short timeout (we would need a waterfall cb inside the pouchservice.reinitializeDBs, to have a more elegant solution)*/
-        setTimeout(function() {
+        // We reload the app to re-initialize the databases with a valid session
+        setTimeout(() => {
           window.location = window.location.href + 'index.html';
-        }, 1500)
-
-        console.log('...log in successful');
-      }
-    });
+        }, 1500);
+      })
+      .catch((error) => {
+        console.log('Login error', error);
+        if (error.name === 'unauthorized' || error.name === 'authentication_error') {
+          alert(error.message);
+        }
+      });
   }
-  logout() {
 
+  logout() {
     this.changeLoginStateTo(false);
     ipcRenderer.send('logout-called');
+  }
 
-  }
   is_logged_in() {
-    return this.logged_in
+    return this.logged_in;
   }
+
   getUserData() {
     return this.sessiondata;
   }
-
 }

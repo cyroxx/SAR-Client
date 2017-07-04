@@ -614,6 +614,11 @@ a.gray:hover, a.gray:focus, a.gray:active {
     top: 50px;
     font-size: 25px;
   }
+
+  .leaflet-top {
+    top: 47px!important;
+  }
+
   .caseBox .edit {
     
   }

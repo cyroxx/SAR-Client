@@ -25,7 +25,7 @@ export class AppComponent {
 
     this.hideCreateCaseForm = true;
 
-    this.showSettingsModal()
+    this.showSettingsModal();
   }
 
   showSettingsModal() {

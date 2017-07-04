@@ -1,11 +1,13 @@
-import { Component, OnInit, ComponentRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ComponentRef } from '@angular/core';
 
 import { AppModule } from '../../app.module';
 import { CreateCaseFormComponent } from '../create-case-form/create-case-form.component';
 import { CaseListComponent } from '../case-list/case-list.component';
 import { ModalService } from '../../services/modal.service';
 import { AuthService } from '../../services/auth.service';
+import { NetworkStateService } from '../../services/network-state.service';
 import { SettingsComponent } from 'app/components/settings/settings.component';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'top-nav',
@@ -13,26 +15,33 @@ import { SettingsComponent } from 'app/components/settings/settings.component';
   styleUrls: ['./top-nav.component.css']
 })
 
-export class TopNavComponent implements OnInit {
+export class TopNavComponent implements OnInit, OnDestroy {
   title: string;
-  authService
-  is_online
-  show_sub_menu
-  constructor(private modalService: ModalService, AuthService: AuthService) {
-    this.title = 'top nav'
-    this.show_sub_menu = false
-    this.authService = AuthService
+  is_online;
+  show_sub_menu;
+  private networkStatusSubscription: Subscription;
+
+  constructor(
+    private modalService: ModalService,
+    private authService: AuthService,
+    private networkStateService: NetworkStateService) {
+
+    this.title = 'top nav';
+    this.show_sub_menu = false;
   }
 
   ngOnInit() {
-    //this.is_online = this.authService.pouchService.getConnectionState();
-    this.authService.pouchService.onlineState.subscribe((value: any) => this.is_online = value)
+    this.networkStatusSubscription = this.networkStateService.addConnectionStatusListener(value => this.is_online = value);
+  }
+
+  ngOnDestroy() {
+    this.networkStatusSubscription.unsubscribe();
   }
 
   logout() {
     console.log('logout called');
-    window.localStorage.clear()
-    this.authService.logout()
+    window.localStorage.clear();
+    this.authService.logout();
     console.log('logout worked...');
   }
 

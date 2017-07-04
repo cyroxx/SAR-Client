@@ -38,13 +38,13 @@ export class LeftNavComponent implements OnInit {
     return this.casesService.getFilteredStatuses();
   }
   getStatusClasses(status_index) {
-    return this.states[status_index] + ' ' + ((this.casesService.getFilteredStatuses().indexOf(status_index) > -1) ? 'active' : '')
+    return this.states[status_index] + ' ' + ((this.casesService.getFilteredStatuses().indexOf(status_index) > -1) ? 'active' : '');
   }
 
   go_to_vehicle(vehicle: any) {
     const location_promise = this.locationsService.getLastLocationMatching(vehicle._id);
     location_promise.then((location) => {
-      const location_doc = location.docs[0];
+      const location_doc = location;
       if (!location_doc || !location_doc.latitude) {
         console.log('No location found for vehicle: ' + vehicle.title);
         return;
@@ -55,18 +55,13 @@ export class LeftNavComponent implements OnInit {
 
   filter_by_status(status_id) {
 
-    //add or remove status from filters
+    // add or remove status from filters
     this.casesService.toggleStatusFilter(status_id);
 
     console.log('showing cases with statusses ' + JSON.stringify(this.casesService.getFilteredStatuses()));
 
 
-    let matchingPromise = this.casesService.getCasesMatching(
-      {
-        "state": {
-          "$in": this.casesService.getFilteredStatuses()
-        }
-      });
+    const matchingPromise = this.casesService.getCasesForStates(this.casesService.getFilteredStatuses().map(String));
     matchingPromise.then((data) => {
       console.log(data);
       this.mapService.filter_on_cases('wat');

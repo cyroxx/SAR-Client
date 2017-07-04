@@ -10,7 +10,7 @@ import { ModalService } from 'app/services/modal.service';
 
 export class ModalPlaceholderComponent implements OnInit {
 
-  @ViewChild("modalplaceholder", { read: ViewContainerRef })
+  @ViewChild('modalplaceholder', { read: ViewContainerRef })
   viewContainerRef;
 
   constructor(

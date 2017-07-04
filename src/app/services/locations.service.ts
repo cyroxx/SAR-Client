@@ -1,82 +1,66 @@
 import { Injectable } from '@angular/core';
-import { PouchService } from '../services/pouch.service';
+import { DBClientService } from '../services/db-client.service';
+import { DBTxActions, DBTxReplyMessage } from '../interfaces/db-tx';
 import { Location } from '../interfaces/location';
 
 @Injectable()
 export class LocationsService {
+  dbClientService: DBClientService;
 
-  db: any;
-  data: Array<any>;
-  remote;
-  pouchService: PouchService;
+  constructor(dbclientService: DBClientService) {
+    this.dbClientService = dbclientService;
+    this.dbClientService.initializeDatabase('locations').catch(console.log);
+  }
 
-  constructor(pouchService: PouchService) {
-    this.pouchService = pouchService;
-    this.db = this.pouchService.initDB('locations');
-    this.db.createIndex({
-      index: {
-        fields: ['itemId']
-      }
-    }).then(function(result) {
-      console.log('Created an index on location:itemId');
-    }).catch(function(err) {
-      console.log('Failed to create an index on location:itemId');
-      console.log(err);
+  getLocation(id: string): Promise<Location> {
+    console.log('getting location with id:', id);
+
+    return new Promise((resolve, reject) => {
+      this.dbClientService.newTransaction(DBTxActions.LOCATIONS_GET, { id: id })
+        .then((msg: DBTxReplyMessage) => {
+          const location: Location = msg.payload;
+          resolve(location);
+        }).catch(error => reject(error));
     });
   }
 
-  getLocations() {
-
-    console.log('getting locations');
-    return this.pouchService.get('locations');
+  getLastLocationMatching(foreignKey: string): Promise<Location> {
+    return new Promise((resolve, reject) => {
+      this.dbClientService.newTransaction(DBTxActions.LOCATIONS_FIND, {
+        selector: {
+          itemId: foreignKey,
+        },
+        sort: [
+          { _id: 'desc' },
+        ],
+        limit: 1,
+      }).then((msg: DBTxReplyMessage) => {
+        const location: Location = msg.payload.docs[0];
+        resolve(location);
+      }).catch(error => reject(error));
+    });
   }
 
-  getLocation(id: any) {
-    console.log('getting location with id ' + id);
-    return Promise.resolve(this.pouchService.db('locations').get(id));
+  getAllLocations(): Promise<Array<Location>> {
+    return new Promise((resolve, reject) => {
+      this.dbClientService.newTransaction(DBTxActions.LOCATIONS_ALL)
+        .then((msg: DBTxReplyMessage) => {
+          const list: Array<Location> = msg.payload.rows.map(r => r.doc);
+          resolve(list);
+        }).catch(error => reject(error));
+    });
   }
 
-  /**
-   * 
-   * @param foreignKey the key of the case or vehicle 
-   */
-  getLastLocationMatching(foreignKey: string) {
-    return this.pouchService.find(
-      'locations',
-      {
-        'itemId': foreignKey,
-      },
-      [{ '_id': 'desc' }],
-      1,
-    );
-  }
+  store(location: Location): Promise<Location> {
+    console.log('storing location', location);
 
-  getAllLocations() {
-    return this.pouchService.findAll('locations');
-  }
-
-  store(location: Location) {
-
-    console.log(location);
-
-    this
-      .pouchService
-      .db('locations')
-      .post(location)
-      .then(function(response) {
-        console.log(response);
-      }).catch(function(err) {
-        console.error(err);
-      })
-      ;
-    //store vehicles in db
-    //    this.db.put(location).then(function (result) {
-    // handle result
-    //      console.log(result)
-    //      console.log('...done')
-    //    }).catch(function (err) {
-    //      console.log(err);
-    //    });
-
+    return new Promise((resolve, reject) => {
+      this.dbClientService.newTransaction(DBTxActions.LOCATIONS_STORE, {
+        payload: location,
+      }).then((msg: DBTxReplyMessage) => {
+        const storedLocation: Location = msg.payload;
+        resolve(storedLocation);
+      }).catch(error => reject(error));
+    });
   }
 }
