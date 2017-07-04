@@ -1147,3 +1147,23 @@ a.gray:hover, a.gray:focus, a.gray:active {
     margin-right:30px;
     padding:2px;
 }
+
+
+
+/* in page search */
+  .electron-in-page-search-window {
+    width: 300px;
+    height: 36px;
+    background-color: white;
+    position:absolute;
+    top:0;
+    z-index:9999;
+  }
+
+  .electron-in-page-search-window.search-inactive {
+    visibility: hidden;
+  }
+
+  .electron-in-page-search-window.search-active {
+    visibility: visible;
+  }
