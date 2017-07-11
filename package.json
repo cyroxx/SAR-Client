@@ -42,6 +42,7 @@
   },
   "private": true,
   "dependencies": {
+    "electron-settings": "^3.0.14",
     "cloudant-backup": "0.0.2",
     "cloudant-user": "^2.0.0",
     "couchbackup": "^1.5.0",
