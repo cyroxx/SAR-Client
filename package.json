@@ -42,7 +42,11 @@
   },
   "private": true,
   "dependencies": {
-    "electron-settings": "^3.0.14"
+    "cloudant-backup": "0.0.2",
+    "cloudant-user": "^2.0.0",
+    "couchbackup": "^1.5.0",
+    "electron-settings": "^3.0.14",
+    "shelljs": "^0.7.8"
   },
   "devDependencies": {
     "@angular/cli": "^1.0.0-beta.32.3",
