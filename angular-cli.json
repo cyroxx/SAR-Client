@@ -16,7 +16,8 @@
         "img",
         "config",
         "index.js",
-        "js"
+        "js",
+        "workers"
       ],
       "index": "index.html",
       "main": "main.ts",

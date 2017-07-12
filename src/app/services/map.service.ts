@@ -7,10 +7,15 @@ export class MapService {
   mapContainerId;
   maptype;
   markers = {};
-  layer_groups = {};
+  layer_groups;
 
   constructor() {
     this.maptype = 'OSM';
+    // Make sure to add new layer groups here before using them in setMarker()
+    this.layer_groups = {
+      'vehicles': L.layerGroup(),
+      'cases': L.layerGroup(),
+    };
   }
 
   getMapObject() {
@@ -22,9 +27,8 @@ export class MapService {
 
   getLayerGroup(group_name: string) {
     if (!(group_name in this.layer_groups)) {
-      this.layer_groups[group_name] = L.layerGroup();
-      this.layer_groups[group_name].addTo(this.getMapObject());
-      L.control.layers({}, this.layer_groups).addTo(this.getMapObject());
+      console.log(`ERROR: Layer group <${group_name}> does not exist`);
+      return;
     }
     return this.layer_groups[group_name];
   }
@@ -33,13 +37,36 @@ export class MapService {
     this.getMapObject().panTo([latitude, longitude]);
   }
 
-  setMarker(id: string, group: string, x: number, y: number, description?: string) {
+  setMarker(id: string, group: string, x: number, y: number, description?: string, color?: string, title?: string) {
     const layer_group = this.getLayerGroup(group);
+    var title_html = '';
     // remove potential old marker
     if (id in this.markers) {
       layer_group.removeLayer(this.markers[id]);
     }
-    const marker = L.marker([x, y]).addTo(layer_group);
+
+    if (!title)
+      title = '';
+    if (!color)
+      color = '#583470';
+    const markerHtmlStyles = 'background-color: ' + color;
+
+
+    if (title) {
+      title_html = '<span>' + title + '</span>';
+    }
+
+    const icon = L.divIcon({
+      iconAnchor: [0, 24],
+      labelAnchor: [-6, 0],
+      popupAnchor: [0, -36],
+      html: '<div style="' + markerHtmlStyles + '" class="onefleet_marker">' + title_html + '</div>'
+    });
+
+    /*const marker = L.marker([x, y]).addTo(layer_group);*/
+
+    const marker = L.marker([x, y], { icon: icon }).addTo(layer_group);
+
     if (description) {
       marker.bindPopup(description);
     }
@@ -78,6 +105,15 @@ export class MapService {
         }).addTo(this.map);
         break;
     }
+
+    // Add the pre-defined layer groups to the map
+    for (const name in this.layer_groups) {
+      this.layer_groups[name].addTo(this.map);
+    }
+
+    // Add the control for the layer groups to the map
+    L.control.layers({}, this.layer_groups).addTo(this.map);
+
     return this.map;
   }
 }
