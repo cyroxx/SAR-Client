@@ -46,7 +46,7 @@
     "cloudant-user": "^2.0.0",
     "couchbackup": "^1.5.0",
     "electron-settings": "^3.0.14",
-    "shelljs": "^0.7.8"
+    "shelljs": "^0.7.8",
     "electron-in-page-search": "^1.2.3",
     "electron-settings": "^3.0.14"
   },
